@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum RoomType {
+  BATHROOM
+  KITCHEN
+  BEDROOM
+  LIVING_ROOM
+  HALLWAY
+  STAIRS
+  ENTRANCE
+  OUTDOOR
+  OTHER
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum HazardStatus {
+  PENDING
+  RESOLVED
+}
+
+enum AnalysisSource {
+  LIVE
+  CACHED
+  MOCK
+}
+
+model Household {
+  id          String       @id @default(uuid())
+  accessToken String       @unique // crypto.randomUUID(); shared in the app link
+  name        String?      @db.VarChar(80) // optional label, e.g. "Abuela's house"
+  language    String       @default("es") @db.VarChar(5)
+  createdAt   DateTime     @default(now())
+  expiresAt   DateTime
+  assessments Assessment[]
+
+  @@index([expiresAt])
+}
+
+model Assessment {
+  id          String    @id @default(uuid())
+  householdId String
+  household   Household @relation(fields: [householdId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  rooms       Room[]
+
+  @@index([householdId])
+}
+
+model Room {
+  id           String         @id @default(uuid())
+  assessmentId String
+  assessment   Assessment     @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  type         RoomType
+  source       AnalysisSource // LIVE | CACHED | MOCK — shown to the user when not LIVE
+  imageWidth   Int // dimensions of the normalized image the regions refer to
+  imageHeight  Int
+  createdAt    DateTime       @default(now())
+  hazards      Hazard[]
+
+  @@index([assessmentId])
+}
+
+model Hazard {
+  id              String       @id @default(uuid())
+  roomId          String
+  room            Room         @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  aiId            String       @db.VarChar(20) // "h1", "h2" … the id used to match Spark ↔ SAM
+  labelEn         String       @db.VarChar(60)
+  labelEs         String       @db.VarChar(60)
+  severity        Severity
+  descriptionEs   String       @db.VarChar(300)
+  fixEs           String       @db.VarChar(300)
+  costEstimateUsd Float        @default(0)
+  confidence      Float
+  region          Json? // normalized 0–1, see docs/DATA_MODEL.md §4; null when SAM found nothing
+  status          HazardStatus @default(PENDING)
+  resolvedAt      DateTime?
+
+  @@unique([roomId, aiId])
+  @@index([roomId, status])
+}
+
+model DailyUsage {
+  day     String @id // "YYYY-MM-DD" (UTC)
+  aiCalls Int    @default(0)
+}
