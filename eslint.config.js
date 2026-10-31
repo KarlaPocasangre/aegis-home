@@ -13,6 +13,10 @@ export default tseslint.config(
     },
   },
   {
+    files: ["client/src/**"],
+    languageOptions: { globals: { ...globals.browser } },
+  },
+  {
     files: ["**/tests/**"],
     rules: { "@typescript-eslint/no-explicit-any": "off" },
   },
