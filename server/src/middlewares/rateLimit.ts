@@ -1,6 +1,19 @@
 import { rateLimit } from "express-rate-limit";
 import { HttpError } from "../lib/httpError.js";
 
+// Limits from docs/API_SPECS.md §1 (per IP; requires `trust proxy` behind Render).
+export interface RateLimits {
+  globalPer15Min: number;
+  createHouseholdPerHour: number;
+  analysisPerMinute: number;
+}
+
+export const DEFAULT_RATE_LIMITS: RateLimits = {
+  globalPer15Min: 100,
+  createHouseholdPerHour: 10,
+  analysisPerMinute: 5,
+};
+
 function limiter(windowMs: number, limit: number) {
   return rateLimit({
     windowMs,
@@ -14,7 +27,10 @@ function limiter(windowMs: number, limit: number) {
   });
 }
 
-// Limits from docs/API_SPECS.md §1 (per IP; requires `trust proxy` behind Render).
-export const globalLimiter = () => limiter(15 * 60_000, 100);
-export const createHouseholdLimiter = () => limiter(60 * 60_000, 10);
-export const analysisLimiter = () => limiter(60_000, 5);
+export function createLimiters(limits: RateLimits) {
+  return {
+    global: limiter(15 * 60_000, limits.globalPer15Min),
+    createHousehold: limiter(60 * 60_000, limits.createHouseholdPerHour),
+    analysis: limiter(60_000, limits.analysisPerMinute),
+  };
+}
