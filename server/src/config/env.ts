@@ -5,7 +5,8 @@ const EnvSchema = z
     NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
     PORT: z.coerce.number().int().min(1).max(65535).default(3000),
     DATABASE_URL: z.string().min(1),
-    FRONTEND_URL: z.url(),
+    // Browsers send a bare origin (no trailing slash or path); CORS must compare against that.
+    FRONTEND_URL: z.url().transform((url) => new URL(url).origin),
     META_API_KEY: z.string().min(1).optional(),
     META_API_BASE_URL: z.url().optional(),
     META_MODEL_SPARK: z.string().min(1).optional(),

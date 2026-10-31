@@ -248,6 +248,11 @@ describe("loadConfig", () => {
     expect(config.HOUSEHOLD_TTL_DAYS).toBe(30);
   });
 
+  it("normalizes FRONTEND_URL to a bare origin", () => {
+    const config = loadConfig({ ...base, MOCK_AI: "true", FRONTEND_URL: "https://app.example/" });
+    expect(config.FRONTEND_URL).toBe("https://app.example");
+  });
+
   it("treats empty variables as unset", () => {
     expect(() =>
       loadConfig({ ...base, MOCK_AI: "true", META_API_KEY: "", PORT: "" }),
