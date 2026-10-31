@@ -2,7 +2,7 @@
 
 A Spanish-first web app for Latin American families that turns photos of an older adult's home into a **visual, prioritized, locally-costed fall-prevention plan**.
 
-Built for the **Meta Global AI Developer Hackathon 2026** · Indie Developer track · *Build for Your World*.
+Built for the **Meta Global AI Developer Hackathon 2026** · Indie Developer track · _Build for Your World_.
 
 > 🚧 Work in progress (Oct 27 – Nov 4, 2026).
 
