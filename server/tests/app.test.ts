@@ -248,6 +248,12 @@ describe("loadConfig", () => {
     expect(config.HOUSEHOLD_TTL_DAYS).toBe(30);
   });
 
+  it("treats empty variables as unset", () => {
+    expect(() =>
+      loadConfig({ ...base, MOCK_AI: "true", META_API_KEY: "", PORT: "" }),
+    ).not.toThrow();
+  });
+
   it("requires Meta settings when not mocking, without echoing values", () => {
     const env = { ...base, MOCK_AI: "false", META_API_KEY: "secret-value" };
     expect(() => loadConfig(env)).toThrow(/META_API_BASE_URL/);

@@ -1,0 +1,33 @@
+# Render Blueprint for the API (docs/ARCHITECTURE.md §9).
+# Secrets use `sync: false`: Render asks for them on first deploy; they never live in the repo.
+services:
+  - type: web
+    name: aegis-home-api
+    runtime: node
+    plan: free
+    region: virginia # same AWS region as the Neon database (us-east-1)
+    buildCommand: npm ci --workspace server && npm run db:deploy --workspace server
+    startCommand: npm start --workspace server
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: MOCK_AI
+        value: "true"
+      - key: AI_DAILY_CALL_CAP
+        value: "200"
+      - key: HOUSEHOLD_TTL_DAYS
+        value: "30"
+      - key: META_API_KEY
+        sync: false
+      - key: META_API_BASE_URL
+        sync: false
+      - key: META_MODEL_SPARK
+        sync: false
+      - key: META_MODEL_SAM
+        sync: false

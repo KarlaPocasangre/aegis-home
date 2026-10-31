@@ -31,7 +31,9 @@ const EnvSchema = z
 export type Config = z.infer<typeof EnvSchema>;
 
 export function loadConfig(source: NodeJS.ProcessEnv = process.env): Config {
-  const result = EnvSchema.safeParse(source);
+  // Hosting dashboards often keep unset variables as "": treat them as missing.
+  const defined = Object.fromEntries(Object.entries(source).filter(([, v]) => v !== ""));
+  const result = EnvSchema.safeParse(defined);
   if (!result.success) {
     // Only variable names are reported, never their values.
     const fields = result.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`);
