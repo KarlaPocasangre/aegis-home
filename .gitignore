@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Vercel / Render local state
+.vercel/
+
+# AI assistant files
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+AGENTS.md
+agents.md
+.agents/
+.cursor/
+.cursorrules
+.cursorignore
+.windsurf/
+.windsurfrules
+.github/copilot-instructions.md
+.aider*
+.continue/
+GEMINI.md
+.gemini/
+.codex/
+.clinerules
+.roo/
