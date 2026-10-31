@@ -180,17 +180,23 @@ for (const h of validated.hazards) {
 
 ```ts
 export interface MetaClient {
-  detectHazards(img: NormalizedImage, hint: RoomType, signal: AbortSignal): Promise<unknown>; // raw JSON
+  // raw output (string or parsed JSON); `strict` adds the "return only valid JSON" reminder on retry
+  detectHazards(img: NormalizedImage, hint: RoomType, opts: { signal: AbortSignal; strict: boolean }): Promise<unknown>;
   segment(img: NormalizedImage, label: string, signal: AbortSignal): Promise<RawSegmentation | null>;
-  transcribe?(audio: Buffer, signal: AbortSignal): Promise<string>;           // stretch
 }
+
+// Pixel space of the normalized image; the real adapter maps SAM's actual output into this.
+type RawSegmentation =
+  | { kind: "bbox"; box: [x, y, width, height] }
+  | { kind: "polygon"; points: number[] }; // flat [x1, y1, x2, y2, …]
 ```
 
-Implementations:
-- `createMetaClient(config)` — calls the Meta Model API (`META_API_BASE_URL`, `META_API_KEY`).
-- `createMockMetaClient(fixtures)` — returns recorded responses; used when `MOCK_AI=true` and by tests.
-
-`visionService` receives a `MetaClient` through a factory function (lightweight dependency injection), so tests and the fallback ladder use the same code path.
+Implementations and wiring (`server/src/lib/metaClient.ts`, `server/src/services/visionService.ts`):
+- `createMetaClient(config)` — calls the Meta Model API (`META_API_BASE_URL`, `META_API_KEY`). Until §10 is resolved it fails every call as `unavailable`, so requests degrade to the labeled fallback instead of guessing an API.
+- `MOCK_AI=true` passes **no** client to `visionService`: every analysis goes straight to the fallback ladder, so mock output can never be labeled `live`.
+- Tests inject scripted `MetaClient` fakes through the same factory (lightweight dependency injection).
+- Failures are thrown as `ProviderError` (`rate_limited` with `retryAfterMs`, `timeout`, `invalid_output`, `unavailable`, `spend_cap`).
+- `AI_DAILY_CALL_CAP` counts outbound Meta calls (each Spark attempt is 1; SAM reserves one per hazard). If the cap is hit after Spark, the hazards are kept without regions.
 
 ## 7. Fallback ladder
 

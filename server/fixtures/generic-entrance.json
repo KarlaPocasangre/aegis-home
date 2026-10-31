@@ -1,0 +1,27 @@
+{
+  "roomType": "entrance",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "uneven threshold",
+      "label_es": "desnivel en la entrada",
+      "severity": "medium",
+      "description_es": "El umbral de la puerta tiene un desnivel con el piso.",
+      "fix_es": "Coloque una rampa pequeña o marque el desnivel con cinta de color.",
+      "cost_estimate_usd": 15,
+      "confidence": 0.5,
+      "region": null
+    },
+    {
+      "id": "h2",
+      "label_en": "poor lighting",
+      "label_es": "poca iluminación",
+      "severity": "medium",
+      "description_es": "La entrada queda oscura al llegar de noche.",
+      "fix_es": "Instale un foco exterior o una luz con sensor de movimiento.",
+      "cost_estimate_usd": 12,
+      "confidence": 0.5,
+      "region": null
+    }
+  ]
+}

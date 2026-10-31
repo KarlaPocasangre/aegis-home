@@ -1,0 +1,27 @@
+{
+  "roomType": "kitchen",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "items on high shelf",
+      "label_es": "objetos en repisa alta",
+      "severity": "medium",
+      "description_es": "Los objetos de uso diario están en repisas altas que obligan a subirse a algo.",
+      "fix_es": "Baje a repisas a la altura de la cintura los objetos que se usan todos los días.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.6,
+      "region": null
+    },
+    {
+      "id": "h2",
+      "label_en": "cluttered floor",
+      "label_es": "piso con objetos",
+      "severity": "medium",
+      "description_es": "Hay bolsas y cajas en el piso por donde se camina.",
+      "fix_es": "Guarde las bolsas y cajas fuera del paso, en un rincón o repisa.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.6,
+      "region": null
+    }
+  ]
+}

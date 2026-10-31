@@ -1,0 +1,38 @@
+{
+  "roomType": "bathroom",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "wet floor",
+      "label_es": "piso mojado",
+      "severity": "high",
+      "description_es": "El piso del baño se ve mojado y liso cerca de la ducha.",
+      "fix_es": "Coloque un tapete antideslizante con ventosas y seque el piso después de bañarse.",
+      "cost_estimate_usd": 10,
+      "confidence": 0.7,
+      "region": null
+    },
+    {
+      "id": "h2",
+      "label_en": "missing grab bar",
+      "label_es": "falta barra de apoyo",
+      "severity": "high",
+      "description_es": "No hay una barra de apoyo junto al inodoro ni en la ducha.",
+      "fix_es": "Instale una barra de apoyo atornillada a la pared junto al inodoro y otra en la ducha.",
+      "cost_estimate_usd": 25,
+      "confidence": 0.6,
+      "region": null
+    },
+    {
+      "id": "h3",
+      "label_en": "loose rug",
+      "label_es": "alfombra suelta",
+      "severity": "medium",
+      "description_es": "La alfombra de la entrada del baño no tiene base antideslizante.",
+      "fix_es": "Retírela o fíjela al piso con cinta antideslizante por debajo.",
+      "cost_estimate_usd": 5,
+      "confidence": 0.6,
+      "region": null
+    }
+  ]
+}

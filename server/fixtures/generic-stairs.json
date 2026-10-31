@@ -1,0 +1,38 @@
+{
+  "roomType": "stairs",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "missing handrail",
+      "label_es": "falta pasamanos",
+      "severity": "high",
+      "description_es": "La escalera no tiene pasamanos para sostenerse.",
+      "fix_es": "Instale un pasamanos firme en al menos un lado de la escalera.",
+      "cost_estimate_usd": 40,
+      "confidence": 0.7,
+      "region": null
+    },
+    {
+      "id": "h2",
+      "label_en": "unmarked step edges",
+      "label_es": "orillas de gradas sin marcar",
+      "severity": "medium",
+      "description_es": "Las orillas de las gradas se confunden con el resto del piso.",
+      "fix_es": "Pegue cinta antideslizante de color contrastante en la orilla de cada grada.",
+      "cost_estimate_usd": 8,
+      "confidence": 0.6,
+      "region": null
+    },
+    {
+      "id": "h3",
+      "label_en": "items on stairs",
+      "label_es": "objetos en las gradas",
+      "severity": "high",
+      "description_es": "Hay objetos sobre las gradas.",
+      "fix_es": "Mantenga las gradas libres; guarde los objetos en otro lugar.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.6,
+      "region": null
+    }
+  ]
+}

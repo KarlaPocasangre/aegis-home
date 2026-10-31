@@ -1,0 +1,27 @@
+{
+  "roomType": "other",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "cluttered floor",
+      "label_es": "piso con objetos",
+      "severity": "medium",
+      "description_es": "Hay objetos en el piso por donde se camina.",
+      "fix_es": "Despeje el camino y guarde los objetos en cajas o repisas.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.5,
+      "region": null
+    },
+    {
+      "id": "h2",
+      "label_en": "poor lighting",
+      "label_es": "poca iluminación",
+      "severity": "medium",
+      "description_es": "El espacio tiene poca luz.",
+      "fix_es": "Use focos más potentes o agregue una lámpara.",
+      "cost_estimate_usd": 6,
+      "confidence": 0.5,
+      "region": null
+    }
+  ]
+}

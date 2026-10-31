@@ -1,0 +1,27 @@
+{
+  "roomType": "living_room",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "loose rug",
+      "label_es": "alfombra suelta",
+      "severity": "medium",
+      "description_es": "La alfombra de la sala tiene las orillas levantadas.",
+      "fix_es": "Fije las orillas con cinta doble cara o retire la alfombra.",
+      "cost_estimate_usd": 5,
+      "confidence": 0.6,
+      "region": null
+    },
+    {
+      "id": "h2",
+      "label_en": "low coffee table",
+      "label_es": "mesa de centro baja",
+      "severity": "low",
+      "description_es": "La mesa de centro está en medio del paso y es difícil de ver.",
+      "fix_es": "Mueva la mesa hacia un lado para dejar un camino libre.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.5,
+      "region": null
+    }
+  ]
+}

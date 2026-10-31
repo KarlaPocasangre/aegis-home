@@ -1,17 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { RegionSchema, SparkOutputSchema } from "../src/schemas/ai.js";
-
-const hazard = (overrides: Record<string, unknown> = {}) => ({
-  id: "h1",
-  label_en: "loose rug",
-  label_es: "alfombra suelta",
-  severity: "high",
-  description_es: "La alfombra no tiene base antideslizante junto a la ducha.",
-  fix_es: "Retírela o fíjela con cinta antideslizante por debajo.",
-  cost_estimate_usd: 8,
-  confidence: 0.8,
-  ...overrides,
-});
+import { sparkHazard as hazard } from "./helpers.js";
 
 describe("SparkOutputSchema", () => {
   it("accepts a valid response and strips unknown keys", () => {

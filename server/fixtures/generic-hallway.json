@@ -1,0 +1,27 @@
+{
+  "roomType": "hallway",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "dark hallway",
+      "label_es": "pasillo oscuro",
+      "severity": "high",
+      "description_es": "El pasillo tiene poca luz y el interruptor está lejos.",
+      "fix_es": "Instale un foco más potente o luces con sensor de movimiento.",
+      "cost_estimate_usd": 12,
+      "confidence": 0.6,
+      "region": null
+    },
+    {
+      "id": "h2",
+      "label_en": "cluttered hallway",
+      "label_es": "pasillo con objetos",
+      "severity": "medium",
+      "description_es": "Hay zapatos y objetos en el piso del pasillo.",
+      "fix_es": "Use una repisa o caja para guardar los zapatos fuera del paso.",
+      "cost_estimate_usd": 8,
+      "confidence": 0.6,
+      "region": null
+    }
+  ]
+}

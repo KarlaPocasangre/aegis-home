@@ -1,0 +1,27 @@
+{
+  "roomType": "outdoor",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "slippery surface",
+      "label_es": "superficie resbalosa",
+      "severity": "high",
+      "description_es": "El piso del patio se ve liso y con musgo o humedad.",
+      "fix_es": "Limpie el musgo y aplique pintura o cinta antideslizante en el camino.",
+      "cost_estimate_usd": 15,
+      "confidence": 0.6,
+      "region": null
+    },
+    {
+      "id": "h2",
+      "label_en": "garden hose on path",
+      "label_es": "manguera en el camino",
+      "severity": "medium",
+      "description_es": "Hay una manguera atravesada en el camino.",
+      "fix_es": "Enrolle la manguera en un soporte fuera del paso.",
+      "cost_estimate_usd": 8,
+      "confidence": 0.6,
+      "region": null
+    }
+  ]
+}

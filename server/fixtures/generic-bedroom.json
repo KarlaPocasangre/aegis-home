@@ -1,0 +1,27 @@
+{
+  "roomType": "bedroom",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "no night light",
+      "label_es": "sin luz nocturna",
+      "severity": "high",
+      "description_es": "El camino de la cama a la puerta queda oscuro de noche.",
+      "fix_es": "Coloque una luz nocturna enchufable o con sensor de movimiento junto a la cama.",
+      "cost_estimate_usd": 6,
+      "confidence": 0.6,
+      "region": null
+    },
+    {
+      "id": "h2",
+      "label_en": "loose cables",
+      "label_es": "cables sueltos",
+      "severity": "medium",
+      "description_es": "Hay cables cruzando el paso junto a la cama.",
+      "fix_es": "Pegue los cables a la pared o páselos por detrás de los muebles.",
+      "cost_estimate_usd": 3,
+      "confidence": 0.6,
+      "region": null
+    }
+  ]
+}
