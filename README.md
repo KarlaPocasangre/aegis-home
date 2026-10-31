@@ -23,6 +23,31 @@ aegis-home reports **environmental** hazards only. It does not diagnose conditio
 
 React + Vite + Tailwind (TypeScript) · Node.js + Express 5 (TypeScript) · PostgreSQL (Neon) + Prisma · Zod · Meta Model API (Muse Spark, SAM 3.1) · Vercel · Render.
 
+## Local development
+
+Requires Node.js 22.12+.
+
+```bash
+npm install
+cp .env.example server/.env   # fill in DATABASE_URL; keep MOCK_AI=true until the Meta API is wired
+npm run db:deploy -w server
+npm run dev:server            # http://localhost:3000
+npm run dev:client            # http://localhost:5173
+```
+
+Checks: `npm run typecheck`, `npm run lint`, `npm test` (API tests run against an in-memory Postgres).
+
+## Deployment
+
+| Part       | Host                      | Config                                                                                           |
+| ---------- | ------------------------- | ------------------------------------------------------------------------------------------------ |
+| API        | Render (free web service) | [`render.yaml`](render.yaml) — build runs migrations; health check `/health`                     |
+| Frontend   | Vercel                    | Root directory `client`; [`client/vercel.json`](client/vercel.json) sets CSP and privacy headers |
+| Database   | Neon Postgres             | `DATABASE_URL` with `sslmode=verify-full`                                                        |
+| Keep-alive | UptimeRobot               | `GET /health` every 5 minutes                                                                    |
+
+After each deploy: `npm run smoke-test -- https://<api-url>`.
+
 ## Documentation
 
 - [Context](docs/CONTEXT.md)
