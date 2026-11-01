@@ -9,14 +9,14 @@ const DISCLAIMER =
 function Column({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
-      <h2 className="text-sm font-bold tracking-wide text-teal-200 uppercase">{title}</h2>
+      <h2 className="text-sm font-bold tracking-wide text-mint uppercase">{title}</h2>
       <div className="mt-3 text-base text-stone-300">{children}</div>
     </div>
   );
 }
 
 const footerLink =
-  "inline-flex min-h-10 items-center text-stone-200 underline-offset-4 hover:text-white hover:underline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-teal-300";
+  "inline-flex min-h-10 items-center text-stone-200 underline-offset-4 hover:text-white hover:underline focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint";
 
 /**
  * `full` on the landing page; `compact` inside an evaluation, where the tab bar is the
@@ -38,7 +38,7 @@ export function SiteFooter({
   }
 
   return (
-    <footer className={`bg-stone-900 px-4 pt-14 pb-8 ${className}`}>
+    <footer className={`border-t border-white/10 bg-ink px-4 pt-16 pb-8 ${className}`}>
       <div className="mx-auto grid max-w-5xl gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr_1.2fr]">
         <Column title="Identidad y propósito">
           <p className="flex items-center gap-2 text-xl font-bold text-white">
@@ -100,12 +100,12 @@ export function SiteFooter({
 
       <p
         aria-hidden
-        className="mx-auto mt-14 max-w-6xl text-center font-display text-[18vw] leading-[0.85] tracking-tight text-stone-700 select-none lg:text-[11.5rem]"
+        className="mx-auto mt-14 max-w-6xl text-center font-display text-[18vw] leading-[0.85] tracking-tight text-white/[0.07] select-none lg:text-[11.5rem]"
       >
         aegis-home
       </p>
 
-      <div className="mx-auto mt-10 max-w-5xl border-t border-stone-700 pt-6 text-sm text-stone-400">
+      <div className="mx-auto mt-10 max-w-5xl border-t border-white/10 pt-6 text-sm text-stone-400">
         <p>{DISCLAIMER}</p>
         <p className="mt-2">En una emergencia, llame al 911.</p>
         <p className="mt-4">© 2026 aegis-home</p>

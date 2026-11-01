@@ -20,9 +20,21 @@ export const SEVERITY_LABELS: Record<Severity, string> = {
 
 export const SEVERITY_STYLES: Record<Severity, { badge: string; stroke: string; marker: string }> =
   {
-    high: { badge: "bg-red-100 text-red-800", stroke: "#dc2626", marker: "bg-red-600" },
-    medium: { badge: "bg-amber-100 text-amber-900", stroke: "#d97706", marker: "bg-amber-600" },
-    low: { badge: "bg-sky-100 text-sky-900", stroke: "#0284c7", marker: "bg-sky-600" },
+    high: {
+      badge: "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300",
+      stroke: "#dc2626",
+      marker: "bg-red-600",
+    },
+    medium: {
+      badge: "bg-amber-100 text-amber-900 dark:bg-amber-500/15 dark:text-amber-200",
+      stroke: "#d97706",
+      marker: "bg-amber-600",
+    },
+    low: {
+      badge: "bg-sky-100 text-sky-900 dark:bg-sky-500/15 dark:text-sky-200",
+      stroke: "#0284c7",
+      marker: "bg-sky-600",
+    },
   };
 
 const usd = new Intl.NumberFormat("es-SV", { style: "currency", currency: "USD" });

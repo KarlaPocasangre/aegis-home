@@ -17,7 +17,7 @@ export function ImageCanvasOverlay({ src, alt, hazards, activeId, onSelect }: Pr
     .filter(({ hazard }) => isValidRegion(hazard.region));
 
   return (
-    <div className="relative overflow-hidden rounded-lg bg-stone-200">
+    <div className="relative overflow-hidden rounded-lg bg-stone-200 dark:bg-white/5">
       <img src={src} alt={alt} className="block h-auto w-full" />
       <svg
         className="pointer-events-none absolute inset-0 h-full w-full"

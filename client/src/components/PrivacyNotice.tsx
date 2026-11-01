@@ -7,8 +7,8 @@ export function PrivacyNotice({
   onChange: (accepted: boolean) => void;
 }) {
   return (
-    <div className="rounded-lg border border-stone-200 bg-white p-4 text-sm text-stone-700">
-      <p className="font-semibold text-stone-900">Antes de empezar</p>
+    <div className="rounded-lg border border-stone-200 bg-white p-4 text-sm text-stone-700 dark:border-white/10 dark:bg-white/[0.03] dark:text-stone-300">
+      <p className="font-semibold text-stone-900 dark:text-white">Antes de empezar</p>
       <ul className="mt-2 list-disc space-y-1 pl-5">
         <li>Las fotos se analizan con inteligencia artificial de Meta y esta app no las guarda.</li>
         <li>Evite fotos con personas, rostros o documentos.</li>
@@ -18,12 +18,12 @@ export function PrivacyNotice({
         </li>
         <li>No es un servicio de emergencias.</li>
       </ul>
-      <label className="mt-3 flex items-start gap-2 font-medium text-stone-900">
+      <label className="mt-3 flex items-start gap-2 font-medium text-stone-900 dark:text-white">
         <input
           type="checkbox"
           checked={accepted}
           onChange={(e) => onChange(e.target.checked)}
-          className="mt-0.5 size-4"
+          className="mt-0.5 size-4 accent-teal-700 dark:accent-mint"
         />
         Entiendo y quiero continuar
       </label>

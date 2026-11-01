@@ -20,14 +20,14 @@ function DemoResult() {
   const select = (id: string) => setActiveId((current) => (current === id ? null : id));
 
   return (
-    <div id="ejemplo" className="rounded-2xl bg-white p-4 ring-1 ring-stone-200 sm:p-5">
+    <div id="ejemplo" className="rounded-2xl bg-white/[0.04] p-4 ring-1 ring-white/10 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="font-display text-3xl">Ejemplo: un baño</h3>
-        <span className="rounded-full bg-stone-100 px-3 py-1 text-sm font-semibold text-stone-700">
+        <span className="rounded-full bg-white/5 px-3 py-1 text-sm font-semibold text-stone-300">
           Resultado real grabado
         </span>
       </div>
-      <p className="mt-1 text-base text-stone-600">Toque un número o un riesgo para resaltarlo.</p>
+      <p className="mt-1 text-base text-stone-400">Toque un número o un riesgo para resaltarlo.</p>
       <div className="mt-4">
         <ImageCanvasOverlay
           src={DEMO_IMAGE}
@@ -48,7 +48,7 @@ function DemoResult() {
           />
         ))}
       </ol>
-      <p className="mt-3 text-sm text-stone-600">
+      <p className="mt-3 text-sm text-stone-400">
         Respuesta de Muse Spark y SAM 3.1 sobre una ilustración creada para esta demostración.
       </p>
     </div>
@@ -108,12 +108,12 @@ function StartCard() {
   return (
     <div
       id="empezar"
-      className="space-y-4 rounded-2xl bg-white p-4 shadow-lg ring-2 ring-teal-700/15 sm:p-6"
+      className="space-y-4 rounded-2xl bg-white/[0.04] p-4 shadow-lg ring-2 ring-white/10 sm:p-6"
     >
       <h3 className="font-display text-4xl">Empezar una evaluación</h3>
       <PrivacyNotice accepted={accepted} onChange={setAccepted} />
       <div>
-        <label htmlFor={nameId} className="block text-base font-semibold text-stone-800">
+        <label htmlFor={nameId} className="block text-base font-semibold text-stone-100">
           Nombre para esta casa (opcional)
         </label>
         <input
@@ -122,26 +122,26 @@ function StartCard() {
           onChange={(e) => setName(e.target.value)}
           maxLength={80}
           placeholder="Ej.: Casa de la abuela"
-          className="mt-1 block min-h-12 w-full rounded-lg border border-stone-300 bg-white px-3 text-base"
+          className="mt-1 block min-h-12 w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 text-base"
         />
       </div>
       <button
         type="button"
         onClick={start}
         disabled={!accepted || busy !== null}
-        className="flex min-h-14 w-full items-center justify-center rounded-xl bg-teal-700 px-4 text-lg font-semibold text-white transition hover:bg-teal-800 active:scale-[0.98] disabled:opacity-50"
+        className="flex min-h-14 w-full items-center justify-center rounded-xl bg-mint px-4 text-lg font-semibold text-ink transition hover:bg-mint-soft active:scale-[0.98] disabled:opacity-50"
       >
         {busy === "create" ? "Creando…" : <RollText>Empezar evaluación</RollText>}
       </button>
       {busy === "sample" && <AnalysisProgress />}
       {error && (
-        <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-base text-red-800">
+        <p role="alert" className="rounded-lg bg-red-500/10 px-4 py-3 text-base text-red-200">
           {error}
         </p>
       )}
       <SampleImagePicker onPick={trySample} disabled={!accepted || busy !== null} />
       {!accepted && (
-        <p className="text-sm text-stone-600">Marque la casilla de arriba para continuar.</p>
+        <p className="text-sm text-stone-400">Marque la casilla de arriba para continuar.</p>
       )}
     </div>
   );

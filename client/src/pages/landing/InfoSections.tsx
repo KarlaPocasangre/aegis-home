@@ -17,21 +17,21 @@ const PROBLEM_STORY =
 export function ProblemSection() {
   return (
     <Band id="por-que" labelledBy="por-que-title">
-      <h2 className="text-sm font-bold tracking-widest text-teal-700 uppercase" id="por-que-title">
+      <h2 className="text-sm font-bold tracking-widest text-mint uppercase" id="por-que-title">
         Por qué importa
       </h2>
       <ScrollFillText
         text={PROBLEM_STORY}
-        className="mt-6 font-display text-4xl leading-[1.15] text-stone-900 sm:text-6xl"
+        className="mt-6 font-display text-4xl leading-[1.15] text-white sm:text-6xl"
       />
       <div className="mt-16 grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-start">
-        <p className="text-lg text-stone-700">
+        <p className="text-lg text-stone-300">
           Según la{" "}
           <a
             href={WHO_FALLS}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-semibold text-teal-800 underline underline-offset-4"
+            className="font-semibold text-mint underline underline-offset-4"
           >
             Organización Mundial de la Salud
           </a>
@@ -44,10 +44,10 @@ export function ProblemSection() {
             <li
               data-stagger
               key={risk.title}
-              className="rounded-2xl bg-stone-50 p-5 ring-1 ring-stone-200 transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl hover:shadow-stone-200/70"
+              className="rounded-2xl bg-white/[0.03] p-5 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.06] hover:shadow-xl hover:shadow-black/40"
             >
               <p className="text-lg font-semibold">{risk.title}</p>
-              <p className="mt-1 text-base text-stone-600">{risk.text}</p>
+              <p className="mt-1 text-base text-stone-400">{risk.text}</p>
             </li>
           ))}
         </ul>
@@ -102,13 +102,13 @@ export function FeaturesSection() {
           <li
             data-stagger
             key={f.title}
-            className="rounded-2xl bg-white p-6 ring-1 ring-stone-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-200/70"
+            className="rounded-2xl bg-white/[0.04] p-6 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/40"
           >
-            <span className="flex size-11 items-center justify-center rounded-xl bg-teal-50 text-teal-800">
+            <span className="flex size-11 items-center justify-center rounded-xl bg-mint/10 text-mint">
               {icon(f.icon)}
             </span>
             <p className="mt-4 text-lg font-semibold">{f.title}</p>
-            <p className="mt-1 text-base text-stone-600">{f.text}</p>
+            <p className="mt-1 text-base text-stone-400">{f.text}</p>
           </li>
         ))}
       </ul>
@@ -138,15 +138,15 @@ export function TechSection() {
           <li
             data-stagger
             key={step.name}
-            className="relative rounded-2xl bg-teal-800/70 p-5 ring-1 ring-teal-600"
+            className="relative rounded-2xl bg-white/[0.04] p-5 ring-1 ring-white/10"
           >
-            <p className="text-sm font-semibold text-teal-200">Paso {index + 1}</p>
+            <p className="text-sm font-semibold text-mint">Paso {index + 1}</p>
             <p className="mt-1 text-xl font-bold">{step.name}</p>
-            <p className="mt-2 text-base text-teal-50">{step.detail}</p>
+            <p className="mt-2 text-base text-stone-300">{step.detail}</p>
             {index < PIPELINE.length - 1 && (
               <span
                 aria-hidden
-                className="absolute top-1/2 -right-3 hidden -translate-y-1/2 text-2xl text-teal-300 lg:block"
+                className="absolute top-1/2 -right-3 hidden -translate-y-1/2 text-2xl text-mint lg:block"
               >
                 →
               </span>
@@ -154,7 +154,7 @@ export function TechSection() {
           </li>
         ))}
       </ol>
-      <p className="mt-8 text-base text-teal-100">
+      <p className="mt-8 text-base text-stone-300">
         Si el servicio de IA no responde, la app lo dice claramente y nunca presenta un ejemplo como
         si fuera un análisis nuevo.
       </p>
@@ -196,7 +196,7 @@ export function PrivacySection() {
             title="Hecho para cuidar, también sus datos"
             intro="Las fotos de una casa son información sensible. aegis-home guarda lo mínimo y por el menor tiempo posible."
           />
-          <p className="mt-6 flex items-start gap-3 rounded-xl bg-amber-50 p-4 text-base text-amber-950 ring-1 ring-amber-200">
+          <p className="mt-6 flex items-start gap-3 rounded-xl bg-amber-400/10 p-4 text-base text-amber-100 ring-1 ring-amber-400/30">
             {icon(ICONS.shield, "mt-0.5 size-5")}
             Evite fotos con personas, rostros o documentos. Las fotos se envían a la IA de Meta para
             su análisis.
@@ -207,11 +207,11 @@ export function PrivacySection() {
             <li
               data-stagger
               key={p.title}
-              className="rounded-2xl bg-stone-50 p-5 ring-1 ring-stone-200 transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl hover:shadow-stone-200/70"
+              className="rounded-2xl bg-white/[0.03] p-5 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.06] hover:shadow-xl hover:shadow-black/40"
             >
-              <span className="text-teal-800">{icon(p.icon)}</span>
+              <span className="text-mint">{icon(p.icon)}</span>
               <p className="mt-3 text-lg font-semibold">{p.title}</p>
-              <p className="mt-1 text-base text-stone-600">{p.text}</p>
+              <p className="mt-1 text-base text-stone-400">{p.text}</p>
             </li>
           ))}
         </ul>
@@ -248,7 +248,7 @@ export function AboutSection() {
             eyebrow="Detrás de aegis-home"
             title="Una herramienta para la familia que cuida a distancia"
           />
-          <div className="mt-4 space-y-4 text-lg text-stone-700">
+          <div className="mt-4 space-y-4 text-lg text-stone-300">
             <p>
               Muchos de nosotros vivimos lejos de nuestros padres o abuelos y no siempre podemos
               revisar su casa. Una evaluación profesional en persona no está al alcance de todos, y
@@ -266,14 +266,14 @@ export function AboutSection() {
             <li
               data-stagger
               key={v.title}
-              className="flex gap-4 rounded-xl bg-white p-5 ring-1 ring-stone-200"
+              className="flex gap-4 rounded-xl bg-white/[0.04] p-5 ring-1 ring-white/10"
             >
-              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-800">
+              <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-mint/10 text-mint">
                 {icon(v.icon)}
               </span>
               <div>
                 <p className="text-lg font-semibold">{v.title}</p>
-                <p className="mt-1 text-base text-stone-600">{v.text}</p>
+                <p className="mt-1 text-base text-stone-400">{v.text}</p>
               </div>
             </li>
           ))}
@@ -319,19 +319,19 @@ export function FaqSection() {
           eyebrow="Preguntas frecuentes"
           title="Lo que suelen preguntarnos"
         />
-        <div className="divide-y divide-stone-200 rounded-xl ring-1 ring-stone-200">
+        <div className="divide-y divide-white/10 rounded-xl ring-1 ring-white/10">
           {FAQ.map((item) => (
             <details key={item.q} className="faq group px-5">
               <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 text-lg font-semibold [&::-webkit-details-marker]:hidden">
                 {item.q}
                 <span
                   aria-hidden
-                  className="text-2xl text-teal-700 transition-transform group-open:rotate-45"
+                  className="text-2xl text-mint transition-transform group-open:rotate-45"
                 >
                   +
                 </span>
               </summary>
-              <p className="pb-5 text-base text-stone-700">{item.a}</p>
+              <p className="pb-5 text-base text-stone-300">{item.a}</p>
             </details>
           ))}
         </div>
@@ -343,21 +343,21 @@ export function FaqSection() {
 export function FinalCta() {
   return (
     <section className="px-4 pb-20 sm:pb-28">
-      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-gradient-to-br from-teal-700 via-teal-800 to-teal-950 px-6 py-16 text-center text-white sm:px-12 sm:py-24">
+      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-ink-2 px-6 ring-1 ring-white/10 py-16 text-center text-white sm:px-12 sm:py-24">
         <div
           aria-hidden
-          className="absolute -top-24 left-1/2 size-[36rem] -translate-x-1/2 rounded-full bg-teal-400/20 blur-3xl"
+          className="absolute -top-24 left-1/2 size-[36rem] -translate-x-1/2 rounded-full bg-mint/15 blur-3xl"
         />
         <div className="relative">
           <DisplayHeading className="mx-auto max-w-3xl text-5xl sm:text-7xl">
             Empiece por <em>un solo espacio</em>
           </DisplayHeading>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-teal-50 sm:text-xl">
+          <p className="mx-auto mt-6 max-w-xl text-lg text-stone-300 sm:text-xl">
             El baño suele ser el lugar más importante. Una foto basta para tener su primer plan.
           </p>
           <a
             href="#empezar"
-            className="mt-10 inline-flex min-h-14 items-center rounded-xl bg-white px-8 text-lg font-semibold text-teal-900 transition hover:bg-teal-50 active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="mt-10 inline-flex min-h-14 items-center rounded-full bg-mint px-8 text-lg font-semibold text-ink shadow-[0_0_40px_-8px] shadow-mint/60 transition hover:bg-mint-soft active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint"
           >
             <RollText>Analizar mi casa</RollText>
           </a>

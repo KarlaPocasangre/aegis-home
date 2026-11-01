@@ -2,9 +2,9 @@ import { useRef, type ReactNode } from "react";
 import { useLineReveal, useStaggerIn } from "../../lib/motion";
 
 const TONES = {
-  white: "bg-white",
-  stone: "bg-stone-50",
-  teal: "bg-teal-900 text-white",
+  white: "bg-white/[0.04]",
+  stone: "bg-white/[0.03]",
+  teal: "bg-ink-2 text-white",
 } as const;
 
 /** Full-width landing band with a centered column. Children marked `data-stagger` fade up in turn. */
@@ -70,7 +70,7 @@ export function SectionHeading({
   return (
     <div className="max-w-2xl">
       <p
-        className={`text-sm font-bold tracking-widest uppercase ${invert ? "text-teal-200" : "text-teal-700"}`}
+        className={`text-sm font-bold tracking-widest uppercase ${invert ? "text-mint" : "text-mint"}`}
       >
         {eyebrow}
       </p>
@@ -78,7 +78,7 @@ export function SectionHeading({
         {title}
       </DisplayHeading>
       {intro && (
-        <p className={`mt-5 text-lg ${invert ? "text-teal-50" : "text-stone-700"}`}>{intro}</p>
+        <p className={`mt-5 text-lg ${invert ? "text-stone-300" : "text-stone-300"}`}>{intro}</p>
       )}
     </div>
   );

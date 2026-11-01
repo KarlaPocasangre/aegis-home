@@ -1,8 +1,18 @@
 @import "tailwindcss";
 
+/* Shared components opt into dark styles inside a `.dark` scope (the landing page). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Editorial serif for display headings; body text stays in the system sans. */
   --font-display: "Instrument Serif", ui-serif, Georgia, serif;
+
+  /* Landing palette: near-black, glass surfaces, mint accent. */
+  --color-ink: #0a0b0b;
+  --color-ink-2: #111312;
+  --color-mint: #9ff5a6;
+  --color-mint-strong: #7ee88a;
+  --color-mint-soft: #c9fbcd;
 }
 
 /* In-page anchors on the landing page; clear of the sticky header. */
@@ -65,4 +75,17 @@
 .split-line {
   padding-bottom: 0.08em;
   margin-bottom: -0.08em;
+}
+
+/* Perspective dot field behind the hero, fading into the page. */
+.dot-field {
+  background-image: radial-gradient(rgb(255 255 255 / 0.22) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+  transform: perspective(700px) rotateX(62deg);
+  transform-origin: 50% 100%;
+  mask-image: linear-gradient(to top, black 10%, transparent 75%);
+}
+.dot-grid {
+  background-image: radial-gradient(rgb(255 255 255 / 0.08) 1px, transparent 1.2px);
+  background-size: 24px 24px;
 }

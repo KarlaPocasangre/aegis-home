@@ -37,9 +37,9 @@ function StoryVisual({ stage }: { stage: number }) {
     <div
       inert
       aria-hidden
-      className="relative mx-auto w-full max-w-md rounded-[2rem] bg-stone-900 p-3 shadow-2xl"
+      className="relative mx-auto w-full max-w-md rounded-[2rem] bg-black p-3 shadow-2xl ring-1 ring-white/10"
     >
-      <div className="relative overflow-hidden rounded-[1.4rem] bg-stone-800">
+      <div className="relative overflow-hidden rounded-[1.4rem] bg-ink-2">
         <div className={stage >= 2 ? "" : "[&_svg]:opacity-0 [&_button]:opacity-0"}>
           <ImageCanvasOverlay
             src={DEMO_IMAGE}
@@ -68,7 +68,7 @@ function StoryVisual({ stage }: { stage: number }) {
             <li
               key={h.id}
               style={{ transitionDelay: stage === 1 ? `${i * 90}ms` : "0ms" }}
-              className="rounded-full bg-white/95 px-3 py-1 text-sm font-semibold text-stone-900 shadow"
+              className="rounded-full bg-ink/85 px-3 py-1 text-sm font-semibold text-white shadow ring-1 ring-white/15 backdrop-blur"
             >
               <span
                 className={`mr-1.5 inline-block size-2 rounded-full ${SEVERITY_STYLES[h.severity].marker}`}
@@ -80,18 +80,18 @@ function StoryVisual({ stage }: { stage: number }) {
 
         {/* Stage 3: the plan */}
         <div
-          className={`absolute inset-x-3 bottom-3 rounded-2xl bg-white p-4 shadow-xl ${fade(stage === 3)}`}
+          className={`absolute inset-x-3 bottom-3 rounded-2xl bg-ink/90 p-4 shadow-xl ring-1 ring-white/10 backdrop-blur ${fade(stage === 3)}`}
         >
           <div className="flex items-baseline justify-between">
-            <p className="font-semibold text-stone-900">Plan de acción</p>
-            <p className="text-sm text-stone-600">{formatUsd(demoCost)}</p>
+            <p className="font-semibold text-white">Plan de acción</p>
+            <p className="text-sm text-stone-400">{formatUsd(demoCost)}</p>
           </div>
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-stone-200">
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
             <div className="h-full w-1/4 rounded-full bg-emerald-500" />
           </div>
           <ul className="mt-3 space-y-1.5 text-sm">
             {DEMO_HAZARDS.slice(0, 3).map((h, i) => (
-              <li key={h.id} className="flex items-center gap-2 text-stone-800">
+              <li key={h.id} className="flex items-center gap-2 text-stone-100">
                 <span
                   className={`flex size-4 items-center justify-center rounded border ${i === 0 ? "border-emerald-600 bg-emerald-600 text-white" : "border-stone-400"}`}
                 >
@@ -158,15 +158,15 @@ export function HowItWorksStory() {
                 className={`transition-opacity duration-500 motion-reduce:transition-none ${active === index ? "lg:opacity-100" : "lg:opacity-35"}`}
               >
                 <div className="flex items-center gap-4">
-                  <span className="flex size-12 items-center justify-center rounded-xl bg-teal-700 text-white">
+                  <span className="flex size-12 items-center justify-center rounded-xl bg-mint text-ink">
                     {icon(step.icon)}
                   </span>
-                  <span className="font-display text-5xl text-stone-300" aria-hidden>
+                  <span className="font-display text-5xl text-white/15" aria-hidden>
                     0{index + 1}
                   </span>
                 </div>
-                <h3 className="mt-5 font-display text-4xl text-stone-900">{step.title}</h3>
-                <p className="mt-3 max-w-md text-lg text-stone-700">{step.text}</p>
+                <h3 className="mt-5 font-display text-4xl text-white">{step.title}</h3>
+                <p className="mt-3 max-w-md text-lg text-stone-300">{step.text}</p>
               </div>
               <div className="mt-8 lg:hidden">
                 <StoryVisual stage={index} />

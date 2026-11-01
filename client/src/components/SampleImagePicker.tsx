@@ -8,7 +8,9 @@ interface Props {
 export function SampleImagePicker({ onPick, disabled }: Props) {
   return (
     <div>
-      <p className="text-sm font-semibold text-stone-700">¿No tiene una foto a mano?</p>
+      <p className="text-sm font-semibold text-stone-700 dark:text-stone-300">
+        ¿No tiene una foto a mano?
+      </p>
       <div className="mt-2 grid grid-cols-2 gap-3">
         {SAMPLE_IMAGES.map((sample) => (
           <button
@@ -16,7 +18,7 @@ export function SampleImagePicker({ onPick, disabled }: Props) {
             type="button"
             disabled={disabled}
             onClick={() => onPick(sample)}
-            className="group overflow-hidden rounded-lg border border-stone-200 bg-white text-left hover:border-teal-600 disabled:opacity-50"
+            className="group overflow-hidden rounded-lg border border-stone-200 bg-white text-left transition hover:border-teal-600 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-mint/60"
           >
             <img
               src={sample.url}
@@ -25,10 +27,10 @@ export function SampleImagePicker({ onPick, disabled }: Props) {
               loading="lazy"
             />
             <span className="block px-3 py-2 text-sm">
-              <span className="block font-semibold text-teal-800 group-hover:underline">
+              <span className="block font-semibold text-teal-800 group-hover:underline dark:text-mint">
                 Usar imagen de prueba
               </span>
-              <span className="text-stone-600">{sample.label}</span>
+              <span className="text-stone-600 dark:text-stone-400">{sample.label}</span>
             </span>
           </button>
         ))}
