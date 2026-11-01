@@ -1,3 +1,4 @@
+import { useSmoothScroll } from "../lib/smoothScroll";
 import { AnalysisSection } from "./landing/AnalysisSection";
 import { HeroSection } from "./landing/HeroSection";
 import { HowItWorksStory } from "./landing/HowItWorksStory";
@@ -12,6 +13,7 @@ import {
 } from "./landing/InfoSections";
 
 export function LandingPage() {
+  useSmoothScroll();
   return (
     <>
       <HeroSection />

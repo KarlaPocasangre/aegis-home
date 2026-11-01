@@ -6,6 +6,7 @@ import { DEMO_HAZARDS, DEMO_IMAGE } from "../../lib/demoResult";
 import { capitalize, formatUsd } from "../../lib/labels";
 import { gsap, MOTION_OK, useGSAP } from "../../lib/motion";
 import { householdPath, linkHandler } from "../../lib/router";
+import { scrollToHash } from "../../lib/smoothScroll";
 import { lastHousehold } from "../../lib/storage";
 import { DisplayHeading, ICONS, icon } from "./layout";
 
@@ -14,10 +15,10 @@ const TRUST = ["Gratis y sin crear cuenta", "Las fotos no se guardan", "Pensado 
 const topHazard = DEMO_HAZARDS[0];
 const demoCost = DEMO_HAZARDS.reduce((sum, h) => sum + h.costEstimateUsd, 0);
 
-const scrollTo = (id: string) => () => document.getElementById(id)?.scrollIntoView();
+const scrollTo = (id: string) => () => scrollToHash(`#${id}`);
 
 const primaryCta =
-  "inline-flex min-h-14 items-center rounded-xl bg-teal-700 px-6 text-lg font-semibold text-white shadow-sm transition hover:bg-teal-800 active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-teal-700";
+  "inline-flex min-h-14 items-center rounded-full bg-mint px-7 text-lg font-semibold text-ink shadow-[0_0_40px_-10px] shadow-mint/70 transition hover:bg-mint-soft active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint";
 
 export function HeroSection() {
   const saved = lastHousehold.get();
@@ -69,33 +70,29 @@ export function HeroSection() {
       ref={root}
       id="inicio"
       aria-labelledby="hero-title"
-      className="relative overflow-hidden bg-gradient-to-b from-teal-50 via-white to-white px-4 pt-14 pb-20 sm:pt-20 sm:pb-28"
+      className="relative overflow-hidden bg-ink px-4 pt-14 pb-20 sm:pt-20 sm:pb-28"
     >
       <div
         aria-hidden
-        className="absolute -top-32 -right-32 size-[32rem] rounded-full bg-teal-200/40 blur-3xl"
+        className="absolute -top-40 left-1/2 size-[40rem] -translate-x-1/2 rounded-full bg-mint/10 blur-3xl"
       />
       <div
         aria-hidden
-        className="absolute top-1/2 -left-40 size-80 rounded-full bg-amber-100/50 blur-3xl"
+        className="dot-field pointer-events-none absolute inset-x-[-25%] bottom-0 h-[70%]"
       />
       <div className="relative mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.15fr_1fr]">
         <div>
           <p
             data-hero-copy
-            className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-sm font-semibold text-teal-800 ring-1 ring-teal-200"
+            className="inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-1 text-sm font-semibold text-mint ring-1 ring-mint/30"
           >
             {icon(ICONS.sparkle, "size-4")}
             Con Muse Spark y SAM 3.1 de Meta
           </p>
-          <DisplayHeading
-            as="h1"
-            id="hero-title"
-            className="mt-6 text-5xl text-stone-900 sm:text-7xl"
-          >
-            Una casa más segura para <em className="text-teal-800">quienes más queremos</em>
+          <DisplayHeading as="h1" id="hero-title" className="mt-6 text-5xl text-white sm:text-7xl">
+            Una casa más segura para <em className="text-stone-400">quienes más queremos</em>
           </DisplayHeading>
-          <p data-hero-copy className="mt-6 max-w-xl text-lg text-stone-700 sm:text-xl">
+          <p data-hero-copy className="mt-6 max-w-xl text-lg text-stone-300 sm:text-xl">
             Tome fotos de la casa de su mamá, papá o abuelos. La inteligencia artificial señala lo
             que puede provocar una caída y le da un plan de arreglos sencillos, en orden y con costo
             aproximado.
@@ -117,7 +114,7 @@ export function HeroSection() {
             )}
             <a
               href="#ejemplo"
-              className="inline-flex min-h-14 items-center rounded-xl bg-white px-6 text-lg font-semibold text-teal-900 ring-2 ring-teal-700/20 transition hover:ring-teal-700/50 active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-teal-700"
+              className="inline-flex min-h-14 items-center rounded-full bg-white/5 px-7 text-lg font-semibold text-white ring-1 ring-white/15 transition hover:bg-white/10 active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint"
             >
               <RollText>Ver un ejemplo real</RollText>
             </a>
@@ -125,11 +122,11 @@ export function HeroSection() {
 
           <ul
             data-hero-copy
-            className="mt-9 flex flex-wrap gap-x-6 gap-y-2 text-base text-stone-700"
+            className="mt-9 flex flex-wrap gap-x-6 gap-y-2 text-base text-stone-300"
           >
             {TRUST.map((item) => (
               <li key={item} className="flex items-center gap-2">
-                <span className="text-teal-700">{icon(ICONS.check, "size-5")}</span>
+                <span className="text-mint">{icon(ICONS.check, "size-5")}</span>
                 {item}
               </li>
             ))}
@@ -139,7 +136,7 @@ export function HeroSection() {
         <figure className="relative">
           <div
             data-hero-photo
-            className="rounded-2xl bg-white p-3 shadow-2xl ring-1 ring-stone-200"
+            className="rounded-2xl bg-white/[0.04] p-3 shadow-2xl ring-1 ring-white/10"
           >
             <div className="relative overflow-hidden rounded-lg">
               <ImageCanvasOverlay
@@ -152,25 +149,25 @@ export function HeroSection() {
               <div
                 data-scan
                 aria-hidden
-                className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-teal-300/40 to-transparent opacity-0"
+                className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-mint/40 to-transparent opacity-0"
               />
             </div>
           </div>
           {topHazard && (
             <div
               data-hero-card="hazard"
-              className="relative z-10 -mt-2 ml-4 max-w-[17rem] rounded-xl bg-white p-3 shadow-lg ring-1 ring-stone-200 sm:-ml-6"
+              className="relative z-10 -mt-2 ml-4 max-w-[17rem] rounded-xl bg-white/[0.04] p-3 shadow-lg ring-1 ring-white/10 sm:-ml-6"
             >
-              <p className="text-xs font-bold tracking-wide text-red-700 uppercase">Riesgo alto</p>
-              <p className="mt-0.5 font-semibold text-stone-900">{capitalize(topHazard.labelEs)}</p>
-              <p className="mt-0.5 text-sm text-stone-600">{topHazard.fixEs.split(".")[0]}.</p>
+              <p className="text-xs font-bold tracking-wide text-red-400 uppercase">Riesgo alto</p>
+              <p className="mt-0.5 font-semibold text-white">{capitalize(topHazard.labelEs)}</p>
+              <p className="mt-0.5 text-sm text-stone-400">{topHazard.fixEs.split(".")[0]}.</p>
             </div>
           )}
           <div
             data-hero-card="plan"
-            className="absolute -top-4 -right-2 rounded-xl bg-teal-800 px-4 py-3 text-white shadow-lg sm:-right-4"
+            className="absolute -top-4 -right-2 rounded-xl bg-mint px-4 py-3 text-ink shadow-lg sm:-right-4"
           >
-            <p className="text-xs font-semibold text-teal-100">Plan de este baño</p>
+            <p className="text-xs font-semibold text-ink/70">Plan de este baño</p>
             <p className="text-lg font-bold">
               <CountUp to={DEMO_HAZARDS.length} delay={2.2} /> arreglos ·{" "}
               <CountUp to={demoCost} format={formatUsd} delay={2.2} />

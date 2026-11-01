@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
 import { householdPath, linkHandler } from "../lib/router";
+import { scrollToHash } from "../lib/smoothScroll";
 import { lastHousehold } from "../lib/storage";
 import { Logo } from "./Logo";
 
@@ -12,9 +13,9 @@ export const LANDING_SECTIONS = [
 ];
 
 const linkClass =
-  "flex min-h-12 items-center rounded-lg px-3 text-base font-semibold text-stone-700 hover:bg-stone-100 hover:text-stone-900 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-teal-700";
+  "flex min-h-12 items-center rounded-lg px-3 text-base font-semibold text-stone-300 hover:bg-white/5 hover:text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint";
 const ctaClass =
-  "flex min-h-12 items-center justify-center rounded-lg bg-teal-700 px-4 text-base font-semibold text-white hover:bg-teal-800 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-teal-700";
+  "flex min-h-12 items-center justify-center rounded-full bg-mint px-4 text-base font-semibold text-ink hover:bg-mint-soft focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint";
 
 // The landing page is one linear flow: in-page anchors (smooth scroll) instead of views.
 // On phones the anchors fold into a menu; the main action stays visible next to it.
@@ -29,7 +30,7 @@ export function LandingNavbar() {
     event.preventDefault();
     setOpen(false);
     requestAnimationFrame(() => {
-      document.querySelector(href)?.scrollIntoView();
+      scrollToHash(href);
       window.history.replaceState(null, "", href);
     });
   };
@@ -56,7 +57,7 @@ export function LandingNavbar() {
   );
 
   return (
-    <header className="sticky top-0 z-30 border-b border-stone-200 bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-white/10 bg-ink/75 backdrop-blur-md">
       <div className="mx-auto flex max-w-5xl items-center gap-2 px-4 py-2">
         <Logo />
         <nav aria-label="Secciones de la página" className="ml-auto hidden lg:block">
@@ -78,7 +79,7 @@ export function LandingNavbar() {
             aria-expanded={open}
             aria-controls={menuId}
             onClick={() => setOpen((o) => !o)}
-            className="flex size-12 items-center justify-center rounded-lg text-stone-800 ring-1 ring-stone-300 hover:bg-stone-100 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-teal-700 lg:hidden"
+            className="flex size-12 items-center justify-center rounded-lg text-stone-100 ring-1 ring-white/20 hover:bg-white/5 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint lg:hidden"
           >
             <span className="sr-only">{open ? "Cerrar menú" : "Abrir menú"}</span>
             <svg
@@ -100,7 +101,7 @@ export function LandingNavbar() {
         <nav
           id={menuId}
           aria-label="Secciones de la página"
-          className="border-t border-stone-200 bg-white px-4 pb-4 lg:hidden"
+          className="border-t border-white/10 bg-ink px-4 pb-4 lg:hidden"
         >
           <ul className="mx-auto max-w-5xl pt-2">
             {LANDING_SECTIONS.map((s) => (

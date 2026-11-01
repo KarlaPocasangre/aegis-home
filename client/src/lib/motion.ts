@@ -6,6 +6,10 @@ import type { RefObject } from "react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
 
+// Web fonts change heading heights after first layout; recompute trigger positions once loaded
+// so nothing waits on a trigger that sits in the wrong place.
+void document.fonts?.ready.then(() => ScrollTrigger.refresh());
+
 export { gsap, ScrollTrigger, SplitText, useGSAP };
 
 /**
