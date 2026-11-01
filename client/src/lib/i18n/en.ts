@@ -394,7 +394,8 @@ export const en: Dict = {
     notFoundHint: "It may have been deleted.",
     photoAlt: (room: string) => `Photo of the ${room.toLowerCase()}`,
     noPhoto:
-      "Photos aren't stored. To see the hazards highlighted, upload this room's photo again.",
+      "For privacy, the photo wasn't kept. Choose the same photo to see the markers again: it isn't uploaded or analyzed again.",
+    restorePhoto: "Choose the same photo",
     noHazards:
       "We didn't see hazards in this photo. That doesn't guarantee there are none: if it was dark or far away, try again with more light or from another angle.",
     summaryTitle: (room: string, n: number) =>

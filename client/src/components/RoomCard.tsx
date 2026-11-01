@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { linkHandler } from "../lib/router";
 import { revealElement } from "../lib/scrollTo";
 import { useLang, useT } from "../lib/i18n";
 import { roomLabel } from "../lib/labels";
-import { useRoomImage } from "../lib/roomImages";
+import { roomImages, useRoomImage } from "../lib/roomImages";
 import type { Room } from "../lib/types";
 import { FallbackBanner } from "./FallbackBanner";
 import { HazardCard, hazardElementId } from "./HazardCard";
@@ -17,6 +17,36 @@ interface Props {
   showTitle?: boolean;
   /** Makes the title a link to the room's own page. */
   href?: string;
+}
+
+/**
+ * After a reload the photo is gone (it is never stored). Choosing the same photo shows the
+ * markers again on this device only: nothing is uploaded or re-analyzed, so no duplicate room.
+ */
+function RestorePhoto({ roomId }: { roomId: string }) {
+  const r = useT().roomsView;
+  const inputId = useId();
+  return (
+    <div className="rounded-lg bg-white/5 px-4 py-3">
+      <p className="text-base text-stone-300">{r.noPhoto}</p>
+      <label
+        htmlFor={inputId}
+        className="mt-3 inline-flex min-h-12 cursor-pointer items-center rounded-lg bg-white/10 px-4 text-base font-semibold text-white hover:bg-white/20 has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-mint"
+      >
+        {r.restorePhoto}
+        <input
+          id={inputId}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) roomImages.set(roomId, URL.createObjectURL(file));
+          }}
+          className="sr-only"
+        />
+      </label>
+    </div>
+  );
 }
 
 export function RoomCard({ room, initialActiveId, showTitle = true, href }: Props) {
@@ -65,9 +95,7 @@ export function RoomCard({ room, initialActiveId, showTitle = true, href }: Prop
             onSelect={selectFromPhoto}
           />
         ) : (
-          <p className="rounded-lg bg-white/5 px-4 py-3 text-sm text-stone-400">
-            {tr.roomsView.noPhoto}
-          </p>
+          <RestorePhoto roomId={room.id} />
         )}
         {room.hazards.length === 0 ? (
           <p className="rounded-lg bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">

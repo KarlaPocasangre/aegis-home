@@ -1,7 +1,8 @@
 import { useSyncExternalStore } from "react";
 
 // Photos are never stored by the app: the preview lives only in this tab's memory.
-// After a reload the plan is still there, but the photo has to be uploaded again to see highlights.
+// After a reload the plan is still there; choosing the same photo again (kept local, never
+// uploaded) brings the highlights back.
 const images = new Map<string, string>();
 const listeners = new Set<() => void>();
 let version = 0;

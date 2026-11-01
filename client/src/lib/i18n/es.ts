@@ -403,7 +403,8 @@ export const es = {
     notFoundHint: "Puede que se haya borrado.",
     photoAlt: (room: string) => `Foto de ${room.toLowerCase()}`,
     noPhoto:
-      "Las fotos no se guardan. Para ver los riesgos resaltados, vuelva a subir la foto de este espacio.",
+      "Por privacidad, la foto no se guardó. Elija la misma foto para ver los marcadores otra vez: no se sube ni se vuelve a analizar.",
+    restorePhoto: "Elegir la misma foto",
     noHazards:
       "No vimos riesgos en esta foto. Eso no garantiza que no los haya: si estaba oscura o lejos, pruebe con más luz o desde otro ángulo.",
     summaryTitle: (room: string, n: number) =>

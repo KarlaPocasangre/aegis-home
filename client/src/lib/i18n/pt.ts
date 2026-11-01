@@ -404,7 +404,8 @@ export const pt: Dict = {
     notFoundHint: "Ele pode ter sido apagado.",
     photoAlt: (room: string) => `Foto de ${room.toLowerCase()}`,
     noPhoto:
-      "As fotos não são guardadas. Para ver os riscos destacados, envie de novo a foto deste cômodo.",
+      "Por privacidade, a foto não foi guardada. Escolha a mesma foto para ver as marcações de novo: ela não é enviada nem analisada outra vez.",
+    restorePhoto: "Escolher a mesma foto",
     noHazards:
       "Não vimos riscos nesta foto. Isso não garante que não existam: se estava escura ou distante, tente com mais luz ou de outro ângulo.",
     summaryTitle: (room: string, n: number) =>
