@@ -31,8 +31,8 @@ export function SiteFooter({
 }) {
   if (variant === "compact") {
     return (
-      <footer className={`border-t border-stone-200 bg-white ${className}`}>
-        <p className="mx-auto max-w-3xl px-4 py-4 text-sm text-stone-600">{DISCLAIMER}</p>
+      <footer className={`border-t border-white/10 bg-ink ${className}`}>
+        <p className="mx-auto max-w-3xl px-4 py-4 text-sm text-stone-400">{DISCLAIMER}</p>
       </footer>
     );
   }

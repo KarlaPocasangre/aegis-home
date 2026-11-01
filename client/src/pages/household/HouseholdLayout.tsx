@@ -94,7 +94,7 @@ export function HouseholdLayout({ route }: { route: HouseholdRoute }) {
     const expired = isUnauthorized(household.error);
     return (
       <>
-        <header className="border-b border-stone-200 bg-white">
+        <header className="border-b border-white/10 bg-white/[0.04]">
           <div className="mx-auto flex max-w-5xl px-4 py-2">
             <Logo />
           </div>
@@ -108,7 +108,7 @@ export function HouseholdLayout({ route }: { route: HouseholdRoute }) {
           <button
             type="button"
             onClick={() => navigate("/")}
-            className="mt-6 min-h-12 rounded-lg bg-teal-700 px-5 text-base font-semibold text-white hover:bg-teal-800"
+            className="mt-6 min-h-12 rounded-lg bg-mint px-5 text-base font-semibold text-ink hover:bg-mint-soft"
           >
             Ir al inicio
           </button>
@@ -134,7 +134,7 @@ export function HouseholdLayout({ route }: { route: HouseholdRoute }) {
       {/* Bottom padding keeps the last content clear of the tab bar and the contact button. */}
       <main id="contenido" className="mx-auto w-full max-w-3xl flex-1 px-4 pt-8 pb-44 sm:pb-28">
         {!data || !household.data ? (
-          <p className="py-12 text-center text-lg text-stone-600">Cargando la evaluación…</p>
+          <p className="py-12 text-center text-lg text-stone-400">Cargando la evaluación…</p>
         ) : view === "plan" ? (
           <PlanView
             token={token}

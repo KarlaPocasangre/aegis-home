@@ -14,10 +14,14 @@ export function ViewTitle({ children, subtitle }: { children: ReactNode; subtitl
 
   return (
     <header>
-      <h1 ref={ref} tabIndex={-1} className="text-2xl font-bold outline-none sm:text-3xl">
+      <h1
+        ref={ref}
+        tabIndex={-1}
+        className="font-display text-4xl leading-tight text-white outline-none sm:text-5xl"
+      >
         {children}
       </h1>
-      {subtitle && <p className="mt-1 text-base text-stone-600">{subtitle}</p>}
+      {subtitle && <p className="mt-1 text-base text-stone-400">{subtitle}</p>}
     </header>
   );
 }

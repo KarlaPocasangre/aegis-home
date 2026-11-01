@@ -24,14 +24,14 @@ export function RoomCard({ room, initialActiveId, showTitle = true, href }: Prop
   const label = ROOM_LABELS[room.type];
 
   return (
-    <article className="rounded-xl border border-stone-200 bg-stone-50 p-4 sm:p-5">
+    <article className="rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
       {showTitle && (
         <h2 className="mb-3 text-xl font-bold">
           {href ? (
             <a
               href={href}
               onClick={linkHandler(href)}
-              className="text-teal-900 underline-offset-4 hover:underline"
+              className="text-mint underline-offset-4 hover:underline"
             >
               {label}
             </a>
@@ -51,13 +51,13 @@ export function RoomCard({ room, initialActiveId, showTitle = true, href }: Prop
             onSelect={select}
           />
         ) : (
-          <p className="rounded-lg bg-stone-100 px-4 py-3 text-sm text-stone-600">
+          <p className="rounded-lg bg-white/5 px-4 py-3 text-sm text-stone-400">
             Las fotos no se guardan. Para ver los riesgos resaltados, vuelva a subir la foto de este
             espacio.
           </p>
         )}
         {room.hazards.length === 0 ? (
-          <p className="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+          <p className="rounded-lg bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
             No se encontraron riesgos visibles en esta foto.
           </p>
         ) : (

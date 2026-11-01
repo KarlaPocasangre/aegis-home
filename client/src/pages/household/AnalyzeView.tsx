@@ -8,7 +8,7 @@ export function AnalyzeView(props: ComponentProps<typeof RoomUploader>) {
       <ViewTitle subtitle="Una foto por espacio. Al terminar verá los riesgos resaltados.">
         Analizar un espacio
       </ViewTitle>
-      <div className="rounded-xl bg-stone-100 p-4 sm:p-5">
+      <div className="rounded-xl bg-white/5 p-4 sm:p-5">
         <RoomUploader {...props} />
       </div>
     </div>

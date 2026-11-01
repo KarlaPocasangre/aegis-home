@@ -90,8 +90,8 @@ function TabHint({
   if (view === "analizar" && analyzing) {
     return (
       <span className="relative flex size-2.5" aria-hidden>
-        <span className="absolute inline-flex size-full animate-ping rounded-full bg-teal-500 opacity-75 motion-reduce:hidden" />
-        <span className="relative inline-flex size-2.5 rounded-full bg-teal-600" />
+        <span className="absolute inline-flex size-full animate-ping rounded-full bg-mint/100 opacity-75 motion-reduce:hidden" />
+        <span className="relative inline-flex size-2.5 rounded-full bg-mint" />
       </span>
     );
   }
@@ -115,7 +115,7 @@ export function Navbar({ token, view, householdName, pendingCount, analyzing }: 
           href={path}
           onClick={linkHandler(path)}
           aria-current={current ? "page" : undefined}
-          className={`flex min-h-12 items-center gap-2 rounded-lg px-3 text-base font-semibold focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-teal-700 ${current ? "bg-teal-50 text-teal-900 underline decoration-2 underline-offset-8" : "text-stone-700 hover:bg-stone-100 hover:text-stone-900"}`}
+          className={`flex min-h-12 items-center gap-2 rounded-lg px-3 text-base font-semibold focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint ${current ? "bg-mint/10 text-mint underline decoration-2 underline-offset-8" : "text-stone-300 hover:bg-white/5 hover:text-white"}`}
         >
           {t.icon}
           {t.label}
@@ -129,10 +129,10 @@ export function Navbar({ token, view, householdName, pendingCount, analyzing }: 
         href={path}
         onClick={linkHandler(path)}
         aria-current={current ? "page" : undefined}
-        className={`relative flex min-h-16 flex-1 flex-col items-center justify-center gap-1 text-sm font-semibold focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-teal-700 ${current ? "text-teal-800" : "text-stone-600"}`}
+        className={`relative flex min-h-16 flex-1 flex-col items-center justify-center gap-1 text-sm font-semibold focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-mint ${current ? "text-mint" : "text-stone-400"}`}
       >
         {current && (
-          <span aria-hidden className="absolute inset-x-4 top-0 h-1 rounded-b-full bg-teal-700" />
+          <span aria-hidden className="absolute inset-x-4 top-0 h-1 rounded-b-full bg-mint" />
         )}
         <span className="relative">
           {t.icon}
@@ -145,11 +145,11 @@ export function Navbar({ token, view, householdName, pendingCount, analyzing }: 
 
   return (
     <>
-      <header className="sticky top-0 z-30 border-b border-stone-200 bg-white/95 backdrop-blur">
+      <header className="sticky top-0 z-30 border-b border-white/10 bg-ink/80 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center gap-4 px-4 py-2">
           <Logo />
           {householdName && (
-            <p className="hidden min-w-0 truncate border-l border-stone-300 pl-4 text-stone-700 md:block">
+            <p className="hidden min-w-0 truncate border-l border-white/15 pl-4 text-stone-300 md:block">
               {householdName}
             </p>
           )}
@@ -165,7 +165,7 @@ export function Navbar({ token, view, householdName, pendingCount, analyzing }: 
 
       <nav
         aria-label="Secciones de la evaluación"
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-stone-200 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-2px_8px_rgba(0,0,0,0.06)] sm:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-ink/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md shadow-[0_-8px_24px_rgba(0,0,0,0.5)] sm:hidden"
       >
         <ul className="flex">
           {TABS.map((t) => (

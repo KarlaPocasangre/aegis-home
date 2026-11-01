@@ -30,7 +30,7 @@ export function RoomUploader({ busy, error, onUpload, onSample }: Props) {
     <div className="space-y-4">
       <form onSubmit={submit} className="space-y-4">
         <div>
-          <label htmlFor={ids.type} className="block text-sm font-semibold text-stone-700">
+          <label htmlFor={ids.type} className="block text-sm font-semibold text-stone-300">
             ¿Qué espacio es?
           </label>
           <select
@@ -38,7 +38,7 @@ export function RoomUploader({ busy, error, onUpload, onSample }: Props) {
             value={roomType}
             onChange={(e) => setRoomType(e.target.value as RoomType)}
             disabled={busy}
-            className="mt-1 block w-full rounded-lg border border-stone-300 bg-white px-3 py-2.5"
+            className="mt-1 block min-h-12 w-full rounded-lg border border-white/15 bg-ink-2 px-3 text-white"
           >
             {ROOM_TYPES.map((type) => (
               <option key={type} value={type}>
@@ -48,7 +48,7 @@ export function RoomUploader({ busy, error, onUpload, onSample }: Props) {
           </select>
         </div>
         <div>
-          <label htmlFor={ids.file} className="block text-sm font-semibold text-stone-700">
+          <label htmlFor={ids.file} className="block text-sm font-semibold text-stone-300">
             Foto del espacio
           </label>
           <input
@@ -58,16 +58,16 @@ export function RoomUploader({ busy, error, onUpload, onSample }: Props) {
             accept="image/jpeg,image/png,image/webp"
             disabled={busy}
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-            className="mt-1 block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-stone-200 file:px-4 file:py-2.5 file:font-semibold hover:file:bg-stone-300"
+            className="mt-1 block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-white/10 file:text-white file:px-4 file:py-2.5 file:font-semibold hover:file:bg-white/20"
           />
-          <p className="mt-1 text-xs text-stone-500">
+          <p className="mt-1 text-xs text-stone-400">
             Tome la foto de pie, mostrando el piso y los lugares por donde se camina.
           </p>
         </div>
         <button
           type="submit"
           disabled={busy || !file}
-          className="w-full rounded-lg bg-teal-700 px-4 py-3 font-semibold text-white hover:bg-teal-800 disabled:opacity-50"
+          className="w-full rounded-lg bg-mint px-4 py-3 font-semibold text-ink hover:bg-mint-soft disabled:opacity-50"
         >
           Analizar foto
         </button>
@@ -75,7 +75,7 @@ export function RoomUploader({ busy, error, onUpload, onSample }: Props) {
 
       {busy && <AnalysisProgress />}
       {error && !busy && (
-        <p role="alert" className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-800">
+        <p role="alert" className="rounded-lg bg-red-500/10 px-4 py-3 text-sm text-red-200">
           {error}
         </p>
       )}

@@ -8,12 +8,10 @@ export default function App() {
   const route = useRoute();
 
   return (
-    <div
-      className={`flex min-h-dvh flex-col ${route.name === "household" ? "bg-stone-50 text-stone-900" : "dark bg-ink text-stone-100"}`}
-    >
+    <div className="dark flex min-h-dvh flex-col bg-ink text-stone-100">
       <a
         href="#contenido"
-        className="sr-only z-50 rounded-lg bg-teal-800 px-4 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
+        className="sr-only z-50 rounded-lg bg-mint px-4 py-3 font-semibold text-ink focus:not-sr-only focus:fixed focus:top-2 focus:left-2"
       >
         Saltar al contenido
       </a>

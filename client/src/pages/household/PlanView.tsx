@@ -38,7 +38,7 @@ export function PlanView({
         />
       )}
       {statusError && (
-        <p role="alert" className="text-base text-red-700">
+        <p role="alert" className="text-base text-red-300">
           {statusError}
         </p>
       )}

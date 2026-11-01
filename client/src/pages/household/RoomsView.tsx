@@ -18,7 +18,7 @@ function BackLink({ token }: { token: string }) {
     <a
       href={path}
       onClick={linkHandler(path)}
-      className="inline-flex min-h-12 items-center gap-1 text-base font-semibold text-teal-800 underline underline-offset-4 hover:text-teal-900"
+      className="inline-flex min-h-12 items-center gap-1 text-base font-semibold text-mint underline underline-offset-4 hover:text-mint"
     >
       <span aria-hidden>←</span> Todos los espacios
     </a>
