@@ -368,6 +368,7 @@ export const es = {
     photoLabel: "Foto del espacio",
     photoHint: "Tome la foto de pie, mostrando el piso y los lugares por donde se camina.",
     submit: "Analizar foto",
+    takePhoto: "Tomar foto",
     choosePhoto: "Elegir foto",
     noFile: "Ninguna foto elegida",
     analyzing: "Analizando…",

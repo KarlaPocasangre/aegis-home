@@ -368,6 +368,7 @@ export const pt: Dict = {
     photoLabel: "Foto do cômodo",
     photoHint: "Tire a foto em pé, mostrando o piso e os lugares por onde se anda.",
     submit: "Analisar foto",
+    takePhoto: "Tirar foto",
     choosePhoto: "Escolher foto",
     noFile: "Nenhuma foto escolhida",
     analyzing: "Analisando…",

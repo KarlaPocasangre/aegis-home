@@ -364,6 +364,7 @@ export const en: Dict = {
     photoLabel: "Photo of the room",
     photoHint: "Take the photo standing up, showing the floor and the places people walk.",
     submit: "Analyze photo",
+    takePhoto: "Take photo",
     choosePhoto: "Choose photo",
     noFile: "No photo chosen",
     analyzing: "Analyzing…",

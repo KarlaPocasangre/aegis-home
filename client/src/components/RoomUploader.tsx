@@ -18,6 +18,7 @@ export function RoomUploader({ busy, error, onUpload, onSample }: Props) {
   const [roomType, setRoomType] = useState<RoomType>("bathroom");
   const [file, setFile] = useState<File | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
   const ids = { type: useId(), file: useId() };
 
   const submit = (event: FormEvent) => {
@@ -25,7 +26,7 @@ export function RoomUploader({ busy, error, onUpload, onSample }: Props) {
     if (!file) return;
     onUpload(file, roomType);
     setFile(null);
-    if (inputRef.current) inputRef.current.value = "";
+    for (const input of [inputRef.current, cameraRef.current]) if (input) input.value = "";
   };
 
   return (
@@ -54,8 +55,37 @@ export function RoomUploader({ busy, error, onUpload, onSample }: Props) {
             {a.photoLabel}
           </label>
           {/* The native file button is labeled in the browser's language, not the app's:
-              the input stays for keyboard and screen readers, a translated button sits on top. */}
-          <div className="mt-1 flex items-center gap-3">
+              each input stays for keyboard and screen readers, a translated button sits on top. */}
+          <div className="mt-1 flex flex-wrap items-center gap-3">
+            {/* Phones: open the rear camera directly, the natural flow while walking the home.
+                Hidden where there is no touch camera (desktop opens a file picker anyway). */}
+            <label
+              className={`hidden min-h-12 shrink-0 cursor-pointer items-center gap-2 rounded-lg bg-mint px-4 font-semibold text-ink hover:bg-mint-soft has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-mint [@media(pointer:coarse)]:inline-flex ${busy ? "pointer-events-none opacity-50" : ""}`}
+            >
+              <svg
+                aria-hidden
+                viewBox="0 0 24 24"
+                className="size-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M4 8a2 2 0 0 1 2-2h1.5l1.5-2h6l1.5 2H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" />
+                <circle cx="12" cy="12.5" r="3.5" />
+              </svg>
+              {a.takePhoto}
+              <input
+                ref={cameraRef}
+                type="file"
+                accept="image/*"
+                capture="environment"
+                disabled={busy}
+                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                className="sr-only"
+              />
+            </label>
             <label
               htmlFor={ids.file}
               className={`inline-flex min-h-12 shrink-0 cursor-pointer items-center rounded-lg bg-white/10 px-4 font-semibold text-white hover:bg-white/20 has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-mint ${busy ? "pointer-events-none opacity-50" : ""}`}
@@ -71,7 +101,7 @@ export function RoomUploader({ busy, error, onUpload, onSample }: Props) {
                 className="sr-only"
               />
             </label>
-            <span className="min-w-0 truncate text-sm text-stone-400">
+            <span className="min-w-0 basis-full truncate text-sm text-stone-400 sm:basis-auto">
               {file ? file.name : a.noFile}
             </span>
           </div>
