@@ -4,7 +4,7 @@ import { HttpError } from "../lib/httpError.js";
 import type { NormalizedImage } from "../lib/imagePipeline.js";
 import { extractJsonObject } from "../lib/json.js";
 import { ProviderError, type MetaClient } from "../lib/metaClient.js";
-import { toNormalizedRegion } from "../lib/regions.js";
+import { sparkBoxToSegmentation, toNormalizedRegion } from "../lib/regions.js";
 import {
   SparkOutputSchema,
   type Region,
@@ -106,19 +106,22 @@ export function createVisionService(deps: VisionDeps): VisionService {
     hazards: SparkHazard[],
     budget: AbortSignal,
   ): Promise<AnalyzedHazard[]> {
-    // Spend cap hit after detection: keep the live hazards, just without highlights (ladder level 2).
-    const allowed = hazards.length > 0 && (await usage.tryConsume(hazards.length));
+    const fromBox = (hazard: SparkHazard) => {
+      const seg = sparkBoxToSegmentation(hazard.box, image);
+      return seg ? toNormalizedRegion(seg, image) : null;
+    };
+    const segment = ai.segment?.bind(ai);
+    // Spend cap hit after detection: keep the live hazards with Spark's boxes only (ladder level 2).
+    const allowed =
+      segment !== undefined && hazards.length > 0 && (await usage.tryConsume(hazards.length));
     return mapWithConcurrency(hazards, SAM_CONCURRENCY, async (hazard) => {
-      if (!allowed) return { ...hazard, region: null };
+      if (!segment || !allowed) return { ...hazard, region: fromBox(hazard) };
       try {
-        const seg = await ai.segment(
-          image,
-          hazard.label_en,
-          withTimeout(budget, timing.samTimeoutMs),
-        );
-        return { ...hazard, region: seg ? toNormalizedRegion(seg, image) : null };
+        const seg = await segment(image, hazard.label_en, withTimeout(budget, timing.samTimeoutMs));
+        const region = seg ? toNormalizedRegion(seg, image) : null;
+        return { ...hazard, region: region ?? fromBox(hazard) };
       } catch {
-        return { ...hazard, region: null };
+        return { ...hazard, region: fromBox(hazard) };
       }
     });
   }

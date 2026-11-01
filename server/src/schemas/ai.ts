@@ -13,6 +13,9 @@ export const HazardSchema = z.object({
   fix_es: z.string().min(5).max(300),
   cost_estimate_usd: z.number().min(0).max(5000),
   confidence: z.number().min(0).max(1),
+  // Spark grounding box [x_min, y_min, x_max, y_max] on a 0–1000 grid, the region when SAM has
+  // none. A malformed box is dropped rather than failing the whole answer; values are clamped later.
+  box: z.array(z.number()).length(4).optional().catch(undefined),
 });
 
 export const SparkOutputSchema = z

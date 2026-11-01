@@ -35,3 +35,26 @@ export function toNormalizedRegion(
   const parsed = RegionSchema.safeParse(region);
   return parsed.success ? parsed.data : null;
 }
+
+const GRID = 1000;
+
+/**
+ * Spark grounding box ([x_min, y_min, x_max, y_max] on a 0–1000 grid) → pixel bbox of the
+ * normalized image. Empty or inverted boxes → null.
+ */
+export function sparkBoxToSegmentation(
+  box: number[] | undefined,
+  size: { width: number; height: number },
+): RawSegmentation | null {
+  if (!box || box.length !== 4 || !box.every(Number.isFinite)) return null;
+  const [x0, y0, x1, y1] = box.map((v) => Math.min(GRID, Math.max(0, v))) as [
+    number,
+    number,
+    number,
+    number,
+  ];
+  if (x1 <= x0 || y1 <= y0) return null;
+  const sx = size.width / GRID;
+  const sy = size.height / GRID;
+  return { kind: "bbox", box: [x0 * sx, y0 * sy, (x1 - x0) * sx, (y1 - y0) * sy] };
+}

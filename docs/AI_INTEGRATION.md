@@ -182,7 +182,8 @@ for (const h of validated.hazards) {
 export interface MetaClient {
   // raw output (string or parsed JSON); `strict` adds the "return only valid JSON" reminder on retry
   detectHazards(img: NormalizedImage, hint: RoomType, opts: { signal: AbortSignal; strict: boolean }): Promise<unknown>;
-  segment(img: NormalizedImage, label: string, signal: AbortSignal): Promise<RawSegmentation | null>;
+  // optional: while SAM is not wired, regions come from Spark's grounding boxes
+  segment?(img: NormalizedImage, label: string, signal: AbortSignal): Promise<RawSegmentation | null>;
 }
 
 // Pixel space of the normalized image; the real adapter maps SAM's actual output into this.
@@ -192,7 +193,8 @@ type RawSegmentation =
 ```
 
 Implementations and wiring (`server/src/lib/metaClient.ts`, `server/src/services/visionService.ts`):
-- `createMetaClient(config)` — calls the Meta Model API (`META_API_BASE_URL`, `META_API_KEY`). Until §10 is resolved it fails every call as `unavailable`, so requests degrade to the labeled fallback instead of guessing an API.
+- `createMetaClient(config)` — calls the Meta Model API (`META_API_BASE_URL`, `META_API_KEY` as a Bearer token). Spark runs over `POST /chat/completions` with the image as a base64 data URL and `response_format: { type: "json_schema" }` (constrained decoding; Zod still validates). HTTP 429 → `rate_limited` (honors `Retry-After`), other errors → `unavailable`, abort → `timeout`.
+- Each hazard also carries Spark's grounding `box` (`[x_min, y_min, x_max, y_max]` on a 0–1000 grid). It is the region when SAM returns nothing; a malformed box is dropped without failing the answer. SAM 3.1 (`sam-3.1`, Responses API, streamed special-token output) is not wired yet, so no SAM calls are made or counted.
 - `MOCK_AI=true` passes **no** client to `visionService`: every analysis goes straight to the fallback ladder, so mock output can never be labeled `live`.
 - Tests inject scripted `MetaClient` fakes through the same factory (lightweight dependency injection).
 - Failures are thrown as `ProviderError` (`rate_limited` with `retryAfterMs`, `timeout`, `invalid_output`, `unavailable`, `spend_cap`).
@@ -237,13 +239,13 @@ Constraints:
 
 | # | Question | Where to check | Status |
 |---|---|---|---|
-| 1 | Base URL and auth scheme (secondary sources suggest OpenAI-SDK compatibility at `https://api.meta.ai/v1`) | `dev.meta.ai/docs/quickstart` | ⚠️ VERIFY |
-| 2 | Exact model IDs for Muse Spark (vision) and SAM 3.1 | `dev.meta.ai/docs/models` | ⚠️ VERIFY |
-| 3 | How SAM 3.1 receives input (text label? points? boxes?) and its output format (mask encoding, polygon, bbox, coordinate space) | SAM 3.1 model page + cookbook | ⚠️ VERIFY |
-| 4 | Whether a JSON / structured-output mode exists for Spark | API docs | ⚠️ VERIFY |
-| 5 | Image input format and size limits | API docs | ⚠️ VERIFY |
+| 1 | Base URL and auth scheme | `https://api.meta.ai/v1`, `Authorization: Bearer LLM_…`, OpenAI-compatible | ✅ |
+| 2 | Exact model IDs | `muse-spark-1.3` (Standard mode; `-contributor` suffix = Contributor mode), `sam-3.1` | ✅ |
+| 3 | SAM 3.1 input/output | Text noun phrase (or boxes/points) + image over `POST /v1/responses`, streamed special-token text with boxes and masks. Parsing format still to read ("Reading segmentation output") | ⚠️ PARTIAL |
+| 4 | Structured output for Spark | `response_format: { type: "json_schema", json_schema: { name, schema } }`, constrained decoding; no recursive schemas | ✅ |
+| 5 | Image input and limits | Base64 data URL or public URL; ≤ 50 MB inline; JPEG/PNG/GIF/WebP; images only in user messages; Spark coordinates on a 0–1000 grid | ✅ |
 | 6 | Rate limits and error format (429 body, `Retry-After`) | API docs | ⚠️ VERIFY |
-| 7 | Standard vs "Contributor" data mode and how to select it | Account/billing settings | ⚠️ VERIFY |
+| 7 | Standard vs Contributor mode | Selected by model ID on pay-as-you-go; we use `muse-spark-1.3` (Standard: content not used for training) | ✅ |
 | 8 | Whether a partner-hosted open-weight route is needed (hackathon naming: `meta-models/muse-spark-open-1026`, not the name in partner docs) | Participant Guide | Only if used |
 | 9 | Whether Muse Voice Transcribe is worth including | Time check on Mon Nov 2 | Stretch |
 

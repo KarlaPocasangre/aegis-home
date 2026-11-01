@@ -1,6 +1,7 @@
 import type { Config } from "../config/env.js";
 import type { RoomTypeValue } from "../schemas/enums.js";
 import type { NormalizedImage } from "./imagePipeline.js";
+import { SPARK_OUTPUT_JSON_SCHEMA, SPARK_SYSTEM_PROMPT, sparkUserMessage } from "./sparkPrompt.js";
 
 export type ProviderErrorKind =
   "rate_limited" | "timeout" | "invalid_output" | "unavailable" | "spend_cap";
@@ -34,26 +35,83 @@ export interface DetectOptions {
 export interface MetaClient {
   /** Raw model output (string or parsed JSON); validated by the caller. */
   detectHazards(img: NormalizedImage, hint: RoomTypeValue, opts: DetectOptions): Promise<unknown>;
-  segment(
+  /** Absent while SAM is not wired: regions then come from Spark's own boxes. */
+  segment?(
     img: NormalizedImage,
     label: string,
     signal: AbortSignal,
   ): Promise<RawSegmentation | null>;
 }
 
-type MetaConfig = Pick<
-  Config,
-  "META_API_KEY" | "META_API_BASE_URL" | "META_MODEL_SPARK" | "META_MODEL_SAM"
->;
+type MetaConfig = Pick<Config, "META_API_KEY" | "META_API_BASE_URL" | "META_MODEL_SPARK">;
+
+function retryAfterMs(res: Response): number | undefined {
+  const seconds = Number(res.headers.get("retry-after"));
+  return Number.isFinite(seconds) && seconds > 0 ? seconds * 1000 : undefined;
+}
+
+/** Maps transport failures to ProviderError kinds. Bodies are never logged (they may echo input). */
+async function post(url: string, apiKey: string, body: unknown, signal: AbortSignal) {
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal,
+    });
+  } catch (err) {
+    if (err instanceof Error && (err.name === "AbortError" || err.name === "TimeoutError")) {
+      throw new ProviderError("timeout");
+    }
+    throw new ProviderError("unavailable", "network error");
+  }
+  if (res.status === 429) {
+    throw new ProviderError("rate_limited", "HTTP 429", retryAfterMs(res));
+  }
+  if (!res.ok) throw new ProviderError("unavailable", `HTTP ${res.status}`);
+  return res.json() as Promise<unknown>;
+}
 
 /**
- * Meta Model API client. Endpoints, auth and the SAM 3.1 input/output format are still
- * unverified (docs/AI_INTEGRATION.md §10), so calls fail as `unavailable` and the request
- * degrades to the labeled fallback instead of guessing an API.
+ * Meta Model API client (OpenAI-compatible, https://api.meta.ai/v1, Bearer auth).
+ * Muse Spark runs over Chat Completions with a JSON schema in `response_format`, so decoding
+ * is constrained; the caller still validates with Zod.
  */
-export function createMetaClient(_config: MetaConfig): MetaClient {
-  const notWired = async (): Promise<never> => {
-    throw new ProviderError("unavailable", "Meta Model API client not wired yet");
+export function createMetaClient(config: MetaConfig): MetaClient {
+  const { META_API_KEY: apiKey, META_API_BASE_URL: baseUrl, META_MODEL_SPARK: sparkModel } = config;
+  if (!apiKey || !baseUrl || !sparkModel) throw new Error("Meta API configuration is incomplete");
+  const endpoint = `${baseUrl.replace(/\/+$/, "")}/chat/completions`;
+
+  return {
+    async detectHazards(img, hint, { signal, strict }) {
+      const dataUrl = `data:image/jpeg;base64,${img.buffer.toString("base64")}`;
+      const json = await post(
+        endpoint,
+        apiKey,
+        {
+          model: sparkModel,
+          messages: [
+            { role: "system", content: SPARK_SYSTEM_PROMPT },
+            {
+              role: "user",
+              content: [
+                { type: "text", text: sparkUserMessage(hint, strict) },
+                { type: "image_url", image_url: { url: dataUrl } },
+              ],
+            },
+          ],
+          response_format: {
+            type: "json_schema",
+            json_schema: { name: "HomeHazards", schema: SPARK_OUTPUT_JSON_SCHEMA },
+          },
+        },
+        signal,
+      );
+      const content = (json as { choices?: { message?: { content?: unknown } }[] })?.choices?.[0]
+        ?.message?.content;
+      if (typeof content !== "string") throw new ProviderError("invalid_output", "no content");
+      return content;
+    },
   };
-  return { detectHazards: notWired, segment: notWired };
 }
