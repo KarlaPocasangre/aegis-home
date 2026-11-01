@@ -6,7 +6,7 @@ import { DEMO_IMAGE, demoHazards } from "../../lib/demoResult";
 import { capitalize, formatUsd } from "../../lib/labels";
 import { gsap, MOTION_OK, useGSAP } from "../../lib/motion";
 import { householdPath, linkHandler } from "../../lib/router";
-import { scrollToHash } from "../../lib/smoothScroll";
+import { scrollToHash } from "../../lib/scrollTo";
 import { useLang, useT } from "../../lib/i18n";
 import { lastHousehold } from "../../lib/storage";
 import { DisplayHeading, ICONS, icon } from "./layout";

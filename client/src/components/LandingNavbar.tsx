@@ -1,6 +1,6 @@
 import { useEffect, useId, useRef, useState, type MouseEvent } from "react";
 import { householdPath, linkHandler } from "../lib/router";
-import { scrollToHash } from "../lib/smoothScroll";
+import { scrollToHash } from "../lib/scrollTo";
 import { lastHousehold } from "../lib/storage";
 import { useT } from "../lib/i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";

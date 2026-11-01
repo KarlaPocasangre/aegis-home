@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import { EmergencyContactButton } from "../../components/EmergencyContactButton";
 import { Logo } from "../../components/Logo";
 import { Navbar } from "../../components/Navbar";
@@ -21,6 +21,7 @@ import type { RoomType } from "../../lib/types";
 import { AnalyzeView } from "./AnalyzeView";
 import { PlanView } from "./PlanView";
 import { RoomsView } from "./RoomsView";
+import { queryClient } from "./queryClient";
 import { SettingsView } from "./SettingsView";
 
 type HouseholdRoute = Extract<Route, { name: "household" }>;
@@ -31,6 +32,14 @@ type HouseholdRoute = Extract<Route, { name: "household" }>;
  * Views only render what they receive.
  */
 export function HouseholdLayout({ route }: { route: HouseholdRoute }) {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <HouseholdArea route={route} />
+    </QueryClientProvider>
+  );
+}
+
+function HouseholdArea({ route }: { route: HouseholdRoute }) {
   const { token, view } = route;
   const tr = useT();
   const queryClient = useQueryClient();

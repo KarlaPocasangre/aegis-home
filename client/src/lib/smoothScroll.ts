@@ -2,8 +2,7 @@ import Lenis from "lenis";
 import "lenis/dist/lenis.css";
 import { useEffect } from "react";
 import { gsap, MOTION_OK, ScrollTrigger } from "./motion";
-
-let lenis: Lenis | null = null;
+import { setSmoothScroller } from "./scrollTo";
 
 /**
  * Inertial smooth scrolling for the landing page only (wheel and trackpad). Touch keeps native
@@ -24,21 +23,13 @@ export function useSmoothScroll() {
     instance.on("scroll", ScrollTrigger.update);
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
-    lenis = instance;
+    setSmoothScroller({ scrollTo: (target) => instance.scrollTo(target) });
 
     return () => {
       gsap.ticker.remove(raf);
       gsap.ticker.lagSmoothing(500, 33);
       instance.destroy();
-      lenis = null;
+      setSmoothScroller(null);
     };
   }, []);
-}
-
-/** Scrolls to an in-page anchor, smoothly through Lenis when it is running. */
-export function scrollToHash(hash: string) {
-  const target = document.querySelector<HTMLElement>(hash);
-  if (!target) return;
-  if (lenis) lenis.scrollTo(target);
-  else target.scrollIntoView();
 }

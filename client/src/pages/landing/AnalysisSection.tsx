@@ -5,7 +5,7 @@ import { ImageCanvasOverlay } from "../../components/ImageCanvasOverlay";
 import { RollText } from "../../components/RollText";
 import { PrivacyNotice } from "../../components/PrivacyNotice";
 import { SampleImagePicker } from "../../components/SampleImagePicker";
-import { analyzeRoom } from "../../hooks/useAssessment";
+import { analyzeRoom } from "../../lib/analyzeRoom";
 import { api } from "../../lib/api";
 import { DEMO_IMAGE, demoHazards } from "../../lib/demoResult";
 import { userMessage } from "../../lib/errors";
