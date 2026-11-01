@@ -15,6 +15,7 @@ export const en: Dict = {
     copied: "Copied!",
     useSample: "Use a sample image",
     noPhotoAtHand: "Don't have a photo handy?",
+    materials: "You'll need:",
   },
   theme: {
     title: "Appearance",

@@ -151,6 +151,7 @@ Returns the assessment with its rooms, hazards, and the derived plan.
           "descriptionEs": "La alfombra no tiene base antideslizante junto a la ducha.",
           "fixEs": "Retírela o fíjela con cinta antideslizante por debajo.",
           "costEstimateUsd": 8,
+          "materialsEs": ["cinta antideslizante"],
           "confidence": 0.8,
           "region": { "type": "bbox", "points": [0.12, 0.55, 0.3, 0.18] },
           "status": "pending"

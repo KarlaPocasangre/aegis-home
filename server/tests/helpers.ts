@@ -56,6 +56,7 @@ export const sparkHazard = (overrides: Record<string, unknown> = {}) => ({
   description_es: "La alfombra no tiene base antideslizante junto a la ducha.",
   fix_es: "Retírela o fíjela con cinta antideslizante por debajo.",
   cost_estimate_usd: 8,
+  materials_es: ["cinta antideslizante"],
   confidence: 0.8,
   ...overrides,
 });

@@ -52,6 +52,7 @@ erDiagram
         string descriptionEs
         string fixEs
         float costEstimateUsd
+        string[] materialsEs
         float confidence
         json region
         enum status
@@ -154,6 +155,7 @@ model Hazard {
   descriptionEs   String       @db.VarChar(300)
   fixEs           String       @db.VarChar(300)
   costEstimateUsd Float        @default(0)
+  materialsEs     String[]     @default([]) // short shopping list for the fix; [] when none
   confidence      Float
   region          Json?        // normalized 0–1, see §4; null when SAM found nothing
   status          HazardStatus @default(PENDING)

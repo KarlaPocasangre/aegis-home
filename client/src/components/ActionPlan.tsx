@@ -33,7 +33,8 @@ function ActionItemRow({
   onToggle: () => void;
   photoHref?: string;
 }) {
-  const p = useT().plan;
+  const tr = useT();
+  const p = tr.plan;
   const resolved = item.status === "resolved";
   return (
     <li
@@ -54,6 +55,12 @@ function ActionItemRow({
             <p lang={item.language} className="mt-1 text-sm text-stone-300">
               {item.fixEs}
             </p>
+            {item.materialsEs?.length ? (
+              <p className="mt-1 text-sm text-stone-300">
+                <span className="font-semibold">{tr.common.materials} </span>
+                <span lang={item.language}>{item.materialsEs.join(", ")}</span>
+              </p>
+            ) : null}
             <p className="mt-1 text-sm text-stone-400">
               {roomLabel(item.roomType)} · {formatCost(item.costEstimateUsd)}
             </p>

@@ -13,6 +13,15 @@ describe("SparkOutputSchema", () => {
     expect(parsed).not.toHaveProperty("note");
   });
 
+  it("keeps materials and turns missing or malformed ones into an empty list", () => {
+    const parse = (overrides: Record<string, unknown>) =>
+      SparkOutputSchema.parse({ room_type: "bathroom", hazards: [hazard(overrides)] }).hazards[0]!;
+    expect(parse({}).materials_es).toEqual(["cinta antideslizante"]);
+    expect(parse({ materials_es: undefined }).materials_es).toEqual([]);
+    expect(parse({ materials_es: "cinta" }).materials_es).toEqual([]);
+    expect(parse({ materials_es: Array(6).fill("cinta") }).materials_es).toEqual([]);
+  });
+
   it("accepts an empty hazard list", () => {
     expect(SparkOutputSchema.safeParse({ room_type: "kitchen", hazards: [] }).success).toBe(true);
   });

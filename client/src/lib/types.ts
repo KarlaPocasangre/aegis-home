@@ -33,6 +33,9 @@ export interface Hazard {
   descriptionEs: string;
   fixEs: string;
   costEstimateUsd: number;
+  /** Things to buy or have at hand for the fix. Optional: older API versions and the recorded
+   * demo do not send it, and the UI must not break during a staggered deploy. */
+  materialsEs?: string[];
   confidence: number;
   region: Region | null;
   status: HazardStatus;

@@ -14,6 +14,7 @@ export const es = {
     copied: "¡Copiado!",
     useSample: "Usar imagen de prueba",
     noPhotoAtHand: "¿No tiene una foto a mano?",
+    materials: "Necesita:",
   },
   theme: {
     title: "Apariencia",

@@ -15,6 +15,7 @@ export const pt: Dict = {
     copied: "Copiado!",
     useSample: "Usar imagem de exemplo",
     noPhotoAtHand: "Não tem uma foto à mão?",
+    materials: "Precisa de:",
   },
   theme: {
     title: "Aparência",

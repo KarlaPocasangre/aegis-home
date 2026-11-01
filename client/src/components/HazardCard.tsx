@@ -50,6 +50,12 @@ export function HazardCard({ hazard, number, active, onSelect, lang }: Props) {
           <span className="font-semibold">{tr.roomsView.whatToDo} </span>
           <span lang={lang}>{hazard.fixEs}</span>
         </p>
+        {hazard.materialsEs?.length ? (
+          <p className="mt-1 text-sm dark:text-stone-200">
+            <span className="font-semibold">{tr.common.materials} </span>
+            <span lang={lang}>{hazard.materialsEs.join(", ")}</span>
+          </p>
+        ) : null}
         <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
           {formatCost(hazard.costEstimateUsd)}
         </p>
