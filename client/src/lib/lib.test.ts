@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { contactLinks, helpMessage, normalizeName, normalizePhone } from "./contacts";
 import { isValidRegion, polygonPoints, regionAnchor } from "./regions";
 import { householdPath, parseRoute, roomPath } from "./router";
@@ -9,6 +9,10 @@ import { en } from "./i18n/en";
 import { es } from "./i18n/es";
 import { pt } from "./i18n/pt";
 import { formatCost, roomLabel } from "./labels";
+
+// The app picks its first language from the system (navigator.language): CI runs in English.
+// Every test starts from Spanish so results don't depend on the machine or on test order.
+beforeEach(() => setLang("es"));
 
 describe("normalizePhone", () => {
   it.each([
