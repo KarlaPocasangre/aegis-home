@@ -18,7 +18,7 @@ export function ShareLink({ token }: { token: string }) {
   };
 
   return (
-    <div className="rounded-lg border border-white/10 bg-white/[0.04] p-4">
+    <div className="rounded-lg border border-white/10 bg-ink-2 p-4">
       <p className="font-semibold">{tr.share.title}</p>
       <p className="mt-1 text-sm text-stone-400">{tr.share.warning}</p>
       <div className="mt-3 flex gap-2">
@@ -27,7 +27,7 @@ export function ShareLink({ token }: { token: string }) {
           value={url}
           aria-label={tr.share.linkLabel}
           onFocus={(e) => e.currentTarget.select()}
-          className="min-w-0 flex-1 rounded-lg border border-white/15 bg-white/[0.03] px-3 py-2 text-sm text-stone-300"
+          className="min-w-0 flex-1 rounded-lg border border-white/15 bg-ink px-3 py-2 text-sm text-stone-300"
         />
         <button
           type="button"

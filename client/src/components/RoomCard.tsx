@@ -27,7 +27,7 @@ export function RoomCard({ room, initialActiveId, showTitle = true, href }: Prop
   const label = roomLabel(room.type);
 
   return (
-    <article className="rounded-xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+    <article className="rounded-xl border border-white/10 bg-ink-2 p-4 sm:p-5">
       {showTitle && (
         <h2 className="mb-3 text-xl font-bold">
           {href ? (

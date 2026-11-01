@@ -100,7 +100,7 @@ function HouseholdArea({ route }: { route: HouseholdRoute }) {
     const expired = isUnauthorized(household.error);
     return (
       <>
-        <header className="border-b border-white/10 bg-white/[0.04]">
+        <header className="border-b border-white/10 bg-ink-2">
           <div className="mx-auto flex max-w-5xl px-4 py-2">
             <Logo />
           </div>

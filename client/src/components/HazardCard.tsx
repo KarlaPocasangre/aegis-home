@@ -23,7 +23,7 @@ export function HazardCard({ hazard, number, active, onSelect, lang }: Props) {
         type="button"
         onClick={() => onSelect(hazard.id)}
         aria-pressed={active}
-        className={`w-full rounded-lg border bg-white p-4 text-left transition dark:bg-white/[0.03] ${active ? "border-teal-600 ring-2 ring-teal-600/30 dark:border-mint/70 dark:ring-mint/20" : "border-stone-200 hover:border-stone-300 dark:border-white/10 dark:hover:border-white/25"}`}
+        className={`w-full rounded-lg border bg-white p-4 text-left transition dark:bg-ink-2 ${active ? "border-teal-600 ring-2 ring-teal-600/30 dark:border-mint/70 dark:ring-mint/20" : "border-stone-200 hover:border-stone-300 dark:border-white/10 dark:hover:border-white/25"}`}
       >
         <div className="flex items-start justify-between gap-3">
           <p

@@ -2,8 +2,8 @@ import { useRef, type ReactNode } from "react";
 import { useLineReveal, useStaggerIn } from "../../lib/motion";
 
 const TONES = {
-  white: "bg-white/[0.04]",
-  stone: "bg-white/[0.03]",
+  white: "bg-ink",
+  stone: "bg-ink-2",
   teal: "bg-ink-2 text-white",
 } as const;
 

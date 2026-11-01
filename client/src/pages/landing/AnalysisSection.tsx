@@ -24,7 +24,7 @@ function DemoResult() {
   const select = (id: string) => setActiveId((current) => (current === id ? null : id));
 
   return (
-    <div id="ejemplo" className="rounded-2xl bg-white/[0.04] p-4 ring-1 ring-white/10 sm:p-5">
+    <div id="ejemplo" className="rounded-2xl bg-ink-2 p-4 ring-1 ring-white/10 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="font-display text-3xl">{a.demoTitle}</h3>
         <span className="rounded-full bg-white/5 px-3 py-1 text-sm font-semibold text-stone-300">
@@ -112,7 +112,7 @@ function StartCard() {
   return (
     <div
       id="empezar"
-      className="space-y-4 rounded-2xl bg-white/[0.04] p-4 shadow-lg ring-2 ring-white/10 sm:p-6"
+      className="space-y-4 rounded-2xl bg-ink-2 p-4 shadow-(--shadow-float) ring-2 ring-white/10 sm:p-6"
     >
       <h3 className="font-display text-4xl">{a.startTitle}</h3>
       <PrivacyNotice accepted={accepted} onChange={setAccepted} />
@@ -126,7 +126,7 @@ function StartCard() {
           onChange={(e) => setName(e.target.value)}
           maxLength={80}
           placeholder={a.namePlaceholder}
-          className="mt-1 block min-h-12 w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 text-base"
+          className="mt-1 block min-h-12 w-full rounded-lg border border-white/15 bg-ink px-3 text-base"
         />
       </div>
       <button

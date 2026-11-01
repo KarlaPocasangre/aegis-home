@@ -32,7 +32,7 @@ export function ProblemSection() {
             <li
               data-stagger
               key={risk.title}
-              className="rounded-2xl bg-white/[0.03] p-5 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.06] hover:shadow-xl hover:shadow-black/40"
+              className="rounded-2xl bg-ink-2 p-5 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.06] shadow-(--shadow-card) hover:shadow-(--shadow-float)"
             >
               <p className="text-lg font-semibold">{risk.title}</p>
               <p className="mt-1 text-base text-stone-400">{risk.text}</p>
@@ -56,7 +56,7 @@ export function FeaturesSection() {
           <li
             data-stagger
             key={item.title}
-            className="rounded-2xl bg-white/[0.04] p-6 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/40"
+            className="rounded-2xl bg-ink-2 p-6 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 shadow-(--shadow-card) hover:shadow-(--shadow-float)"
           >
             <span className="flex size-11 items-center justify-center rounded-xl bg-mint/10 text-mint">
               {icon(FEATURE_ICONS[i])}
@@ -86,7 +86,7 @@ export function TechSection() {
           <li
             data-stagger
             key={step.name}
-            className="relative rounded-2xl bg-white/[0.04] p-5 ring-1 ring-white/10"
+            className="relative rounded-2xl bg-ink-2 p-5 ring-1 ring-white/10"
           >
             <p className="text-sm font-semibold text-mint">{tech.step(index + 1)}</p>
             <p className="mt-1 text-xl font-bold">{step.name}</p>
@@ -131,7 +131,7 @@ export function PrivacySection() {
             <li
               data-stagger
               key={item.title}
-              className="rounded-2xl bg-white/[0.03] p-5 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.06] hover:shadow-xl hover:shadow-black/40"
+              className="rounded-2xl bg-ink-2 p-5 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.06] shadow-(--shadow-card) hover:shadow-(--shadow-float)"
             >
               <span className="text-mint">{icon(PRIVACY_ICONS[i])}</span>
               <p className="mt-3 text-lg font-semibold">{item.title}</p>
@@ -167,7 +167,7 @@ export function AboutSection() {
             <li
               data-stagger
               key={v.title}
-              className="flex gap-4 rounded-xl bg-white/[0.04] p-5 ring-1 ring-white/10"
+              className="flex gap-4 rounded-xl bg-ink-2 p-5 ring-1 ring-white/10"
             >
               <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-mint/10 text-mint">
                 {icon(VALUE_ICONS[i])}
@@ -218,7 +218,7 @@ export function FinalCta() {
       <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-ink-2 px-6 py-16 text-center text-white ring-1 ring-white/10 sm:px-12 sm:py-24">
         <div
           aria-hidden
-          className="absolute -top-24 left-1/2 size-[36rem] -translate-x-1/2 rounded-full bg-mint/15 blur-3xl"
+          className="absolute -top-24 left-1/2 size-[36rem] -translate-x-1/2 glow-blob rounded-full bg-mint/15 blur-3xl"
         />
         <div className="relative">
           <DisplayHeading className="mx-auto max-w-3xl text-5xl sm:text-7xl">
@@ -227,7 +227,7 @@ export function FinalCta() {
           <p className="mx-auto mt-6 max-w-xl text-lg text-stone-300 sm:text-xl">{c.text}</p>
           <a
             href="#empezar"
-            className="mt-10 inline-flex min-h-14 items-center rounded-full bg-mint px-8 text-lg font-semibold text-ink shadow-[0_0_40px_-8px] shadow-mint/60 transition hover:bg-mint-soft active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint"
+            className="mt-10 inline-flex min-h-14 items-center rounded-full bg-mint px-8 text-lg font-semibold text-ink cta-glow transition hover:bg-mint-soft active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint"
           >
             <RollText>{c.cta}</RollText>
           </a>

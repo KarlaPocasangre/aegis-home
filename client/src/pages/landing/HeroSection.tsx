@@ -14,7 +14,7 @@ import { DisplayHeading, ICONS, icon } from "./layout";
 const scrollTo = (id: string) => () => scrollToHash(`#${id}`);
 
 const primaryCta =
-  "inline-flex min-h-14 items-center rounded-full bg-mint px-7 text-lg font-semibold text-ink shadow-[0_0_40px_-10px] shadow-mint/70 transition hover:bg-mint-soft active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint";
+  "inline-flex min-h-14 items-center rounded-full bg-mint px-7 text-lg font-semibold text-ink cta-glow transition hover:bg-mint-soft active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint";
 
 export function HeroSection() {
   const h = useT().hero;
@@ -75,7 +75,7 @@ export function HeroSection() {
     >
       <div
         aria-hidden
-        className="absolute -top-40 left-1/2 size-[40rem] -translate-x-1/2 rounded-full bg-mint/10 blur-3xl"
+        className="absolute -top-40 left-1/2 size-[40rem] -translate-x-1/2 glow-blob rounded-full bg-mint/10 blur-3xl"
       />
       <div
         aria-hidden
@@ -85,7 +85,7 @@ export function HeroSection() {
         <div>
           <p
             data-hero-copy
-            className="inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-1 text-sm font-semibold text-mint ring-1 ring-mint/30"
+            className="inline-flex items-center gap-2 rounded-full bg-ink-2 px-3 py-1 text-sm font-semibold text-mint ring-1 ring-mint/30"
           >
             {icon(ICONS.sparkle, "size-4")}
             {h.badge}
@@ -135,7 +135,7 @@ export function HeroSection() {
         <figure className="relative">
           <div
             data-hero-photo
-            className="rounded-2xl bg-white/[0.04] p-3 shadow-2xl ring-1 ring-white/10"
+            className="rounded-2xl bg-ink-2 p-3 shadow-(--shadow-float) ring-1 ring-white/10"
           >
             <div className="relative overflow-hidden rounded-lg">
               <ImageCanvasOverlay
@@ -155,7 +155,7 @@ export function HeroSection() {
           {topHazard && (
             <div
               data-hero-card="hazard"
-              className="relative z-10 -mt-2 ml-4 max-w-[17rem] rounded-xl bg-white/[0.04] p-3 shadow-lg ring-1 ring-white/10 sm:-ml-6"
+              className="relative z-10 -mt-2 ml-4 max-w-[17rem] rounded-xl bg-ink-2 p-3 shadow-(--shadow-float) ring-1 ring-white/10 sm:-ml-6"
             >
               <p className="text-xs font-bold tracking-wide text-red-400 uppercase">{h.highRisk}</p>
               <p lang={lang} className="mt-0.5 font-semibold text-white">
@@ -168,7 +168,7 @@ export function HeroSection() {
           )}
           <div
             data-hero-card="plan"
-            className="absolute -top-4 -right-2 rounded-xl bg-mint px-4 py-3 text-ink shadow-lg sm:-right-4"
+            className="absolute -top-4 -right-2 rounded-xl bg-mint px-4 py-3 text-ink shadow-(--shadow-float) sm:-right-4"
           >
             <p className="text-xs font-semibold text-ink/70">{h.planOf}</p>
             <p className="text-lg font-bold">

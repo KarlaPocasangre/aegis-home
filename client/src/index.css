@@ -85,7 +85,7 @@
 /* Perspective dot field behind the hero, fading into the page. */
 .dot-field {
   background-image: radial-gradient(
-    color-mix(in srgb, var(--color-white) 22%, transparent) 1px,
+    color-mix(in srgb, var(--color-white) calc(var(--dots-opacity) * 100%), transparent) 1px,
     transparent 1.2px
   );
   background-size: 22px 22px;
@@ -101,9 +101,20 @@
   background-size: 24px 24px;
 }
 
-/* Native controls (select menus, scrollbars, checkboxes) follow the active theme. */
+/* Native controls (select menus, scrollbars, checkboxes) follow the active theme.
+   Dark defaults live in the same `theme` layer as the light overrides below: an unlayered
+   rule would always win over a layered one, whatever its specificity. */
+@layer theme {
+  :root {
+    color-scheme: dark;
+    /* Elevation: deep black shadows read on dark; light uses soft navy-tinted ones (below). */
+    --shadow-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 12px 32px -16px rgb(0 0 0 / 0.6);
+    --shadow-float: 0 24px 48px -18px rgb(0 0 0 / 0.75);
+    --glow-opacity: 1;
+    --dots-opacity: 0.22;
+  }
+}
 :root {
-  color-scheme: dark;
   background-color: var(--color-ink);
 }
 
@@ -118,6 +129,10 @@
 @layer theme {
   :root[data-theme="light"] {
     color-scheme: light;
+    --shadow-card: 0 1px 2px rgb(16 41 59 / 0.04), 0 6px 20px -10px rgb(16 41 59 / 0.1);
+    --shadow-float: 0 2px 6px rgb(16 41 59 / 0.05), 0 20px 40px -18px rgb(16 41 59 / 0.18);
+    --glow-opacity: 0;
+    --dots-opacity: 0.1;
     --color-ink: #f3f6f7;
     --color-ink-2: #ffffff;
     --color-white: #10293b;
@@ -146,6 +161,10 @@
   @layer theme {
     :root:not([data-theme]) {
       color-scheme: light;
+      --shadow-card: 0 1px 2px rgb(16 41 59 / 0.04), 0 6px 20px -10px rgb(16 41 59 / 0.1);
+      --shadow-float: 0 2px 6px rgb(16 41 59 / 0.05), 0 20px 40px -18px rgb(16 41 59 / 0.18);
+      --glow-opacity: 0;
+      --dots-opacity: 0.1;
       --color-ink: #f3f6f7;
       --color-ink-2: #ffffff;
       --color-white: #10293b;
@@ -170,4 +189,13 @@
       --color-sky-200: #075985;
     }
   }
+}
+
+/* Decorative light (blurred blobs, button glow) only works on dark; in light it reads as smudge. */
+.glow-blob {
+  opacity: var(--glow-opacity);
+}
+.cta-glow {
+  box-shadow: 0 0 40px -10px
+    color-mix(in srgb, var(--color-mint) calc(var(--glow-opacity) * 70%), transparent);
 }

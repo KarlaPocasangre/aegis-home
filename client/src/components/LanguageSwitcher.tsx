@@ -98,7 +98,7 @@ export function LanguageSwitcher({ inline = false }: { inline?: boolean }) {
           id={menuId}
           role="group"
           aria-label={tr.common.language}
-          className="absolute right-0 z-40 mt-2 w-52 rounded-xl bg-ink-2 p-1.5 shadow-2xl ring-1 ring-white/10"
+          className="absolute right-0 z-40 mt-2 w-52 rounded-xl bg-ink-2 p-1.5 shadow-(--shadow-float) ring-1 ring-white/10"
         >
           {options}
         </div>

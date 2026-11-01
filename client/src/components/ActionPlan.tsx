@@ -28,7 +28,7 @@ function ActionItemRow({
   const p = useT().plan;
   const resolved = item.status === "resolved";
   return (
-    <li className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/[0.04] p-3">
+    <li className="flex items-start gap-3 rounded-lg border border-white/10 bg-ink-2 p-3">
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <p className={`font-semibold ${resolved ? "text-stone-400 line-through" : ""}`}>
@@ -89,7 +89,7 @@ export function ActionPlan({ assessment, onSetStatus, pendingHazardId, photoHref
 
   return (
     <div className="space-y-4">
-      <div className="rounded-lg bg-white/[0.04] p-4 ring-1 ring-white/10">
+      <div className="rounded-lg bg-ink-2 p-4 ring-1 ring-white/10">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
           <p className="font-semibold">{p.progress(resolvedCount, totalHazards)}</p>
           <p className="text-sm text-stone-400">

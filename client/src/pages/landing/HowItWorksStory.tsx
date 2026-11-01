@@ -19,7 +19,7 @@ function StoryVisual({ stage }: { stage: number }) {
     <div
       inert
       aria-hidden
-      className="relative mx-auto w-full max-w-md rounded-[2rem] bg-black p-3 shadow-2xl ring-1 ring-white/10"
+      className="relative mx-auto w-full max-w-md rounded-[2rem] bg-black p-3 shadow-(--shadow-float) ring-1 ring-white/10"
     >
       <div className="relative overflow-hidden rounded-[1.4rem] bg-ink-2">
         <div className={stage >= 2 ? "" : "[&_svg]:opacity-0 [&_button]:opacity-0"}>
@@ -62,7 +62,7 @@ function StoryVisual({ stage }: { stage: number }) {
 
         {/* Stage 3: the plan */}
         <div
-          className={`absolute inset-x-3 bottom-3 rounded-2xl bg-ink/90 p-4 shadow-xl ring-1 ring-white/10 backdrop-blur ${fade(stage === 3)}`}
+          className={`absolute inset-x-3 bottom-3 rounded-2xl bg-ink/90 p-4 shadow-(--shadow-float) ring-1 ring-white/10 backdrop-blur ${fade(stage === 3)}`}
         >
           <div className="flex items-baseline justify-between">
             <p className="font-semibold text-white">{tr.how.planTitle}</p>

@@ -10,7 +10,7 @@ export function PrivacyNotice({
 }) {
   const p = useT().privacy;
   return (
-    <div className="rounded-lg border border-stone-200 bg-white p-4 text-sm text-stone-700 dark:border-white/10 dark:bg-white/[0.03] dark:text-stone-300">
+    <div className="rounded-lg border border-stone-200 bg-white p-4 text-sm text-stone-700 dark:border-white/10 dark:bg-ink-2 dark:text-stone-300">
       <p className="font-semibold text-stone-900 dark:text-white">{p.title}</p>
       <ul className="mt-2 list-disc space-y-1 pl-5">
         {p.items.map((item) => (

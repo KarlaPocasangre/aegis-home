@@ -20,7 +20,7 @@ export function SampleImagePicker({ onPick, disabled }: Props) {
             type="button"
             disabled={disabled}
             onClick={() => onPick(sample)}
-            className="group overflow-hidden rounded-lg border border-stone-200 bg-white text-left transition hover:border-teal-600 disabled:opacity-50 dark:border-white/10 dark:bg-white/[0.03] dark:hover:border-mint/60"
+            className="group overflow-hidden rounded-lg border border-stone-200 bg-white text-left transition hover:border-teal-600 disabled:opacity-50 dark:border-white/10 dark:bg-ink-2 dark:hover:border-mint/60"
           >
             <img
               src={sample.url}

@@ -6,7 +6,7 @@ export function EmptyState({ token, text }: { token: string; text: string }) {
   const tr = useT();
   const path = householdPath(token, "analizar");
   return (
-    <div className="rounded-xl border-2 border-dashed border-white/15 bg-white/[0.04] p-6 text-center">
+    <div className="rounded-xl border-2 border-dashed border-white/15 bg-ink-2 p-6 text-center">
       <p className="text-base text-stone-300">{text}</p>
       <a
         href={path}
