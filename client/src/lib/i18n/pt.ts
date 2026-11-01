@@ -188,6 +188,8 @@ export const pt: Dict = {
     creating: "Criando…",
     start: "Analisar uma foto",
     checkFirst: "Marque a caixa para continuar.",
+    showAll: (n: number) => `Ver os ${n} riscos`,
+    showLess: "Ver menos",
   },
   features: {
     eyebrow: "O que você recebe",
@@ -212,10 +214,6 @@ export const pt: Dict = {
       {
         title: "Em família",
         text: "Compartilhe um link privado para que irmãos ou primos ajudem com o plano.",
-      },
-      {
-        title: "Contato rápido",
-        text: "Ligue ou escreva por WhatsApp ou SMS para seus contatos de confiança com um toque.",
       },
     ],
   },

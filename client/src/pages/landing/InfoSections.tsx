@@ -53,7 +53,7 @@ export function ProblemSection() {
   );
 }
 
-const FEATURE_ICONS = [ICONS.target, ICONS.list, ICONS.coin, ICONS.check, ICONS.share, ICONS.phone];
+const FEATURE_ICONS = [ICONS.target, ICONS.list, ICONS.coin, ICONS.check, ICONS.share];
 
 export function FeaturesSection() {
   const f = useT().features;

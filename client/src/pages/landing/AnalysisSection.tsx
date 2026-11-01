@@ -15,13 +15,21 @@ import { useLang, useT } from "../../lib/i18n";
 import { lastHousehold } from "../../lib/storage";
 import { Band, SectionHeading } from "./layout";
 
+const PREVIEW_COUNT = 3;
+
 /** A recorded real result, explorable before creating anything. */
 function DemoResult() {
   const a = useT().analysis;
   const lang = useLang();
   const hazards = demoHazards(lang);
   const [activeId, setActiveId] = useState<string | null>(hazards[0]?.id ?? null);
-  const select = (id: string) => setActiveId((current) => (current === id ? null : id));
+  const [expanded, setExpanded] = useState(false);
+  // A marker on the photo can point at a hazard past the preview: open the full list for it.
+  const select = (id: string) => {
+    if (hazards.findIndex((h) => h.id === id) >= PREVIEW_COUNT) setExpanded(true);
+    setActiveId((current) => (current === id ? null : id));
+  };
+  const shown = expanded ? hazards : hazards.slice(0, PREVIEW_COUNT);
 
   return (
     <div id="ejemplo" className="rounded-2xl bg-ink p-4 ring-1 ring-white/10 sm:p-5">
@@ -41,8 +49,8 @@ function DemoResult() {
           onSelect={select}
         />
       </div>
-      <ol className="mt-4 max-h-[28rem] space-y-2 overflow-y-auto pr-1">
-        {hazards.map((hazard, index) => (
+      <ol className="mt-4 space-y-2">
+        {shown.map((hazard, index) => (
           <HazardCard
             key={hazard.id}
             hazard={hazard}
@@ -53,6 +61,16 @@ function DemoResult() {
           />
         ))}
       </ol>
+      {hazards.length > PREVIEW_COUNT && (
+        <button
+          type="button"
+          aria-expanded={expanded}
+          onClick={() => setExpanded((e) => !e)}
+          className="mt-3 flex min-h-12 w-full items-center justify-center rounded-lg text-base font-semibold text-mint ring-1 ring-white/15 hover:bg-white/5 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint"
+        >
+          {expanded ? a.showLess : a.showAll(hazards.length)}
+        </button>
+      )}
       <p className="mt-3 text-sm text-stone-400">{a.demoCaption}</p>
     </div>
   );

@@ -187,6 +187,8 @@ export const es = {
     creating: "Creando…",
     start: "Analizar una foto",
     checkFirst: "Marque la casilla para continuar.",
+    showAll: (n: number) => `Ver los ${n} riesgos`,
+    showLess: "Ver menos",
   },
   features: {
     eyebrow: "Lo que recibe",
@@ -211,10 +213,6 @@ export const es = {
       {
         title: "En familia",
         text: "Comparta un enlace privado para que hermanos o primos ayuden con el plan.",
-      },
-      {
-        title: "Contacto rápido",
-        text: "Llame o escriba por WhatsApp o SMS a sus contactos de confianza con un toque.",
       },
     ],
   },

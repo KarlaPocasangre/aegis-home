@@ -184,6 +184,8 @@ export const en: Dict = {
     creating: "Creating…",
     start: "Check a photo",
     checkFirst: "Check the box to continue.",
+    showAll: (n: number) => `See all ${n} hazards`,
+    showLess: "See less",
   },
   features: {
     eyebrow: "What you get",
@@ -208,10 +210,6 @@ export const en: Dict = {
       {
         title: "Family together",
         text: "Share a private link so siblings or cousins can help with the plan.",
-      },
-      {
-        title: "Quick contact",
-        text: "Call or text your trusted contacts by WhatsApp or SMS with one tap.",
       },
     ],
   },
