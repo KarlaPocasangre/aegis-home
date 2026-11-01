@@ -23,7 +23,11 @@ export function useSmoothScroll() {
     instance.on("scroll", ScrollTrigger.update);
     gsap.ticker.add(raf);
     gsap.ticker.lagSmoothing(0);
-    setSmoothScroller({ scrollTo: (target) => instance.scrollTo(target) });
+    setSmoothScroller({
+      scrollTo: (target) => instance.scrollTo(target),
+      stop: () => instance.stop(),
+      start: () => instance.start(),
+    });
 
     return () => {
       gsap.ticker.remove(raf);

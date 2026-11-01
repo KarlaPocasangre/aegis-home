@@ -2,6 +2,8 @@
 // the lazily loaded landing chunk and register themselves here when they run.
 interface SmoothScroller {
   scrollTo(target: HTMLElement): void;
+  stop(): void;
+  start(): void;
 }
 
 let scroller: SmoothScroller | null = null;
@@ -16,4 +18,11 @@ export function scrollToHash(hash: string) {
   if (!target) return;
   if (scroller) scroller.scrollTo(target);
   else target.scrollIntoView();
+}
+
+/** Freezes page scrolling behind an overlay (native and Lenis). */
+export function setScrollLocked(locked: boolean) {
+  document.documentElement.style.overflow = locked ? "hidden" : "";
+  if (locked) scroller?.stop();
+  else scroller?.start();
 }

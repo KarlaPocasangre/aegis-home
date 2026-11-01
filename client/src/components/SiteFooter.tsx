@@ -3,6 +3,9 @@ import { LANDING_SECTIONS } from "./LandingNavbar";
 import { useT } from "../lib/i18n";
 import { Wordmark } from "./Logo";
 
+// The footer also links "About", which the navbar leaves out to stay short.
+const FOOTER_SECTIONS = [...LANDING_SECTIONS, { href: "#acerca", key: "about" }] as const;
+
 const REPO_URL = "https://github.com/KarlaPocasangre/aegis-home";
 
 function Column({ title, children }: { title: string; children: ReactNode }) {
@@ -53,7 +56,7 @@ export function SiteFooter({
                 {f.home}
               </a>
             </li>
-            {LANDING_SECTIONS.map((s) => (
+            {FOOTER_SECTIONS.map((s) => (
               <li key={s.href}>
                 <a href={s.href} className={footerLink}>
                   {tr.landingNav.sections[s.key]}

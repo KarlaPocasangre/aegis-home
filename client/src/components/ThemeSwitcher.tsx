@@ -73,7 +73,7 @@ export function ThemeSwitcher({ inline = false }: { inline?: boolean }) {
       onClick={() => setThemePref(next)}
       aria-label={next === "light" ? tr.toLight : tr.toDark}
       title={next === "light" ? tr.toLight : tr.toDark}
-      className="flex size-12 items-center justify-center rounded-full text-stone-200 ring-1 ring-white/15 transition hover:bg-white/10 hover:text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint"
+      className="flex size-12 items-center justify-center rounded-full text-stone-200 transition hover:bg-white/10 hover:text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint"
     >
       {next === "light" ? SUN : MOON}
     </button>

@@ -85,7 +85,7 @@ export function LanguageSwitcher({ inline = false }: { inline?: boolean }) {
         aria-expanded={open}
         aria-controls={menuId}
         onClick={() => setOpen((o) => !o)}
-        className="flex min-h-12 items-center gap-1.5 rounded-full px-3 text-sm font-bold text-stone-200 ring-1 ring-white/15 transition hover:bg-white/10 hover:text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint"
+        className="flex min-h-12 items-center gap-1.5 rounded-full px-3 text-sm font-bold text-stone-200 transition hover:bg-white/10 hover:text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint"
       >
         {globe}
         <span aria-hidden>{currentShort}</span>
