@@ -15,18 +15,27 @@ export function ProblemSection() {
         className="mt-6 font-display text-4xl leading-[1.15] text-white sm:text-6xl"
       />
       <div className="mt-16 grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-start">
-        <p className="text-lg text-stone-300">
-          {p.whoBefore}{" "}
-          <a
-            href={p.whoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold text-mint underline underline-offset-4"
-          >
-            {p.whoLink}
-          </a>
-          {p.whoAfter}
-        </p>
+        <div>
+          <p className="text-lg text-stone-300">
+            {p.statLead}{" "}
+            <span className="block font-display text-8xl leading-none text-mint">
+              {p.statValue}
+            </span>
+            <span className="mt-2 block text-xl font-semibold text-white">{p.statLabel}</span>
+          </p>
+          <p className="mt-4 text-lg text-stone-300">{p.detail}</p>
+          <p className="mt-3 text-sm text-stone-400">
+            {p.sourceLabel}{" "}
+            <a
+              href={p.whoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-mint underline underline-offset-4"
+            >
+              {p.whoLink}
+            </a>
+          </p>
+        </div>
         <ul className="grid gap-4 sm:grid-cols-2">
           {p.risks.map((risk) => (
             <li
@@ -49,7 +58,7 @@ const FEATURE_ICONS = [ICONS.target, ICONS.list, ICONS.coin, ICONS.check, ICONS.
 export function FeaturesSection() {
   const f = useT().features;
   return (
-    <Band id="funciones" tone="stone" labelledBy="funciones-title">
+    <Band id="funciones" labelledBy="funciones-title">
       <SectionHeading id="funciones-title" eyebrow={f.eyebrow} title={f.title} />
       <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {f.items.map((item, i) => (
@@ -66,43 +75,6 @@ export function FeaturesSection() {
           </li>
         ))}
       </ul>
-    </Band>
-  );
-}
-
-export function TechSection() {
-  const tech = useT().tech;
-  return (
-    <Band id="tecnologia" tone="teal" labelledBy="tecnologia-title">
-      <SectionHeading
-        id="tecnologia-title"
-        eyebrow={tech.eyebrow}
-        title={tech.title}
-        intro={tech.intro}
-        invert
-      />
-      <ol className="mt-10 grid gap-4 lg:grid-cols-4">
-        {tech.pipeline.map((step, index) => (
-          <li
-            data-stagger
-            key={step.name}
-            className="relative rounded-2xl bg-ink-2 p-5 ring-1 ring-white/10"
-          >
-            <p className="text-sm font-semibold text-mint">{tech.step(index + 1)}</p>
-            <p className="mt-1 text-xl font-bold">{step.name}</p>
-            <p className="mt-2 text-base text-stone-300">{step.detail}</p>
-            {index < tech.pipeline.length - 1 && (
-              <span
-                aria-hidden
-                className="absolute top-1/2 -right-3 hidden -translate-y-1/2 text-2xl text-mint lg:block"
-              >
-                →
-              </span>
-            )}
-          </li>
-        ))}
-      </ol>
-      <p className="mt-8 text-base text-stone-300">{tech.honesty}</p>
     </Band>
   );
 }
@@ -146,8 +118,10 @@ export function PrivacySection() {
 
 const VALUE_ICONS = [ICONS.heart, ICONS.globe, ICONS.shield];
 
+/** About the project, plus how the two Meta models work together (one section, not two). */
 export function AboutSection() {
   const a = useT().about;
+  const tech = useT().tech;
   return (
     <Band id="acerca" tone="stone" labelledBy="acerca-title">
       <div className="grid gap-10 lg:grid-cols-2">
@@ -179,6 +153,33 @@ export function AboutSection() {
             </li>
           ))}
         </ul>
+      </div>
+
+      <div id="tecnologia" className="mt-16 border-t border-white/10 pt-12">
+        <h3 className="font-display text-3xl text-white sm:text-4xl">{tech.title}</h3>
+        <p className="mt-3 max-w-2xl text-lg text-stone-300">{tech.intro}</p>
+        <ol className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {tech.pipeline.map((step, index) => (
+            <li
+              data-stagger
+              key={step.name}
+              className="relative rounded-2xl bg-ink p-5 ring-1 ring-white/10"
+            >
+              <p className="text-sm font-semibold text-mint">{tech.step(index + 1)}</p>
+              <p className="mt-1 text-xl font-bold">{step.name}</p>
+              <p className="mt-2 text-base text-stone-300">{step.detail}</p>
+              {index < tech.pipeline.length - 1 && (
+                <span
+                  aria-hidden
+                  className="absolute top-1/2 -right-3 hidden -translate-y-1/2 text-2xl text-mint lg:block"
+                >
+                  →
+                </span>
+              )}
+            </li>
+          ))}
+        </ol>
+        <p className="mt-6 text-base text-stone-300">{tech.honesty}</p>
       </div>
     </Band>
   );

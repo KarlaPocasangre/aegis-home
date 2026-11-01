@@ -9,9 +9,9 @@ import {
   FinalCta,
   PrivacySection,
   ProblemSection,
-  TechSection,
 } from "./landing/InfoSections";
 
+// Sales order: problem → how → what you get → try it → trust (privacy, about) → objections → CTA.
 export function LandingPage() {
   useSmoothScroll();
   return (
@@ -19,9 +19,8 @@ export function LandingPage() {
       <HeroSection />
       <ProblemSection />
       <HowItWorksStory />
-      <AnalysisSection />
       <FeaturesSection />
-      <TechSection />
+      <AnalysisSection />
       <PrivacySection />
       <AboutSection />
       <FaqSection />

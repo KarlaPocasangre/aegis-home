@@ -89,7 +89,7 @@ export function HeroSection() {
       ref={root}
       id="inicio"
       aria-labelledby="hero-title"
-      className="relative overflow-hidden bg-ink px-4 pt-14 pb-20 sm:pt-20 sm:pb-28"
+      className="relative overflow-hidden bg-ink px-4 pt-8 pb-20 sm:pt-20 sm:pb-28"
     >
       <div
         aria-hidden
@@ -99,7 +99,7 @@ export function HeroSection() {
         aria-hidden
         className="dot-field pointer-events-none absolute inset-x-[-25%] bottom-0 h-[70%]"
       />
-      <div className="relative mx-auto grid max-w-6xl items-center gap-14 lg:grid-cols-[1.15fr_1fr]">
+      <div className="relative mx-auto grid max-w-6xl items-center gap-10 sm:gap-14 lg:grid-cols-[1.15fr_1fr]">
         <div>
           <p
             data-hero-copy
@@ -108,14 +108,18 @@ export function HeroSection() {
             {icon(ICONS.sparkle, "size-4")}
             {h.badge}
           </p>
-          <DisplayHeading as="h1" id="hero-title" className="mt-6 text-5xl text-white sm:text-7xl">
+          <DisplayHeading
+            as="h1"
+            id="hero-title"
+            className="mt-4 text-[2.5rem] text-white sm:mt-6 sm:text-6xl"
+          >
             {h.titleA} <em className="text-stone-400">{h.titleB}</em>
           </DisplayHeading>
-          <p data-hero-copy className="mt-6 max-w-xl text-lg text-stone-300 sm:text-xl">
+          <p data-hero-copy className="mt-4 max-w-xl text-lg text-stone-300 sm:mt-6 sm:text-xl">
             {h.intro}
           </p>
 
-          <div data-hero-copy className="mt-9 flex flex-wrap gap-3">
+          <div data-hero-copy className="mt-6 flex flex-wrap gap-3 sm:mt-9">
             {saved ? (
               <a
                 href={householdPath(saved)}
@@ -139,7 +143,7 @@ export function HeroSection() {
 
           <ul
             data-hero-copy
-            className="mt-9 flex flex-wrap gap-x-6 gap-y-2 text-base text-stone-300"
+            className="mt-6 flex flex-wrap gap-x-5 gap-y-1 text-sm text-stone-300 sm:mt-9 sm:gap-x-6 sm:gap-y-2 sm:text-base"
           >
             {h.trust.map((item) => (
               <li key={item} className="flex items-center gap-2">

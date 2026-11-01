@@ -135,7 +135,7 @@ export function HowItWorksStory() {
                 stepRefs.current[index] = el;
               }}
               data-step={index}
-              className="flex flex-col justify-center py-10 lg:min-h-[75vh] lg:py-0"
+              className="flex flex-col justify-center py-10 lg:min-h-[50vh] lg:py-0"
             >
               <div
                 className={`transition-opacity duration-500 motion-reduce:transition-none ${active === index ? "lg:opacity-100" : "lg:opacity-35"}`}

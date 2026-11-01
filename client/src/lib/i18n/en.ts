@@ -104,24 +104,20 @@ export const en: Dict = {
       faq: "FAQ",
     },
     myEvaluation: "My assessment",
-    start: "Get started",
+    start: "Check a photo",
     openMenu: "Open menu",
     closeMenu: "Close menu",
   },
   hero: {
-    badge: "Powered by Meta's Muse Spark and SAM 3.1",
-    titleA: "A safer home for",
-    titleB: "the people we love most",
+    badge: "Built with Meta's AI",
+    titleA: "Find out what could make your parents fall at home.",
+    titleB: "With a single photo.",
     intro:
-      "Take photos of your mom's, dad's or grandparents' home. AI points out what could cause a fall and gives you a plan of simple fixes, in order and with approximate costs.",
+      "Take a photo of the bathroom, kitchen or hallway. The AI marks each hazard on your photo and gives you a list of simple fixes, sorted by urgency and with approximate costs.",
     continue: "Continue my assessment",
-    analyze: "Check my home",
+    analyze: "Check a photo for free",
     seeExample: "See a real example",
-    trust: [
-      "Free, no account needed",
-      "Photos are never stored",
-      "In Spanish, Portuguese and English",
-    ],
+    trust: ["Free, no account needed", "Photos are never stored", "Results in a minute or less"],
     photoAlt: "Sample photo of a living room with highlighted hazards",
     highRisk: "High risk",
     planOf: "Plan for this living room",
@@ -132,11 +128,14 @@ export const en: Dict = {
     eyebrow: "Why it matters",
     story:
       "Your mom gets up at night to use the bathroom. The hallway is dark, the floor is still wet and there's nothing to hold on to. These are details we see every day and almost never notice.",
-    whoBefore: "According to the",
+    statLead: "Falls are the",
+    statValue: "2nd",
+    statLabel: "leading cause of unintentional injury deaths worldwide",
+    sourceLabel: "Source:",
     whoLink: "World Health Organization",
     whoUrl: "https://www.who.int/news-room/fact-sheets/detail/falls",
-    whoAfter:
-      ", falls are the second leading cause of unintentional injury deaths worldwide, and adults over 60 are the most affected. Many start at home, with things that can be fixed for little money.",
+    detail:
+      "Adults over 60 are the most affected. Many falls start at home, with things that can be fixed for little money.",
     risks: [
       { title: "Wet or slippery floors", text: "Bathrooms and kitchens without non-slip mats." },
       { title: "Loose rugs and cords", text: "Curled edges and things in the way." },
@@ -147,19 +146,19 @@ export const en: Dict = {
   how: {
     eyebrow: "How it works",
     title: "From one photo to an action plan",
-    intro: "Two Meta AI models work in sequence on your photo.",
+    intro: "Nothing to install, no account to create.",
     steps: [
       {
         title: "Take a photo",
         text: "Standing up, showing the floor and where people walk: bathroom, kitchen, stairs, hallways. The photo is resized and its location data removed on your device.",
       },
       {
-        title: "Muse Spark reviews it",
-        text: "Meta's vision model identifies each hazard, how serious it is, how to fix it in plain words and roughly what it costs.",
+        title: "The AI finds the hazards",
+        text: "Muse Spark, Meta's vision model, identifies each hazard, how serious it is, how to fix it in plain words and roughly what it costs.",
       },
       {
-        title: "SAM 3.1 pinpoints them",
-        text: "Meta's segmentation model locates each hazard in the image to highlight it on your own photo, with a number.",
+        title: "It marks them on your photo",
+        text: "SAM 3.1, Meta's segmentation model, locates each hazard and highlights it on your own photo, with a number.",
       },
       {
         title: "Follow your plan",
@@ -179,12 +178,12 @@ export const en: Dict = {
     demoAlt: "Sample photo of a living room",
     demoCaption:
       "Muse Spark and SAM 3.1 response on an AI-generated sample image (not a real home).",
-    startTitle: "Start an assessment",
+    startTitle: "Check your first photo",
     nameLabel: "Name for this home (optional)",
     namePlaceholder: "E.g.: Grandma's house",
     creating: "Creating…",
-    start: "Start assessment",
-    checkFirst: "Check the box above to continue.",
+    start: "Check a photo",
+    checkFirst: "Check the box to continue.",
   },
   features: {
     eyebrow: "What you get",
@@ -217,7 +216,6 @@ export const en: Dict = {
     ],
   },
   tech: {
-    eyebrow: "The technology",
     title: "Two Meta models working together",
     intro:
       "Muse Spark understands the scene and decides what's dangerous; SAM 3.1 finds exactly where it is. Every response is checked before it's shown.",
@@ -317,7 +315,7 @@ export const en: Dict = {
     titleA: "Start with",
     titleB: "a single room",
     text: "The bathroom is usually the most important place. One photo is enough for your first plan.",
-    cta: "Check my home",
+    cta: "Check my first room",
   },
   footer: {
     disclaimer:

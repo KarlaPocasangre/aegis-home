@@ -1,4 +1,4 @@
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { AnalysisProgress } from "../../components/AnalysisProgress";
 import { HazardCard } from "../../components/HazardCard";
 import { ImageCanvasOverlay } from "../../components/ImageCanvasOverlay";
@@ -24,7 +24,7 @@ function DemoResult() {
   const select = (id: string) => setActiveId((current) => (current === id ? null : id));
 
   return (
-    <div id="ejemplo" className="rounded-2xl bg-ink-2 p-4 ring-1 ring-white/10 sm:p-5">
+    <div id="ejemplo" className="rounded-2xl bg-ink p-4 ring-1 ring-white/10 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="font-display text-3xl">{a.demoTitle}</h3>
         <span className="rounded-full bg-white/5 px-3 py-1 text-sm font-semibold text-stone-300">
@@ -65,7 +65,24 @@ function StartCard() {
   const [name, setName] = useState("");
   const [busy, setBusy] = useState<"create" | "sample" | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [needsConsent, setNeedsConsent] = useState(false);
+  const consentRef = useRef<HTMLInputElement>(null);
   const nameId = useId();
+
+  // Actions stay enabled: a click without consent explains why next to the checkbox instead
+  // of leaving a greyed-out button with no reason.
+  const withConsent =
+    <A extends unknown[]>(action: (...args: A) => void) =>
+    (...args: A) => {
+      if (accepted) return action(...args);
+      setNeedsConsent(true);
+      consentRef.current?.focus();
+    };
+
+  const onConsentChange = (value: boolean) => {
+    setAccepted(value);
+    if (value) setNeedsConsent(false);
+  };
 
   const createHousehold = async () => {
     const household = await api.createHousehold(name.trim() || undefined);
@@ -112,10 +129,15 @@ function StartCard() {
   return (
     <div
       id="empezar"
-      className="space-y-4 rounded-2xl bg-ink-2 p-4 shadow-(--shadow-float) ring-2 ring-white/10 sm:p-6"
+      className="space-y-4 rounded-2xl bg-ink p-4 shadow-(--shadow-float) ring-2 ring-white/10 sm:p-6"
     >
       <h3 className="font-display text-4xl">{a.startTitle}</h3>
-      <PrivacyNotice accepted={accepted} onChange={setAccepted} />
+      <PrivacyNotice
+        accepted={accepted}
+        onChange={onConsentChange}
+        error={needsConsent ? a.checkFirst : null}
+        inputRef={consentRef}
+      />
       <div>
         <label htmlFor={nameId} className="block text-base font-semibold text-stone-100">
           {a.nameLabel}
@@ -126,13 +148,13 @@ function StartCard() {
           onChange={(e) => setName(e.target.value)}
           maxLength={80}
           placeholder={a.namePlaceholder}
-          className="mt-1 block min-h-12 w-full rounded-lg border border-white/15 bg-ink px-3 text-base"
+          className="mt-1 block min-h-12 w-full rounded-lg border border-white/15 bg-ink-2 px-3 text-base"
         />
       </div>
       <button
         type="button"
-        onClick={start}
-        disabled={!accepted || busy !== null}
+        onClick={withConsent(start)}
+        disabled={busy !== null}
         className="flex min-h-14 w-full items-center justify-center rounded-xl bg-mint px-4 text-lg font-semibold text-ink transition hover:bg-mint-soft active:scale-[0.98] disabled:opacity-50"
       >
         {busy === "create" ? a.creating : <RollText>{a.start}</RollText>}
@@ -143,8 +165,7 @@ function StartCard() {
           {error}
         </p>
       )}
-      <SampleImagePicker onPick={trySample} disabled={!accepted || busy !== null} />
-      {!accepted && <p className="text-sm text-stone-400">{a.checkFirst}</p>}
+      <SampleImagePicker onPick={withConsent(trySample)} disabled={busy !== null} />
     </div>
   );
 }
@@ -152,7 +173,7 @@ function StartCard() {
 export function AnalysisSection() {
   const a = useT().analysis;
   return (
-    <Band id="analizar" labelledBy="analizar-title">
+    <Band id="analizar" tone="stone" labelledBy="analizar-title">
       <SectionHeading id="analizar-title" eyebrow={a.eyebrow} title={a.title} intro={a.intro} />
       <div className="mt-10 grid items-start gap-8 lg:grid-cols-2">
         <DemoResult />

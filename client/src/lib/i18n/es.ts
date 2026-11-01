@@ -103,23 +103,23 @@ export const es = {
       faq: "Preguntas",
     },
     myEvaluation: "Mi evaluación",
-    start: "Empezar",
+    start: "Analizar foto",
     openMenu: "Abrir menú",
     closeMenu: "Cerrar menú",
   },
   hero: {
-    badge: "Con Muse Spark y SAM 3.1 de Meta",
-    titleA: "Una casa más segura para",
-    titleB: "quienes más queremos",
+    badge: "Hecho con la IA de Meta",
+    titleA: "Descubra qué puede provocar una caída en casa de sus papás.",
+    titleB: "Con una sola foto.",
     intro:
-      "Tome fotos de la casa de su mamá, papá o abuelos. La inteligencia artificial señala lo que puede provocar una caída y le da un plan de arreglos sencillos, en orden y con costo aproximado.",
+      "Tome una foto del baño, la cocina o el pasillo. La IA marca cada riesgo sobre su foto y le da una lista de arreglos sencillos, ordenados por urgencia y con costo aproximado.",
     continue: "Continuar mi evaluación",
-    analyze: "Analizar mi casa",
+    analyze: "Analizar una foto gratis",
     seeExample: "Ver un ejemplo real",
     trust: [
       "Gratis y sin crear cuenta",
       "Las fotos no se guardan",
-      "En español, portugués e inglés",
+      "Resultado en un minuto o menos",
     ],
     photoAlt: "Foto de ejemplo de una sala con riesgos resaltados",
     highRisk: "Riesgo alto",
@@ -131,11 +131,14 @@ export const es = {
     eyebrow: "Por qué importa",
     story:
       "Su mamá se levanta de noche para ir al baño. El pasillo está oscuro, el piso sigue mojado y no hay dónde agarrarse. Son detalles que vemos todos los días y que casi nunca notamos.",
-    whoBefore: "Según la",
+    statLead: "Las caídas son la",
+    statValue: "2.ª",
+    statLabel: "causa de muerte por lesiones no intencionales en el mundo",
+    sourceLabel: "Fuente:",
     whoLink: "Organización Mundial de la Salud",
     whoUrl: "https://www.who.int/es/news-room/fact-sheets/detail/falls",
-    whoAfter:
-      ", las caídas son la segunda causa de muerte por lesiones no intencionales en el mundo, y las personas mayores de 60 años son las más afectadas. Muchas empiezan en casa, con cosas que se pueden arreglar con poco dinero.",
+    detail:
+      "Las personas mayores de 60 años son las más afectadas. Muchas caídas empiezan en casa, con cosas que se pueden arreglar con poco dinero.",
     risks: [
       { title: "Pisos mojados o lisos", text: "Baños y cocinas sin tapete antideslizante." },
       { title: "Tapetes sueltos y cables", text: "Bordes levantados y cosas en el paso." },
@@ -146,19 +149,19 @@ export const es = {
   how: {
     eyebrow: "Cómo funciona",
     title: "De una foto a un plan de acción",
-    intro: "Dos modelos de inteligencia artificial de Meta trabajan en cadena sobre su foto.",
+    intro: "Sin instalar nada ni crear una cuenta.",
     steps: [
       {
         title: "Tome una foto",
         text: "De pie, mostrando el piso y por donde se camina: baño, cocina, escaleras, pasillos. La foto se reduce y se le quitan los datos de ubicación en su dispositivo.",
       },
       {
-        title: "Muse Spark revisa",
-        text: "El modelo de visión de Meta identifica cada riesgo, qué tan grave es, cómo arreglarlo en palabras sencillas y cuánto puede costar.",
+        title: "La IA encuentra los riesgos",
+        text: "Muse Spark, el modelo de visión de Meta, identifica cada riesgo, qué tan grave es, cómo arreglarlo en palabras sencillas y cuánto puede costar.",
       },
       {
-        title: "SAM 3.1 los señala",
-        text: "El modelo de segmentación de Meta ubica cada riesgo en la imagen para resaltarlo sobre su propia foto, con un número.",
+        title: "Los marca en su foto",
+        text: "SAM 3.1, el modelo de segmentación de Meta, ubica cada riesgo y lo resalta sobre su propia foto, con un número.",
       },
       {
         title: "Siga su plan",
@@ -178,12 +181,12 @@ export const es = {
     demoAlt: "Foto de ejemplo de una sala",
     demoCaption:
       "Respuesta de Muse Spark y SAM 3.1 sobre una imagen de ejemplo generada con IA (no es una casa real).",
-    startTitle: "Empezar una evaluación",
+    startTitle: "Analice su primera foto",
     nameLabel: "Nombre para esta casa (opcional)",
     namePlaceholder: "Ej.: Casa de la abuela",
     creating: "Creando…",
-    start: "Empezar evaluación",
-    checkFirst: "Marque la casilla de arriba para continuar.",
+    start: "Analizar una foto",
+    checkFirst: "Marque la casilla para continuar.",
   },
   features: {
     eyebrow: "Lo que recibe",
@@ -216,7 +219,6 @@ export const es = {
     ],
   },
   tech: {
-    eyebrow: "La tecnología",
     title: "Dos modelos de Meta trabajando juntos",
     intro:
       "Muse Spark entiende la escena y decide qué es peligroso; SAM 3.1 encuentra exactamente dónde está. Cada respuesta se revisa antes de mostrarse.",
@@ -319,7 +321,7 @@ export const es = {
     titleA: "Empiece por",
     titleB: "un solo espacio",
     text: "El baño suele ser el lugar más importante. Una foto basta para tener su primer plan.",
-    cta: "Analizar mi casa",
+    cta: "Analizar mi primer espacio",
   },
   footer: {
     disclaimer:
