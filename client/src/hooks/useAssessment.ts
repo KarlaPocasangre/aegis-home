@@ -38,6 +38,8 @@ export function useSetHazardStatus(token: string, assessmentId: string | undefin
   const queryClient = useQueryClient();
   const key = queryKeys.assessment(token, assessmentId ?? "");
   return useMutation({
+    // Serial: an "undo" tapped while "fixed" is still saving runs after it, never races it.
+    scope: { id: `hazard-status-${token}` },
     mutationFn: (input: { hazardId: string; status: HazardStatus }) =>
       api.setHazardStatus(token, input.hazardId, input.status),
     // Optimistic: the plan updates on tap; rolled back if the request fails.

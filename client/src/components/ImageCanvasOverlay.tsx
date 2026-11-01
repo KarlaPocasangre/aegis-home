@@ -31,13 +31,15 @@ export function ImageCanvasOverlay({ src, alt, hazards, activeId, onSelect }: Pr
           const region = hazard.region!;
           const style = SEVERITY_STYLES[hazard.severity];
           const active = hazard.id === activeId;
+          // With one hazard selected the others step back, so the photo is not a tangle of boxes.
+          const dimmed = hazard.status === "resolved" || (activeId !== null && !active);
           const common = {
             fill: style.stroke,
             fillOpacity: active ? 0.28 : 0.12,
             stroke: style.stroke,
             strokeWidth: active ? 4 : 2.5,
             vectorEffect: "non-scaling-stroke" as const,
-            opacity: hazard.status === "resolved" ? 0.35 : 1,
+            opacity: dimmed ? 0.35 : 1,
           };
           const [x = 0, y = 0, w = 0, h = 0] = region.points;
           return region.type === "bbox" ? (
@@ -49,16 +51,24 @@ export function ImageCanvasOverlay({ src, alt, hazards, activeId, onSelect }: Pr
       </svg>
       {visible.map(({ hazard, number }) => {
         const anchor = regionAnchor(hazard.region!);
+        const active = hazard.id === activeId;
+        // A 44px invisible hit area around a 32px badge: big enough for a shaky finger.
         return (
           <button
             key={hazard.id}
             type="button"
             onClick={() => onSelect(hazard.id)}
             aria-label={tr.roomsView.riskAria(number, hazard.labelEs)}
-            className={`absolute flex size-7 -translate-x-1/3 -translate-y-1/3 items-center justify-center rounded-full text-sm font-bold text-snow shadow ring-2 ring-snow ${SEVERITY_STYLES[hazard.severity].marker} ${hazard.id === activeId ? "scale-125" : ""}`}
+            aria-pressed={active}
+            className={`group absolute flex size-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full focus-visible:outline-3 focus-visible:outline-mint ${active ? "z-10" : ""}`}
             style={{ left: `${anchor.x * 100}%`, top: `${anchor.y * 100}%` }}
           >
-            {number}
+            <span
+              aria-hidden
+              className={`flex size-8 items-center justify-center rounded-full text-sm font-bold text-snow shadow ring-2 ring-snow transition-transform ${SEVERITY_STYLES[hazard.severity].marker} ${active ? "scale-125" : ""}`}
+            >
+              {number}
+            </span>
           </button>
         );
       })}

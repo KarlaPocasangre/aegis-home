@@ -23,7 +23,7 @@ const linkState = (active: boolean) =>
     ? "text-white underline decoration-mint decoration-2 underline-offset-[10px]"
     : "text-stone-300";
 const ctaClass =
-  "flex min-h-12 items-center justify-center rounded-full bg-mint px-4 text-base font-semibold text-ink hover:bg-mint-soft focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint";
+  "flex min-h-12 items-center justify-center rounded-full bg-mint px-4 text-base font-semibold whitespace-nowrap text-ink hover:bg-mint-soft focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint";
 
 /** The section crossing 40% of the viewport height, or null between tracked sections. */
 function useActiveSection(hrefs: readonly string[]) {

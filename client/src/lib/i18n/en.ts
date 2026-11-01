@@ -104,7 +104,7 @@ export const en: Dict = {
       about: "About",
       faq: "FAQ",
     },
-    myEvaluation: "My assessment",
+    myEvaluation: "My plan",
     settings: "Language and appearance",
     start: "Check a photo",
     openMenu: "Open menu",
@@ -364,6 +364,11 @@ export const en: Dict = {
     fixed: "I fixed it",
     undo: "Undo",
     seePhoto: "See on the photo",
+    fixedDone: "✓ Well done! Marked as fixed.",
+    fixedAnnounce: (label: string, remaining: number) =>
+      remaining === 0 ? `${label}: fixed. Plan complete!` : `${label}: fixed. ${remaining} left.`,
+    undoAnnounce: (label: string) => `${label} is back on the to-do list.`,
+    allDone: "Plan complete! The home is safer. You can check another room whenever you like.",
   },
   analyze: {
     title: "Analyze a room",
@@ -390,7 +395,18 @@ export const en: Dict = {
     photoAlt: (room: string) => `Photo of the ${room.toLowerCase()}`,
     noPhoto:
       "Photos aren't stored. To see the hazards highlighted, upload this room's photo again.",
-    noHazards: "No visible hazards were found in this photo.",
+    noHazards:
+      "We didn't see hazards in this photo. That doesn't guarantee there are none: if it was dark or far away, try again with more light or from another angle.",
+    summaryTitle: (room: string, n: number) =>
+      n === 1 ? `${room}: we found 1 thing to improve` : `${room}: we found ${n} things to improve`,
+    summaryHigh: (n: number) =>
+      n === 1
+        ? "Start with the one marked “High risk”."
+        : `Start with the ${n} marked “High risk”.`,
+    summaryCost: (value: string) => `Approximate cost of the fixes: ${value}.`,
+    summaryResolved: "Everything in this room is already fixed.",
+    seePlan: "See my plan",
+    analyzeAnother: "Check another room",
     whatToDo: "What to do:",
     resolved: "Fixed",
     riskAria: (n: number, label: string) => `Hazard ${n}: ${label}`,

@@ -1,6 +1,6 @@
 import { useId, useRef, useState } from "react";
 import { AnalysisProgress } from "../../components/AnalysisProgress";
-import { HazardCard } from "../../components/HazardCard";
+import { HazardCard, hazardElementId } from "../../components/HazardCard";
 import { ImageCanvasOverlay } from "../../components/ImageCanvasOverlay";
 import { RollText } from "../../components/RollText";
 import { PrivacyNotice } from "../../components/PrivacyNotice";
@@ -11,6 +11,7 @@ import { DEMO_IMAGE, demoHazards } from "../../lib/demoResult";
 import { userMessage } from "../../lib/errors";
 import { householdPath, navigate } from "../../lib/router";
 import { fetchSample, type SampleImage } from "../../lib/samples";
+import { revealElement } from "../../lib/scrollTo";
 import { useLang, useT } from "../../lib/i18n";
 import { lastHousehold } from "../../lib/storage";
 import { Band, SectionHeading } from "./layout";
@@ -29,6 +30,13 @@ function DemoResult() {
     if (hazards.findIndex((h) => h.id === id) >= PREVIEW_COUNT) setExpanded(true);
     setActiveId((current) => (current === id ? null : id));
   };
+  // A marker tap also brings its card into view (after the list may have expanded).
+  const selectFromPhoto = (id: string) => {
+    select(id);
+    if (activeId !== id) {
+      requestAnimationFrame(() => revealElement(document.getElementById(hazardElementId(id))));
+    }
+  };
   const shown = expanded ? hazards : hazards.slice(0, PREVIEW_COUNT);
 
   return (
@@ -46,7 +54,7 @@ function DemoResult() {
           alt={a.demoAlt}
           hazards={hazards}
           activeId={activeId}
-          onSelect={select}
+          onSelect={selectFromPhoto}
         />
       </div>
       <ol className="mt-4 space-y-2">

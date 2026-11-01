@@ -12,12 +12,26 @@ export function setSmoothScroller(next: SmoothScroller | null) {
   scroller = next;
 }
 
+function scrollToElement(target: HTMLElement) {
+  if (scroller) scroller.scrollTo(target);
+  else target.scrollIntoView({ behavior: "smooth" });
+}
+
 /** Scrolls to an in-page anchor, smoothly through Lenis when it is running. */
 export function scrollToHash(hash: string) {
   const target = document.querySelector<HTMLElement>(hash);
+  if (target) scrollToElement(target);
+}
+
+/**
+ * Brings an element into view only when part of it is off screen. `margin` keeps it clear of
+ * fixed bars (sticky header, phone tab bar, floating contact button).
+ */
+export function revealElement(target: HTMLElement | null, margin = 96) {
   if (!target) return;
-  if (scroller) scroller.scrollTo(target);
-  else target.scrollIntoView();
+  const rect = target.getBoundingClientRect();
+  if (rect.top >= margin && rect.bottom <= window.innerHeight - margin) return;
+  scrollToElement(target);
 }
 
 /** Freezes page scrolling behind an overlay (native and Lenis). */

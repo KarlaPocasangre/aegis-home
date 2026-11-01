@@ -81,7 +81,8 @@ function TabHint({
   const tr = useT();
   if (view === "plan" && pendingCount > 0) {
     return (
-      <span className="rounded-full bg-rose-700 px-2 py-0.5 text-xs leading-none font-bold whitespace-nowrap text-snow">
+      // Neutral, not red: a count of things to do, not an alarm.
+      <span className="rounded-full bg-mint px-2 py-0.5 text-xs leading-none font-bold whitespace-nowrap text-ink">
         {pendingCount}
         <span className="sr-only"> {tr.nav.pending}</span>
       </span>

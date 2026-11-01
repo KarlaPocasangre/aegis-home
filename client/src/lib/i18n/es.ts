@@ -103,7 +103,7 @@ export const es = {
       about: "Acerca",
       faq: "Preguntas",
     },
-    myEvaluation: "Mi evaluación",
+    myEvaluation: "Mi plan",
     settings: "Idioma y apariencia",
     start: "Analizar foto",
     openMenu: "Abrir menú",
@@ -371,6 +371,13 @@ export const es = {
     fixed: "Ya lo arreglé",
     undo: "Deshacer",
     seePhoto: "Ver en la foto",
+    fixedDone: "✓ ¡Bien hecho! Marcado como arreglado.",
+    fixedAnnounce: (label: string, remaining: number) =>
+      remaining === 0
+        ? `${label}: arreglado. ¡Plan completo!`
+        : `${label}: arreglado. Quedan ${remaining}.`,
+    undoAnnounce: (label: string) => `${label} vuelve a la lista de pendientes.`,
+    allDone: "¡Plan completo! La casa es más segura. Puede analizar otro espacio cuando quiera.",
   },
   analyze: {
     title: "Analizar un espacio",
@@ -397,7 +404,20 @@ export const es = {
     photoAlt: (room: string) => `Foto de ${room.toLowerCase()}`,
     noPhoto:
       "Las fotos no se guardan. Para ver los riesgos resaltados, vuelva a subir la foto de este espacio.",
-    noHazards: "No se encontraron riesgos visibles en esta foto.",
+    noHazards:
+      "No vimos riesgos en esta foto. Eso no garantiza que no los haya: si estaba oscura o lejos, pruebe con más luz o desde otro ángulo.",
+    summaryTitle: (room: string, n: number) =>
+      n === 1
+        ? `${room}: encontramos 1 cosa para mejorar`
+        : `${room}: encontramos ${n} cosas para mejorar`,
+    summaryHigh: (n: number) =>
+      n === 1
+        ? "Empiece por la marcada como «Riesgo alto»."
+        : `Empiece por las ${n} marcadas como «Riesgo alto».`,
+    summaryCost: (value: string) => `Costo aproximado de los arreglos: ${value}.`,
+    summaryResolved: "Todo lo de este espacio ya está resuelto.",
+    seePlan: "Ver mi plan",
+    analyzeAnother: "Analizar otro espacio",
     whatToDo: "Qué hacer:",
     resolved: "Resuelto",
     riskAria: (n: number, label: string) => `Riesgo ${n}: ${label}`,

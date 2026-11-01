@@ -15,12 +15,13 @@ export const SEVERITY_STYLES: Record<Severity, { badge: string; stroke: string; 
     medium: {
       badge: "bg-amber-100 text-amber-900 dark:bg-amber-500/15 dark:text-amber-200",
       stroke: "#d97706",
-      marker: "bg-amber-600",
+      // -700 shades: white numbers need 4.5:1 (amber-600 gives 3.2:1, sky-600 4.1:1).
+      marker: "bg-amber-700",
     },
     low: {
       badge: "bg-sky-100 text-sky-900 dark:bg-sky-500/15 dark:text-sky-200",
       stroke: "#0284c7",
-      marker: "bg-sky-600",
+      marker: "bg-sky-700",
     },
   };
 

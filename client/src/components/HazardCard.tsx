@@ -3,6 +3,9 @@ import type { ContentLanguage, Hazard } from "../lib/types";
 import { useT } from "../lib/i18n";
 import { SeverityBadge } from "./SeverityBadge";
 
+/** DOM id of a hazard's card, so a tap on its photo marker can scroll to it. */
+export const hazardElementId = (id: string) => `hazard-${id}`;
+
 interface Props {
   /** Language the hazard text is written in. */
   lang: ContentLanguage;
@@ -18,7 +21,7 @@ export function HazardCard({ hazard, number, active, onSelect, lang }: Props) {
   const tr = useT();
   const resolved = hazard.status === "resolved";
   return (
-    <li>
+    <li id={hazardElementId(hazard.id)}>
       <button
         type="button"
         onClick={() => onSelect(hazard.id)}
