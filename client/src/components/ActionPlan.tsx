@@ -95,6 +95,8 @@ export function ActionPlan({ assessment, onSetStatus, pendingHazardId, photoHref
   const timers = useRef(new Map<string, number>());
   const fixedAt = useRef(new Map<string, number>());
   const lastOrder = useRef<string[]>([]);
+  // Order stays by priority; the filter only narrows it to one room once the plan grows.
+  const [roomFilter, setRoomFilter] = useState<string | null>(null);
 
   useEffect(() => {
     const pendingTimers = timers.current;
@@ -143,6 +145,23 @@ export function ActionPlan({ assessment, onSetStatus, pendingHazardId, photoHref
   const resolved = [...byId.values()].filter(
     (h) => h.status === "resolved" && !justFixed.includes(h.id) && !reverting.includes(h.id),
   );
+  // Rooms with something to show, labeled "Sala", "Sala 2"… when a type repeats.
+  const typeCount = new Map<RoomType, number>();
+  const roomOptions = assessment.rooms
+    .filter((room) => room.hazards.length > 0)
+    .map((room) => {
+      const n = (typeCount.get(room.type) ?? 0) + 1;
+      typeCount.set(room.type, n);
+      return {
+        id: room.id,
+        label: n === 1 ? roomLabel(room.type) : `${roomLabel(room.type)} ${n}`,
+      };
+    });
+  const activeFilter = roomOptions.some((o) => o.id === roomFilter) ? roomFilter : null;
+  const inFilter = (item: Item) => activeFilter === null || item.roomId === activeFilter;
+  const shownPending = pending.filter(inFilter);
+  const shownResolved = resolved.filter(inFilter);
+
   const { totalHazards, resolved: resolvedCount, pendingCostUsd } = assessment.plan;
   const progress = totalHazards === 0 ? 0 : Math.round((resolvedCount / totalHazards) * 100);
 
@@ -217,11 +236,37 @@ export function ActionPlan({ assessment, onSetStatus, pendingHazardId, photoHref
         )}
       </div>
 
-      {pending.length > 0 && (
+      {roomOptions.length > 1 && (
+        <div
+          role="group"
+          aria-label={p.filterAria}
+          className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1"
+        >
+          {[{ id: null, label: p.filterAll }, ...roomOptions].map((option) => (
+            <button
+              key={option.id ?? "all"}
+              type="button"
+              aria-pressed={activeFilter === option.id}
+              onClick={() => setRoomFilter(option.id)}
+              className={`flex min-h-12 shrink-0 items-center rounded-full px-4 text-base font-semibold ring-1 ${activeFilter === option.id ? "bg-mint text-ink ring-mint" : "text-stone-200 ring-white/15 hover:bg-white/10"}`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {activeFilter !== null && shownPending.length === 0 && (
+        <p className="rounded-lg bg-emerald-500/10 px-4 py-3 text-base text-emerald-200">
+          {p.roomClear}
+        </p>
+      )}
+
+      {shownPending.length > 0 && (
         <section>
           <h2 className="mb-2 font-semibold">{p.todo}</h2>
           <ol className="space-y-2">
-            {pending.map((item) => {
+            {shownPending.map((item) => {
               const fixedNow = justFixedNow.has(item.id);
               return (
                 <ActionItemRow
@@ -239,11 +284,11 @@ export function ActionPlan({ assessment, onSetStatus, pendingHazardId, photoHref
         </section>
       )}
 
-      {resolved.length > 0 && (
+      {shownResolved.length > 0 && (
         <section>
           <h2 className="mb-2 font-semibold">{p.done}</h2>
           <ul className="space-y-2">
-            {resolved.map((item) => (
+            {shownResolved.map((item) => (
               <ActionItemRow
                 key={item.id}
                 item={item}

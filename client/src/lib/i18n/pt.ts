@@ -377,6 +377,9 @@ export const pt: Dict = {
     fixed: "Já resolvi",
     undo: "Desfazer",
     seePhoto: "Ver na foto",
+    filterAria: "Ver por cômodo",
+    filterAll: "Todos",
+    roomClear: "Não há nada pendente neste cômodo.",
     fixedDone: "✓ Muito bem! Marcado como resolvido.",
     fixedAnnounce: (label: string, remaining: number) =>
       remaining === 0

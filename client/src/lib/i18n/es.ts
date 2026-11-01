@@ -377,6 +377,9 @@ export const es = {
     fixed: "Ya lo arreglé",
     undo: "Deshacer",
     seePhoto: "Ver en la foto",
+    filterAria: "Ver por espacio",
+    filterAll: "Todos",
+    roomClear: "No queda nada pendiente en este espacio.",
     fixedDone: "✓ ¡Bien hecho! Marcado como arreglado.",
     fixedAnnounce: (label: string, remaining: number) =>
       remaining === 0

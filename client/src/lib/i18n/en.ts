@@ -370,6 +370,9 @@ export const en: Dict = {
     fixed: "I fixed it",
     undo: "Undo",
     seePhoto: "See on the photo",
+    filterAria: "View by room",
+    filterAll: "All",
+    roomClear: "Nothing left to do in this room.",
     fixedDone: "✓ Well done! Marked as fixed.",
     fixedAnnounce: (label: string, remaining: number) =>
       remaining === 0 ? `${label}: fixed. Plan complete!` : `${label}: fixed. ${remaining} left.`,
