@@ -1,5 +1,6 @@
 import { ActionPlan } from "../../components/ActionPlan";
 import { EmptyState } from "../../components/EmptyState";
+import { ShareLink } from "../../components/ShareLink";
 import { ViewTitle } from "../../components/ViewTitle";
 import { useT } from "../../lib/i18n";
 import { roomPath } from "../../lib/router";
@@ -41,6 +42,8 @@ export function PlanView({
           {statusError}
         </p>
       )}
+      {/* Sharing belongs with the plan the family will follow, not only in Settings. */}
+      {assessment.rooms.length > 0 && <ShareLink token={token} />}
     </div>
   );
 }

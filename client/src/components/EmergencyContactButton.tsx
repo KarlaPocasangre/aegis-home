@@ -1,4 +1,4 @@
-import { useId, useRef, useState, type FormEvent } from "react";
+import { useEffect, useId, useRef, useState, type FormEvent } from "react";
 import {
   contactLinks,
   helpMessage,
@@ -25,11 +25,34 @@ export function EmergencyContactButton() {
   const [contacts, setContacts] = useState<Contact[]>(loadContacts);
   const [location, setLocation] = useState<LocationState>({ status: "off" });
   const [formError, setFormError] = useState<string | null>(null);
+  // The last removed contact, restorable for a few seconds: "Quitar" sits next to the name.
+  const [removed, setRemoved] = useState<{ contact: Contact; index: number } | null>(null);
   const ids = { name: useId(), phone: useId(), title: useId() };
+
+  useEffect(() => {
+    if (!removed) return;
+    const timer = window.setTimeout(() => setRemoved(null), 8000);
+    return () => window.clearTimeout(timer);
+  }, [removed]);
 
   const updateContacts = (next: Contact[]) => {
     setContacts(next);
     saveContacts(next);
+  };
+
+  const removeContact = (index: number) => {
+    const contact = contacts[index];
+    if (!contact) return;
+    updateContacts(contacts.filter((_, i) => i !== index));
+    setRemoved({ contact, index });
+  };
+
+  const undoRemove = () => {
+    if (!removed || contacts.length >= MAX_CONTACTS) return setRemoved(null);
+    const next = [...contacts];
+    next.splice(removed.index, 0, removed.contact);
+    updateContacts(next);
+    setRemoved(null);
   };
 
   // Geolocation is requested only when the user ticks the box.
@@ -90,7 +113,7 @@ export function EmergencyContactButton() {
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}
-              className="rounded-lg px-2 py-1 text-stone-400 hover:bg-white/5"
+              className="flex size-12 shrink-0 items-center justify-center rounded-lg text-xl text-stone-300 hover:bg-white/5"
               aria-label={tr.common.close}
             >
               ✕
@@ -100,12 +123,28 @@ export function EmergencyContactButton() {
             {c.disclaimer}
           </p>
 
+          {removed && (
+            <div
+              role="status"
+              className="mt-4 flex items-center justify-between gap-3 rounded-lg bg-white/5 px-3 py-1"
+            >
+              <p className="text-sm text-stone-300">{c.removed(removed.contact.name)}</p>
+              <button
+                type="button"
+                onClick={undoRemove}
+                className="flex min-h-12 shrink-0 items-center px-2 text-base font-semibold text-mint underline underline-offset-4"
+              >
+                {c.undo}
+              </button>
+            </div>
+          )}
+
           {contacts.length > 0 && (
             <>
-              <label className="mt-4 flex items-center gap-2 text-sm">
+              <label className="mt-4 flex min-h-11 cursor-pointer items-center gap-3 text-base">
                 <input
                   type="checkbox"
-                  className="size-4 accent-mint"
+                  className="size-6 shrink-0 accent-mint"
                   checked={location.status === "on" || location.status === "locating"}
                   onChange={(e) => toggleLocation(e.target.checked)}
                 />
@@ -131,9 +170,9 @@ export function EmergencyContactButton() {
                         <p className="font-semibold">{contact.name}</p>
                         <button
                           type="button"
-                          onClick={() => updateContacts(contacts.filter((_, i) => i !== index))}
+                          onClick={() => removeContact(index)}
                           aria-label={c.removeAria(contact.name)}
-                          className="text-xs text-stone-400 underline hover:text-red-300"
+                          className="flex min-h-12 items-center rounded-lg px-3 text-sm font-semibold text-stone-300 underline hover:text-red-300"
                         >
                           {c.remove}
                         </button>
@@ -142,7 +181,7 @@ export function EmergencyContactButton() {
                       <div className="mt-2 grid grid-cols-3 gap-2 text-center text-sm font-semibold">
                         <a
                           href={links.call}
-                          className="rounded-lg bg-mint px-2 py-2.5 text-ink hover:bg-mint-soft"
+                          className="flex min-h-12 items-center justify-center rounded-lg bg-mint px-2 text-ink hover:bg-mint-soft"
                         >
                           {c.call}
                         </a>
@@ -150,13 +189,13 @@ export function EmergencyContactButton() {
                           href={links.whatsapp}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="rounded-lg bg-emerald-500 px-2 py-2.5 text-ink hover:bg-emerald-400"
+                          className="flex min-h-12 items-center justify-center rounded-lg bg-emerald-500 px-2 text-ink hover:bg-emerald-400"
                         >
                           WhatsApp
                         </a>
                         <a
                           href={links.sms}
-                          className="rounded-lg bg-white/10 px-2 py-2.5 text-white hover:bg-white/20"
+                          className="flex min-h-12 items-center justify-center rounded-lg bg-white/10 px-2 text-white hover:bg-white/20"
                         >
                           SMS
                         </a>
@@ -209,7 +248,7 @@ export function EmergencyContactButton() {
               )}
               <button
                 type="submit"
-                className="w-full rounded-lg border border-mint/60 px-4 py-2.5 font-semibold text-mint hover:bg-mint/10"
+                className="min-h-12 w-full rounded-lg border border-mint/60 px-4 font-semibold text-mint hover:bg-mint/10"
               >
                 {c.save}
               </button>

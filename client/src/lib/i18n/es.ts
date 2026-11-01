@@ -35,7 +35,8 @@ export const es = {
     outdoor: "Patio o exterior",
     other: "Otro espacio",
   },
-  severity: { high: "Riesgo alto", medium: "Riesgo medio", low: "Riesgo bajo" },
+  // Framed as when to act, not how alarming it is: calmer, and it says what to do.
+  severity: { high: "Arreglar primero", medium: "Arreglar pronto", low: "Cuando pueda" },
   cost: {
     free: "Sin costo",
     approx: (value: string) => `Aprox. ${value}`,
@@ -94,6 +95,9 @@ export const es = {
       "Cualquier persona con este enlace puede ver y actualizar el plan de esta casa. Compártalo solo con personas de confianza.",
     linkLabel: "Enlace del plan",
     promptCopy: "Copie este enlace:",
+    shareButton: "Compartir el plan",
+    message:
+      "Este es el plan de Aegis Home para hacer más segura la casa. Con este enlace puede verlo y marcar lo que ya se arregló.",
   },
   landingNav: {
     aria: "Secciones de la página",
@@ -126,7 +130,7 @@ export const es = {
       "Resultado en un minuto o menos",
     ],
     photoAlt: "Foto de ejemplo de una sala con riesgos resaltados",
-    highRisk: "Riesgo alto",
+    highRisk: "Arreglar primero",
     planOf: "Plan de esta sala",
     fixes: "arreglos",
     caption: "Resultado real de Muse Spark y SAM 3.1 sobre una imagen de ejemplo generada con IA.",
@@ -420,8 +424,8 @@ export const es = {
         : `${room}: encontramos ${n} cosas para mejorar`,
     summaryHigh: (n: number) =>
       n === 1
-        ? "Empiece por la marcada como «Riesgo alto»."
-        : `Empiece por las ${n} marcadas como «Riesgo alto».`,
+        ? "Empiece por la marcada como «Arreglar primero»."
+        : `Empiece por las ${n} marcadas como «Arreglar primero».`,
     summaryCost: (value: string) => `Costo aproximado de los arreglos: ${value}.`,
     summaryResolved: "Todo lo de este espacio ya está resuelto.",
     seePlan: "Ver mi plan",
@@ -461,6 +465,8 @@ export const es = {
     whatsapp: "WhatsApp",
     sms: "SMS",
     remove: "Quitar",
+    removed: (name: string) => `Contacto quitado: ${name}.`,
+    undo: "Deshacer",
     removeAria: (name: string) => `Quitar a ${name}`,
     actionAria: (action: string, name: string) => `${action}: ${name}`,
     addFirst: "Agregue un contacto de confianza",

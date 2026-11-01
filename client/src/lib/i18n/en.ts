@@ -36,7 +36,8 @@ export const en: Dict = {
     outdoor: "Yard or outdoors",
     other: "Other room",
   },
-  severity: { high: "High risk", medium: "Medium risk", low: "Low risk" },
+  // Framed as when to act, not how alarming it is: calmer, and it says what to do.
+  severity: { high: "Fix first", medium: "Fix soon", low: "When you can" },
   cost: {
     free: "No cost",
     approx: (value: string) => `About ${value}`,
@@ -95,6 +96,9 @@ export const en: Dict = {
       "Anyone with this link can see and update this home's plan. Only share it with people you trust.",
     linkLabel: "Plan link",
     promptCopy: "Copy this link:",
+    shareButton: "Share the plan",
+    message:
+      "This is the Aegis Home plan to make the home safer. With this link you can see it and check off what's already fixed.",
   },
   landingNav: {
     aria: "Page sections",
@@ -123,7 +127,7 @@ export const en: Dict = {
     seeExample: "See a real example",
     trust: ["Free, no account needed", "Photos are never stored", "Results in a minute or less"],
     photoAlt: "Sample photo of a living room with highlighted hazards",
-    highRisk: "High risk",
+    highRisk: "Fix first",
     planOf: "Plan for this living room",
     fixes: "fixes",
     caption: "Real Muse Spark and SAM 3.1 result on an AI-generated sample image.",
@@ -409,8 +413,8 @@ export const en: Dict = {
       n === 1 ? `${room}: we found 1 thing to improve` : `${room}: we found ${n} things to improve`,
     summaryHigh: (n: number) =>
       n === 1
-        ? "Start with the one marked “High risk”."
-        : `Start with the ${n} marked “High risk”.`,
+        ? "Start with the one marked “Fix first”."
+        : `Start with the ${n} marked “Fix first”.`,
     summaryCost: (value: string) => `Approximate cost of the fixes: ${value}.`,
     summaryResolved: "Everything in this room is already fixed.",
     seePlan: "See my plan",
@@ -449,6 +453,8 @@ export const en: Dict = {
     whatsapp: "WhatsApp",
     sms: "SMS",
     remove: "Remove",
+    removed: (name: string) => `Removed ${name}.`,
+    undo: "Undo",
     removeAria: (name: string) => `Remove ${name}`,
     actionAria: (action: string, name: string) => `${action}: ${name}`,
     addFirst: "Add a trusted contact",

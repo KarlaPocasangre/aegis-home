@@ -36,7 +36,8 @@ export const pt: Dict = {
     outdoor: "Quintal ou área externa",
     other: "Outro cômodo",
   },
-  severity: { high: "Risco alto", medium: "Risco médio", low: "Risco baixo" },
+  // Framed as when to act, not how alarming it is: calmer, and it says what to do.
+  severity: { high: "Resolver primeiro", medium: "Resolver logo", low: "Quando puder" },
   cost: {
     free: "Sem custo",
     approx: (value: string) => `Aprox. ${value}`,
@@ -95,6 +96,9 @@ export const pt: Dict = {
       "Qualquer pessoa com este link pode ver e atualizar o plano desta casa. Compartilhe apenas com pessoas de confiança.",
     linkLabel: "Link do plano",
     promptCopy: "Copie este link:",
+    shareButton: "Compartilhar o plano",
+    message:
+      "Este é o plano do Aegis Home para deixar a casa mais segura. Com este link você pode vê-lo e marcar o que já foi resolvido.",
   },
   landingNav: {
     aria: "Seções da página",
@@ -127,7 +131,7 @@ export const pt: Dict = {
       "Resultado em um minuto ou menos",
     ],
     photoAlt: "Foto de exemplo de uma sala com riscos destacados",
-    highRisk: "Risco alto",
+    highRisk: "Resolver primeiro",
     planOf: "Plano desta sala",
     fixes: "ajustes",
     caption: "Resultado real do Muse Spark e do SAM 3.1 sobre uma imagem de exemplo gerada com IA.",
@@ -421,8 +425,8 @@ export const pt: Dict = {
         : `${room}: encontramos ${n} coisas para melhorar`,
     summaryHigh: (n: number) =>
       n === 1
-        ? "Comece pela marcada como «Risco alto»."
-        : `Comece pelas ${n} marcadas como «Risco alto».`,
+        ? "Comece pela marcada como «Resolver primeiro»."
+        : `Comece pelas ${n} marcadas como «Resolver primeiro».`,
     summaryCost: (value: string) => `Custo aproximado dos ajustes: ${value}.`,
     summaryResolved: "Tudo neste cômodo já está resolvido.",
     seePlan: "Ver meu plano",
@@ -462,6 +466,8 @@ export const pt: Dict = {
     whatsapp: "WhatsApp",
     sms: "SMS",
     remove: "Remover",
+    removed: (name: string) => `Contato removido: ${name}.`,
+    undo: "Desfazer",
     removeAria: (name: string) => `Remover ${name}`,
     actionAria: (action: string, name: string) => `${action}: ${name}`,
     addFirst: "Adicione um contato de confiança",
