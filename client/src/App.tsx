@@ -20,10 +20,10 @@ export default function App() {
       ) : (
         <>
           <LandingNavbar />
-          <main id="contenido" className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
+          <main id="contenido" className="flex-1">
             <LandingPage />
           </main>
-          <SiteFooter />
+          <SiteFooter variant="full" />
         </>
       )}
     </div>
