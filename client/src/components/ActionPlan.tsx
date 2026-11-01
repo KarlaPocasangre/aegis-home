@@ -1,7 +1,7 @@
 import { linkHandler } from "../lib/router";
 import { useT } from "../lib/i18n";
 import { capitalize, formatCost, formatUsd, roomLabel } from "../lib/labels";
-import type { Assessment, Hazard, HazardStatus, RoomType } from "../lib/types";
+import type { ContentLanguage, Assessment, Hazard, HazardStatus, RoomType } from "../lib/types";
 import { SeverityBadge } from "./SeverityBadge";
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
   photoHref?: (roomId: string, hazardId: string) => string;
 }
 
-type Item = Hazard & { roomType: RoomType; roomId: string };
+type Item = Hazard & { roomType: RoomType; roomId: string; language: ContentLanguage };
 
 function ActionItemRow({
   item,
@@ -32,11 +32,11 @@ function ActionItemRow({
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <p className={`font-semibold ${resolved ? "text-stone-400 line-through" : ""}`}>
-            <span lang="es">{capitalize(item.labelEs)}</span>
+            <span lang={item.language}>{capitalize(item.labelEs)}</span>
           </p>
           {!resolved && <SeverityBadge severity={item.severity} />}
         </div>
-        <p lang="es" className="mt-1 text-sm text-stone-300">
+        <p lang={item.language} className="mt-1 text-sm text-stone-300">
           {item.fixEs}
         </p>
         <p className="mt-1 text-xs text-stone-400">
@@ -69,7 +69,12 @@ export function ActionPlan({ assessment, onSetStatus, pendingHazardId, photoHref
   const byId = new Map<string, Item>();
   for (const room of assessment.rooms) {
     for (const hazard of room.hazards)
-      byId.set(hazard.id, { ...hazard, roomType: room.type, roomId: room.id });
+      byId.set(hazard.id, {
+        ...hazard,
+        roomType: room.type,
+        roomId: room.id,
+        language: room.language,
+      });
   }
   const pending = assessment.plan.orderedHazardIds
     .map((id) => byId.get(id))

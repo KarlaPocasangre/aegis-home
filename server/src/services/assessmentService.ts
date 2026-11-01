@@ -43,6 +43,7 @@ function toRoomDto(r: RoomRow) {
     source: toApiEnum(r.source),
     imageWidth: r.imageWidth,
     imageHeight: r.imageHeight,
+    language: r.language,
     createdAt: r.createdAt,
     hazards: r.hazards.map(toHazardDto),
   };
@@ -119,6 +120,7 @@ export function createAssessmentService(db: Db) {
           source: toDbEnum(room.result.source),
           imageWidth: room.imageWidth,
           imageHeight: room.imageHeight,
+          language: room.result.language,
           hazards: {
             create: room.result.hazards.map((h) => ({
               aiId: h.id,

@@ -1,0 +1,130 @@
+{
+  "roomType": "stairs",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "missing handrail",
+      "label_es": "corrimão ausente",
+      "severity": "high",
+      "description_es": "Não há corrimão na parede da escada. Sem apoio para segurar, a pessoa pode se desequilibrar e cair.",
+      "fix_es": "Instale um corrimão firme na parede ao longo de toda a escada.",
+      "cost_estimate_usd": 35,
+      "confidence": 0.82,
+      "box": [
+        115,
+        55,
+        910,
+        785
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.115,
+          0.055,
+          0.795,
+          0.73
+        ]
+      }
+    },
+    {
+      "id": "h2",
+      "label_en": "box on stairs",
+      "label_es": "caixa na escada",
+      "severity": "high",
+      "description_es": "Tem uma caixa no degrau da escada. A pessoa pode tropeçar nela e cair.",
+      "fix_es": "Tire a caixa da escada agora e guarde em outro lugar, deixando os degraus livres.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.95,
+      "box": [
+        318,
+        648,
+        458,
+        734
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.318,
+          0.648,
+          0.14,
+          0.08600000000000001
+        ]
+      }
+    },
+    {
+      "id": "h3",
+      "label_en": "shoes on stairs",
+      "label_es": "sapatos na escada",
+      "severity": "high",
+      "description_es": "Tem sapatos escuros no meio do degrau. São difíceis de ver e podem causar tropeço e queda.",
+      "fix_es": "Retire os sapatos da escada e deixe todos os degraus sempre livres.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.9,
+      "box": [
+        536,
+        508,
+        689,
+        553
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.536,
+          0.508,
+          0.153,
+          0.045000000000000005
+        ]
+      }
+    },
+    {
+      "id": "h4",
+      "label_en": "blue item on step",
+      "label_es": "objeto azul no degrau",
+      "severity": "medium",
+      "description_es": "Tem um objeto azul no degrau de cima. Pode fazer a pessoa tropeçar ou se distrair.",
+      "fix_es": "Retire o objeto do degrau e mantenha a passagem da escada livre.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.85,
+      "box": [
+        710,
+        376,
+        781,
+        432
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.6826171875,
+          0.3776041666666667,
+          0.0693359375,
+          0.052083333333333336
+        ]
+      }
+    },
+    {
+      "id": "h5",
+      "label_en": "dim stair lighting",
+      "label_es": "iluminação fraca",
+      "severity": "medium",
+      "description_es": "A parte de baixo da escada está escura. Com pouca luz fica difícil ver os degraus e o risco de queda aumenta.",
+      "fix_es": "Coloque uma lâmpada mais forte que clareie todos os degraus por igual.",
+      "cost_estimate_usd": 12,
+      "confidence": 0.7,
+      "box": [
+        0,
+        550,
+        350,
+        900
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0,
+          0.55,
+          0.35000000000000003,
+          0.35000000000000003
+        ]
+      }
+    }
+  ]
+}

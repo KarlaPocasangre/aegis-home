@@ -66,6 +66,7 @@ model Room {
   source       AnalysisSource // LIVE | CACHED | MOCK — shown to the user when not LIVE
   imageWidth   Int // dimensions of the normalized image the regions refer to
   imageHeight  Int
+  language     String         @default("es") // language of the hazard text: es | pt | en
   createdAt    DateTime       @default(now())
   hazards      Hazard[]
 

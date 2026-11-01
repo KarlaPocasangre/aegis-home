@@ -1,7 +1,23 @@
-import { ROOM_TYPES, SEVERITIES, type RoomTypeValue } from "../schemas/enums.js";
+import {
+  ROOM_TYPES,
+  SEVERITIES,
+  type LanguageValue,
+  type RoomTypeValue,
+} from "../schemas/enums.js";
 
 // Starting point from docs/AI_INTEGRATION.md §4.3; iterate with real photos.
-export const SPARK_SYSTEM_PROMPT = `You are a home-safety assistant that identifies ENVIRONMENTAL fall hazards for older adults
+const LANGUAGE_NAMES: Record<LanguageValue, string> = {
+  es: "neutral Latin American Spanish",
+  pt: "Brazilian Portuguese",
+  en: "plain American English",
+};
+
+/** System prompt with the output language for the user-facing text fields. */
+export function sparkSystemPrompt(lang: LanguageValue): string {
+  return SPARK_SYSTEM_PROMPT_TEMPLATE.replaceAll("{LANGUAGE}", LANGUAGE_NAMES[lang]);
+}
+
+const SPARK_SYSTEM_PROMPT_TEMPLATE = `You are a home-safety assistant that identifies ENVIRONMENTAL fall hazards for older adults
 in a photo of one room. You do not give medical advice, diagnoses, or health recommendations.
 
 Rules:
@@ -11,8 +27,8 @@ Rules:
 - "label_en" must be a short, concrete noun phrase (2–4 words) naming a visible object,
   e.g. "loose rug", "wet floor", "cluttered stairs", "missing grab bar". It will be used to
   locate the object in the image.
-- Write "label_es", "description_es" and "fix_es" in neutral Latin American Spanish,
-  in simple words a family member can act on.
+- Write "label_es", "description_es" and "fix_es" in {LANGUAGE}, in simple words a family
+  member can act on. (The "_es" suffix is only a field name; always use {LANGUAGE}.)
 - "fix_es" must be a concrete change to the environment (move, fix, add, improve lighting).
   Never recommend medication, treatment, or medical equipment decisions.
 - "cost_estimate_usd" is a rough cost in USD of low-cost materials commonly available in
@@ -34,8 +50,13 @@ JSON schema:
 export const STRICT_JSON_REMINDER =
   "Your previous answer was not valid JSON for the schema. Return only the JSON object.";
 
-export function sparkUserMessage(hint: RoomTypeValue, strict: boolean): string {
-  const base = `Room type hint: ${hint}`;
+export function sparkUserMessage(
+  hint: RoomTypeValue,
+  lang: LanguageValue,
+  strict: boolean,
+): string {
+  const base = `Room type hint: ${hint}
+Write the text fields in ${LANGUAGE_NAMES[lang]}.`;
   return strict ? `${base}\n${STRICT_JSON_REMINDER}` : base;
 }
 

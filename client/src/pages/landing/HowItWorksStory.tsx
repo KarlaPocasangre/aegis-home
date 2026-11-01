@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { ImageCanvasOverlay } from "../../components/ImageCanvasOverlay";
-import { DEMO_HAZARDS, DEMO_IMAGE } from "../../lib/demoResult";
+import { DEMO_IMAGE, demoHazards } from "../../lib/demoResult";
 import { capitalize, formatUsd, SEVERITY_STYLES } from "../../lib/labels";
-import { useT } from "../../lib/i18n";
+import { useLang, useT } from "../../lib/i18n";
 import { Band, ICONS, SectionHeading, icon } from "./layout";
 
 const STEP_ICONS = [ICONS.camera, ICONS.sparkle, ICONS.target, ICONS.list];
@@ -13,7 +13,8 @@ const fade = (on: boolean) =>
 /** The same photo at each stage of the pipeline. Decorative: the step text carries the meaning. */
 function StoryVisual({ stage }: { stage: number }) {
   const tr = useT();
-  const demoCost = DEMO_HAZARDS.reduce((sum, h) => sum + h.costEstimateUsd, 0);
+  const hazards = demoHazards(useLang());
+  const demoCost = hazards.reduce((sum, h) => sum + h.costEstimateUsd, 0);
   return (
     <div
       inert
@@ -25,7 +26,7 @@ function StoryVisual({ stage }: { stage: number }) {
           <ImageCanvasOverlay
             src={DEMO_IMAGE}
             alt=""
-            hazards={DEMO_HAZARDS}
+            hazards={hazards}
             activeId={null}
             onSelect={() => {}}
           />
@@ -45,7 +46,7 @@ function StoryVisual({ stage }: { stage: number }) {
 
         {/* Stage 1: what Spark found, as labels */}
         <ul className={`absolute inset-x-3 bottom-3 flex flex-wrap gap-2 ${fade(stage === 1)}`}>
-          {DEMO_HAZARDS.map((h, i) => (
+          {hazards.map((h, i) => (
             <li
               key={h.id}
               style={{ transitionDelay: stage === 1 ? `${i * 90}ms` : "0ms" }}
@@ -71,7 +72,7 @@ function StoryVisual({ stage }: { stage: number }) {
             <div className="h-full w-1/4 rounded-full bg-emerald-500" />
           </div>
           <ul className="mt-3 space-y-1.5 text-sm">
-            {DEMO_HAZARDS.slice(0, 3).map((h, i) => (
+            {hazards.slice(0, 3).map((h, i) => (
               <li key={h.id} className="flex items-center gap-2 text-stone-100">
                 <span
                   className={`flex size-4 items-center justify-center rounded border ${i === 0 ? "border-emerald-600 bg-emerald-600 text-white" : "border-stone-400"}`}

@@ -40,12 +40,14 @@ export function assessmentsRouter(
       const householdId = householdIdOf(res);
       const assessmentId = idParam(req.params);
       if (!req.file) throw new HttpError("VALIDATION_ERROR");
-      const { roomType } = RoomUploadFieldsSchema.parse(req.body ?? {});
+      const { roomType, lang } = RoomUploadFieldsSchema.parse(req.body ?? {});
 
       await assessments.ensureCanAddRoom(householdId, assessmentId);
       const image = await normalizeImage(req.file.buffer);
-      const result = await vision.analyze(image, roomType);
-      console.log(`[analysis] source=${result.source} hazards=${result.hazards.length}`);
+      const result = await vision.analyze(image, roomType, lang);
+      console.log(
+        `[analysis] source=${result.source} lang=${result.language} hazards=${result.hazards.length}`,
+      );
 
       const room = await assessments.addRoom(householdId, assessmentId, {
         type: roomType,

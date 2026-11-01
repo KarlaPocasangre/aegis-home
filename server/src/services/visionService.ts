@@ -11,7 +11,7 @@ import {
   type SparkHazard,
   type SparkOutput,
 } from "../schemas/ai.js";
-import type { AnalysisSourceValue, RoomTypeValue } from "../schemas/enums.js";
+import type { AnalysisSourceValue, LanguageValue, RoomTypeValue } from "../schemas/enums.js";
 import type { UsageService } from "./usageService.js";
 
 export interface AnalyzedHazard extends SparkHazard {
@@ -20,11 +20,17 @@ export interface AnalyzedHazard extends SparkHazard {
 
 export interface AnalysisResult {
   source: AnalysisSourceValue;
+  /** Language the hazard text is actually in (a fallback may differ from the one asked for). */
+  language: LanguageValue;
   hazards: AnalyzedHazard[];
 }
 
 export interface VisionService {
-  analyze(image: NormalizedImage, hint: RoomTypeValue): Promise<AnalysisResult>;
+  analyze(
+    image: NormalizedImage,
+    hint: RoomTypeValue,
+    lang: LanguageValue,
+  ): Promise<AnalysisResult>;
 }
 
 // docs/AI_INTEGRATION.md §3.2 — suggestions; tune after measuring real latency.
@@ -73,6 +79,7 @@ export function createVisionService(deps: VisionDeps): VisionService {
     ai: MetaClient,
     image: NormalizedImage,
     hint: RoomTypeValue,
+    lang: LanguageValue,
     budget: AbortSignal,
   ): Promise<SparkOutput> {
     let invalidRetries = INVALID_JSON_RETRIES;
@@ -84,7 +91,7 @@ export function createVisionService(deps: VisionDeps): VisionService {
       await consume(1);
       try {
         const signal = withTimeout(budget, timing.sparkTimeoutMs);
-        const raw = await ai.detectHazards(image, hint, { signal, strict });
+        const raw = await ai.detectHazards(image, hint, { signal, strict, lang });
         const parsed = SparkOutputSchema.safeParse(extractJsonObject(raw));
         if (parsed.success) return parsed.data;
         if (invalidRetries-- <= 0) throw new ProviderError("invalid_output");
@@ -133,26 +140,34 @@ export function createVisionService(deps: VisionDeps): VisionService {
     });
   }
 
-  function fallback(image: NormalizedImage, hint: RoomTypeValue): AnalysisResult {
-    const cached = fixtures.byHash(image.sha256);
-    if (cached) return { source: "cached", hazards: cached.hazards };
-    const generic = fixtures.generic(hint);
-    if (generic) return { source: "mock", hazards: generic.hazards };
+  function fallback(
+    image: NormalizedImage,
+    hint: RoomTypeValue,
+    lang: LanguageValue,
+  ): AnalysisResult {
+    const cached = fixtures.byHash(image.sha256, lang);
+    if (cached) return { source: "cached", language: cached.language, hazards: cached.hazards };
+    const generic = fixtures.generic(hint, lang);
+    if (generic) return { source: "mock", language: generic.language, hazards: generic.hazards };
     throw new HttpError("AI_PROVIDER_ERROR");
   }
 
   return {
-    async analyze(image, hint) {
-      if (!client) return fallback(image, hint);
+    async analyze(image, hint, lang) {
+      if (!client) return fallback(image, hint, lang);
 
       const budget = AbortSignal.timeout(timing.budgetMs);
       try {
-        const spark = await detect(client, image, hint, budget);
+        const spark = await detect(client, image, hint, lang, budget);
         // Joined by hazard id: each SAM call is prompted with that hazard's own label.
-        return { source: "live", hazards: await segmentAll(client, image, spark.hazards, budget) };
+        return {
+          source: "live",
+          language: lang,
+          hazards: await segmentAll(client, image, spark.hazards, budget),
+        };
       } catch (err) {
         console.warn(`[analysis] live path failed (${failureKind(err)}), using fallback`);
-        return fallback(image, hint);
+        return fallback(image, hint, lang);
       }
     },
   };

@@ -7,18 +7,20 @@ import { PrivacyNotice } from "../../components/PrivacyNotice";
 import { SampleImagePicker } from "../../components/SampleImagePicker";
 import { analyzeRoom } from "../../hooks/useAssessment";
 import { api } from "../../lib/api";
-import { DEMO_HAZARDS, DEMO_IMAGE } from "../../lib/demoResult";
+import { DEMO_IMAGE, demoHazards } from "../../lib/demoResult";
 import { userMessage } from "../../lib/errors";
 import { householdPath, navigate } from "../../lib/router";
 import { fetchSample, type SampleImage } from "../../lib/samples";
-import { useT } from "../../lib/i18n";
+import { useLang, useT } from "../../lib/i18n";
 import { lastHousehold } from "../../lib/storage";
 import { Band, SectionHeading } from "./layout";
 
 /** A recorded real result, explorable before creating anything. */
 function DemoResult() {
   const a = useT().analysis;
-  const [activeId, setActiveId] = useState<string | null>(DEMO_HAZARDS[0]?.id ?? null);
+  const lang = useLang();
+  const hazards = demoHazards(lang);
+  const [activeId, setActiveId] = useState<string | null>(hazards[0]?.id ?? null);
   const select = (id: string) => setActiveId((current) => (current === id ? null : id));
 
   return (
@@ -34,19 +36,20 @@ function DemoResult() {
         <ImageCanvasOverlay
           src={DEMO_IMAGE}
           alt={a.demoAlt}
-          hazards={DEMO_HAZARDS}
+          hazards={hazards}
           activeId={activeId}
           onSelect={select}
         />
       </div>
       <ol className="mt-4 max-h-[28rem] space-y-2 overflow-y-auto pr-1">
-        {DEMO_HAZARDS.map((hazard, index) => (
+        {hazards.map((hazard, index) => (
           <HazardCard
             key={hazard.id}
             hazard={hazard}
             number={index + 1}
             active={hazard.id === activeId}
             onSelect={select}
+            lang={lang}
           />
         ))}
       </ol>

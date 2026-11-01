@@ -1,0 +1,105 @@
+{
+  "roomType": "bathroom",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "wet floor",
+      "label_es": "piso molhado",
+      "severity": "high",
+      "description_es": "Grande poça de água no piso de cerâmica entre o vaso e o box, deixa o chão muito escorregadio.",
+      "fix_es": "Seque toda a água com pano agora e coloque um tapete antiderrapante na saída do box.",
+      "cost_estimate_usd": 10,
+      "confidence": 0.95,
+      "box": [
+        320,
+        690,
+        875,
+        908
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.32,
+          0.69,
+          0.555,
+          0.218
+        ]
+      }
+    },
+    {
+      "id": "h2",
+      "label_en": "bunched bath mat",
+      "label_es": "tapete enrolado",
+      "severity": "high",
+      "description_es": "Tapete de banho laranja todo amontoado e enrolado sobre o chão molhado, fácil de tropeçar.",
+      "fix_es": "Estique o tapete no chão seco e coloque base ou fita antiderrapante embaixo dele.",
+      "cost_estimate_usd": 5,
+      "confidence": 0.92,
+      "box": [
+        440,
+        815,
+        730,
+        995
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.44,
+          0.815,
+          0.29,
+          0.18000000000000002
+        ]
+      }
+    },
+    {
+      "id": "h3",
+      "label_en": "loose slipper",
+      "label_es": "chinelo solto",
+      "severity": "medium",
+      "description_es": "Chinelo verde largado no chão ao lado do tapete, no meio da passagem.",
+      "fix_es": "Retire o chinelo do caminho e guarde os calçados sempre no mesmo lugar fora da passagem.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.8,
+      "box": [
+        320,
+        884,
+        410,
+        977
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.32,
+          0.884,
+          0.09,
+          0.09300000000000001
+        ]
+      }
+    },
+    {
+      "id": "h4",
+      "label_en": "missing grab bar",
+      "label_es": "sem barra de apoio",
+      "severity": "medium",
+      "description_es": "Parede do box do chuveiro sem barra de apoio para segurar ao entrar, tomar banho e sair.",
+      "fix_es": "Instale uma barra de apoio firme na parede do box com ajuda de um profissional.",
+      "cost_estimate_usd": 25,
+      "confidence": 0.75,
+      "box": [
+        700,
+        280,
+        900,
+        560
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.7000000000000001,
+          0.27999999999999997,
+          0.2,
+          0.27999999999999997
+        ]
+      }
+    }
+  ]
+}

@@ -16,6 +16,8 @@ export type RoomType = (typeof ROOM_TYPES)[number];
 export type Severity = "low" | "medium" | "high";
 export type HazardStatus = "pending" | "resolved";
 export type AnalysisSource = "live" | "cached" | "mock";
+/** Language of the model-written hazard text in a room. */
+export type ContentLanguage = "es" | "pt" | "en";
 
 export interface Region {
   type: "bbox" | "polygon";
@@ -43,6 +45,7 @@ export interface Room {
   source: AnalysisSource;
   imageWidth: number;
   imageHeight: number;
+  language: ContentLanguage;
   createdAt: string;
   hazards: Hazard[];
   notice?: string;

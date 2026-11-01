@@ -2,17 +2,14 @@ import { useRef } from "react";
 import { CountUp } from "../../components/CountUp";
 import { ImageCanvasOverlay } from "../../components/ImageCanvasOverlay";
 import { RollText } from "../../components/RollText";
-import { DEMO_HAZARDS, DEMO_IMAGE } from "../../lib/demoResult";
+import { DEMO_IMAGE, demoHazards } from "../../lib/demoResult";
 import { capitalize, formatUsd } from "../../lib/labels";
 import { gsap, MOTION_OK, useGSAP } from "../../lib/motion";
 import { householdPath, linkHandler } from "../../lib/router";
 import { scrollToHash } from "../../lib/smoothScroll";
-import { useT } from "../../lib/i18n";
+import { useLang, useT } from "../../lib/i18n";
 import { lastHousehold } from "../../lib/storage";
 import { DisplayHeading, ICONS, icon } from "./layout";
-
-const topHazard = DEMO_HAZARDS[0];
-const demoCost = DEMO_HAZARDS.reduce((sum, h) => sum + h.costEstimateUsd, 0);
 
 const scrollTo = (id: string) => () => scrollToHash(`#${id}`);
 
@@ -21,6 +18,10 @@ const primaryCta =
 
 export function HeroSection() {
   const h = useT().hero;
+  const lang = useLang();
+  const hazards = demoHazards(lang);
+  const topHazard = hazards[0];
+  const demoCost = hazards.reduce((sum, hz) => sum + hz.costEstimateUsd, 0);
   const saved = lastHousehold.get();
   const root = useRef<HTMLElement>(null);
 
@@ -140,7 +141,7 @@ export function HeroSection() {
               <ImageCanvasOverlay
                 src={DEMO_IMAGE}
                 alt={h.photoAlt}
-                hazards={DEMO_HAZARDS}
+                hazards={hazards}
                 activeId={topHazard?.id ?? null}
                 onSelect={scrollTo("ejemplo")}
               />
@@ -157,10 +158,10 @@ export function HeroSection() {
               className="relative z-10 -mt-2 ml-4 max-w-[17rem] rounded-xl bg-white/[0.04] p-3 shadow-lg ring-1 ring-white/10 sm:-ml-6"
             >
               <p className="text-xs font-bold tracking-wide text-red-400 uppercase">{h.highRisk}</p>
-              <p lang="es" className="mt-0.5 font-semibold text-white">
+              <p lang={lang} className="mt-0.5 font-semibold text-white">
                 {capitalize(topHazard.labelEs)}
               </p>
-              <p lang="es" className="mt-0.5 text-sm text-stone-400">
+              <p lang={lang} className="mt-0.5 text-sm text-stone-400">
                 {topHazard.fixEs.split(".")[0]}.
               </p>
             </div>
@@ -171,7 +172,7 @@ export function HeroSection() {
           >
             <p className="text-xs font-semibold text-ink/70">{h.planOf}</p>
             <p className="text-lg font-bold">
-              <CountUp to={DEMO_HAZARDS.length} delay={2.2} /> {h.fixes} ·{" "}
+              <CountUp to={hazards.length} delay={2.2} /> {h.fixes} ·{" "}
               <CountUp to={demoCost} format={formatUsd} delay={2.2} />
             </p>
           </div>

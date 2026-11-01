@@ -294,7 +294,7 @@ export const es = {
       },
       {
         q: "¿En qué idioma llegan los resultados?",
-        a: "La interfaz está en español, portugués e inglés. Por ahora, la descripción de cada riesgo que escribe la IA llega en español.",
+        a: "Los resultados llegan en el idioma que elija en la app. Si el servicio de IA no está disponible y se muestra un resultado guardado en otro idioma, la app lo indica.",
       },
       {
         q: "¿Quién puede ver el plan?",
@@ -373,6 +373,9 @@ export const es = {
     analyzing: "Analizando…",
   },
   roomsView: {
+    languageNames: { es: "español", pt: "portugués", en: "inglés" } as Record<string, string>,
+    otherLanguage: (language: string) =>
+      `Este resultado está en ${language}: se analizó o se guardó en ese idioma.`,
     title: "Espacios analizados",
     subtitle: "Toque un número en la foto o un riesgo de la lista para resaltarlo.",
     empty: "Todavía no ha analizado ningún espacio.",

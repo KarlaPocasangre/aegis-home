@@ -291,7 +291,7 @@ export const en: Dict = {
       },
       {
         q: "What language are the results in?",
-        a: "The interface is available in Spanish, Portuguese and English. For now, the description of each hazard written by the AI is in Spanish.",
+        a: "Results come in the language you choose in the app. If the AI service is unavailable and a saved result in another language is shown, the app tells you.",
       },
       {
         q: "Who can see the plan?",
@@ -369,6 +369,9 @@ export const en: Dict = {
     analyzing: "Analyzing…",
   },
   roomsView: {
+    languageNames: { es: "Spanish", pt: "Portuguese", en: "English" } as Record<string, string>,
+    otherLanguage: (language: string) =>
+      `This result is in ${language}: it was analyzed or saved in that language.`,
     title: "Analyzed rooms",
     subtitle: "Tap a number on the photo or a hazard in the list to highlight it.",
     empty: "You haven't analyzed any rooms yet.",

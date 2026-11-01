@@ -179,8 +179,11 @@ Upload one room photo and run the analysis. **Synchronous**; may take up to ~30 
 |---|---|---|
 | `image` | file | JPEG/PNG/WebP, ≤ 5 MB; validated by magic bytes; pixel limit enforced; re-encoded server-side |
 | `roomType` | string | One of the `roomType` enum |
+| `lang` | string | Optional. `es` (default) \| `pt` \| `en`: language the model writes the hazard text in |
 
 Limits: max 8 rooms per assessment.
+
+Every `room` object carries `language` (`es | pt | en`): the language its hazard text is actually in. A fallback can be in Spanish even when another language was asked for; the UI says so.
 
 **201** — a `room` object (same shape as in `GET /api/assessments/:id`), plus an optional notice:
 ```json

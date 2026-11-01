@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { linkHandler } from "../lib/router";
-import { useT } from "../lib/i18n";
+import { useLang, useT } from "../lib/i18n";
 import { roomLabel } from "../lib/labels";
 import { useRoomImage } from "../lib/roomImages";
 import type { Room } from "../lib/types";
@@ -23,6 +23,7 @@ export function RoomCard({ room, initialActiveId, showTitle = true, href }: Prop
   const [activeId, setActiveId] = useState<string | null>(initialActiveId ?? null);
   const select = (id: string) => setActiveId((current) => (current === id ? null : id));
   const tr = useT();
+  const appLang = useLang();
   const label = roomLabel(room.type);
 
   return (
@@ -44,6 +45,11 @@ export function RoomCard({ room, initialActiveId, showTitle = true, href }: Prop
       )}
       <div className="space-y-3">
         <FallbackBanner source={room.source} />
+        {room.language !== appLang && (
+          <p className="rounded-lg bg-white/5 px-4 py-3 text-sm text-stone-300">
+            {tr.roomsView.otherLanguage(tr.roomsView.languageNames[room.language] ?? room.language)}
+          </p>
+        )}
         {image ? (
           <ImageCanvasOverlay
             src={image}
@@ -70,6 +76,7 @@ export function RoomCard({ room, initialActiveId, showTitle = true, href }: Prop
                 number={index + 1}
                 active={hazard.id === activeId}
                 onSelect={select}
+                lang={room.language}
               />
             ))}
           </ol>

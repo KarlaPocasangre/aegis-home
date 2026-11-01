@@ -17,5 +17,9 @@ describe("recorded sample fixtures", () => {
   ])("%s matches its cached fixture", async (file, roomType) => {
     const image = await normalizeImage(await readFile(sample(file)));
     expect(fixtures.byHash(image.sha256)?.roomType).toBe(roomType);
+    // Recorded in every app language, so a sample falls back in the visitor's language.
+    for (const lang of ["es", "pt", "en"] as const) {
+      expect(fixtures.byHash(image.sha256, lang)?.language).toBe(lang);
+    }
   });
 });

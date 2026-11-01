@@ -42,7 +42,7 @@ describe("visionService live path", () => {
       timing,
     });
 
-    const result = await vision.analyze(image, "bathroom");
+    const result = await vision.analyze(image, "bathroom", "es");
 
     expect(result.source).toBe("live");
     expect(segment).toHaveBeenCalledTimes(2);
@@ -63,7 +63,7 @@ describe("visionService live path", () => {
       usage: unlimited,
       timing,
     });
-    const result = await vision.analyze(image, "bathroom");
+    const result = await vision.analyze(image, "bathroom", "es");
     expect(result.source).toBe("live");
     expect(result.hazards).toHaveLength(1);
     expect(result.hazards[0]?.region).toBeNull();
@@ -79,7 +79,7 @@ describe("visionService live path", () => {
       usage: unlimited,
       timing,
     });
-    expect((await vision.analyze(image, "bathroom")).source).toBe("live");
+    expect((await vision.analyze(image, "bathroom", "es")).source).toBe("live");
   });
 
   it("retries once with a strict reminder after invalid JSON", async () => {
@@ -94,7 +94,7 @@ describe("visionService live path", () => {
       timing,
     });
 
-    const result = await vision.analyze(image, "bathroom");
+    const result = await vision.analyze(image, "bathroom", "es");
 
     expect(result.source).toBe("live");
     expect(detectHazards.mock.calls.map((c) => c[2].strict)).toEqual([false, true]);
@@ -111,7 +111,7 @@ describe("visionService live path", () => {
       usage: unlimited,
       timing,
     });
-    expect((await vision.analyze(image, "bathroom")).source).toBe("live");
+    expect((await vision.analyze(image, "bathroom", "es")).source).toBe("live");
     expect(detectHazards).toHaveBeenCalledTimes(2);
   });
 });
@@ -139,7 +139,7 @@ describe("visionService fallback ladder", () => {
       usage: unlimited,
       timing,
     });
-    const result = await vision.analyze(image, "bathroom");
+    const result = await vision.analyze(image, "bathroom", "es");
     expect(result.source).toBe("mock");
     expect(result.hazards[0]?.label_en).toBe("wet floor");
   });
@@ -162,7 +162,7 @@ describe("visionService fallback ladder", () => {
       usage: unlimited,
       timing,
     });
-    const result = await vision.analyze(image, "bathroom");
+    const result = await vision.analyze(image, "bathroom", "es");
     expect(result.source).toBe("cached");
     expect(result.hazards[0]?.region).toEqual({ type: "bbox", points: [0, 0, 0.5, 0.5] });
   });
@@ -175,13 +175,13 @@ describe("visionService fallback ladder", () => {
       usage: { tryConsume: async () => false },
       timing,
     });
-    expect((await vision.analyze(image, "bathroom")).source).toBe("mock");
+    expect((await vision.analyze(image, "bathroom", "es")).source).toBe("mock");
     expect(detectHazards).not.toHaveBeenCalled();
   });
 
   it("never labels mock mode as live", async () => {
     const vision = createVisionService({ client: null, fixtures, usage: unlimited, timing });
-    expect((await vision.analyze(image, "bathroom")).source).toBe("mock");
+    expect((await vision.analyze(image, "bathroom", "es")).source).toBe("mock");
   });
 
   it("falls back to the generic 'other' fixture for room types without one", async () => {
@@ -192,7 +192,43 @@ describe("visionService fallback ladder", () => {
       usage: unlimited,
       timing,
     });
-    expect(await vision.analyze(image, "kitchen")).toEqual({ source: "mock", hazards: [] });
+    expect(await vision.analyze(image, "kitchen", "es")).toEqual({
+      source: "mock",
+      language: "es",
+      hazards: [],
+    });
+  });
+
+  it("serves a fallback in the requested language, else Spanish, and says which", async () => {
+    const es: Fixture = { roomType: "bathroom", hazards: [] };
+    const pt: Fixture = { roomType: "bathroom", hazards: [sparkHazard() as never] };
+    const vision = createVisionService({
+      client: null,
+      fixtures: createFixtureStore({ cached: { [image.sha256]: { es, pt } } }),
+      usage: unlimited,
+      timing,
+    });
+    const inPt = await vision.analyze(image, "bathroom", "pt");
+    expect([inPt.source, inPt.language, inPt.hazards.length]).toEqual(["cached", "pt", 1]);
+    const inEn = await vision.analyze(image, "bathroom", "en");
+    expect([inEn.source, inEn.language, inEn.hazards.length]).toEqual(["cached", "es", 0]);
+  });
+
+  it("reports the live result in the language it asked the model for", async () => {
+    const detectHazards = vi.fn(async () => spark(sparkHazard()));
+    const vision = createVisionService({
+      client: client({ detectHazards }),
+      fixtures,
+      usage: unlimited,
+      timing,
+    });
+    const result = await vision.analyze(image, "bathroom", "en");
+    expect(result.language).toBe("en");
+    expect(detectHazards).toHaveBeenCalledWith(
+      image,
+      "bathroom",
+      expect.objectContaining({ lang: "en" }),
+    );
   });
 
   it("returns 502 only when there is no fallback at all", async () => {
@@ -202,6 +238,6 @@ describe("visionService fallback ladder", () => {
       usage: unlimited,
       timing,
     });
-    await expect(vision.analyze(image, "bathroom")).rejects.toMatchObject({ status: 502 });
+    await expect(vision.analyze(image, "bathroom", "es")).rejects.toMatchObject({ status: 502 });
   });
 });

@@ -6,6 +6,7 @@ import type {
   Room,
   RoomType,
 } from "./types";
+import { getLang } from "./i18n";
 
 const API_URL = (import.meta.env.VITE_API_URL ?? "http://localhost:3000").replace(/\/+$/, "");
 
@@ -91,6 +92,8 @@ export const api = {
   uploadRoom: (token: string, assessmentId: string, roomType: RoomType, image: Blob) => {
     const form = new FormData();
     form.set("roomType", roomType);
+    // The model writes the hazard text in the language the app is showing.
+    form.set("lang", getLang());
     form.set("image", image, "room.jpg");
     return request<Room>(`/api/assessments/${encodeURIComponent(assessmentId)}/rooms`, {
       method: "POST",

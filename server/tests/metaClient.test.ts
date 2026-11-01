@@ -13,7 +13,7 @@ const config = {
   META_MODEL_SPARK: "muse-spark-1.3",
   META_MODEL_SAM: "sam-3.1",
 };
-const opts = { signal: new AbortController().signal, strict: false };
+const opts = { signal: new AbortController().signal, strict: false, lang: "es" as const };
 
 afterEach(() => vi.unstubAllGlobals());
 
@@ -40,6 +40,18 @@ describe("createMetaClient", () => {
     expect(body.model).toBe("muse-spark-1.3");
     expect(body.response_format.type).toBe("json_schema");
     expect(body.messages[1].content[1].image_url.url).toMatch(/^data:image\/jpeg;base64,/);
+    expect(body.messages[0].content).toContain("neutral Latin American Spanish");
+  });
+
+  it("asks for the hazard text in the requested language", async () => {
+    const fetchMock = stubFetch(Response.json({ choices: [{ message: { content: "{}" } }] }));
+    await createMetaClient(config).detectHazards(image, "bathroom", { ...opts, lang: "pt" });
+    const body = JSON.parse(
+      (fetchMock.mock.calls[0] as unknown as [string, RequestInit])[1].body as string,
+    );
+    expect(body.messages[0].content).toContain("Brazilian Portuguese");
+    expect(body.messages[0].content).not.toContain("{LANGUAGE}");
+    expect(body.messages[1].content[0].text).toContain("Brazilian Portuguese");
   });
 
   it("maps 429 to rate_limited with Retry-After", async () => {
@@ -136,7 +148,7 @@ describe("Spark grounding boxes", () => {
       fixtures: createFixtureStore({}),
       usage,
     });
-    const result = await vision.analyze(image, "bathroom");
+    const result = await vision.analyze(image, "bathroom", "es");
 
     expect(result.source).toBe("live");
     expect(result.hazards[0]?.region).toEqual({ type: "bbox", points: [0, 0, 0.5, 1] });

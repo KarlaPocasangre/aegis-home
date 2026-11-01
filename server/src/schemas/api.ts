@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { HAZARD_STATUSES, ROOM_TYPES } from "./enums.js";
+import { HAZARD_STATUSES, LANGUAGES, ROOM_TYPES } from "./enums.js";
 
 // Request inputs (docs/API_SPECS.md §2). Every route validates with these before touching the DB.
 
@@ -17,6 +17,8 @@ export const CreateHouseholdBodySchema = z.object({
 
 export const RoomUploadFieldsSchema = z.object({
   roomType: z.enum(ROOM_TYPES),
+  // Language for the model's hazard text; older clients send none and get Spanish.
+  lang: z.enum(LANGUAGES).default("es"),
 });
 
 export const PatchHazardBodySchema = z.object({

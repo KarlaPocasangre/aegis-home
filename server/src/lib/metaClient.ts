@@ -1,8 +1,8 @@
 import type { Config } from "../config/env.js";
-import type { RoomTypeValue } from "../schemas/enums.js";
+import type { LanguageValue, RoomTypeValue } from "../schemas/enums.js";
 import type { NormalizedImage } from "./imagePipeline.js";
 import { parseSamBoxes, pickSamBox } from "./samOutput.js";
-import { SPARK_OUTPUT_JSON_SCHEMA, SPARK_SYSTEM_PROMPT, sparkUserMessage } from "./sparkPrompt.js";
+import { SPARK_OUTPUT_JSON_SCHEMA, sparkSystemPrompt, sparkUserMessage } from "./sparkPrompt.js";
 
 export type ProviderErrorKind =
   "rate_limited" | "timeout" | "invalid_output" | "unavailable" | "spend_cap";
@@ -31,6 +31,8 @@ export interface DetectOptions {
   signal: AbortSignal;
   /** Set on the retry after invalid JSON: adds a "return only valid JSON" reminder. */
   strict: boolean;
+  /** Language for label_es / description_es / fix_es. */
+  lang: LanguageValue;
 }
 
 export interface MetaClient {
@@ -116,18 +118,18 @@ export function createMetaClient(config: MetaConfig): MetaClient {
     `data:image/jpeg;base64,${img.buffer.toString("base64")}`;
 
   return {
-    async detectHazards(img, hint, { signal, strict }) {
+    async detectHazards(img, hint, { signal, strict, lang }) {
       const json = await post(
         `${root}/chat/completions`,
         apiKey,
         {
           model: sparkModel,
           messages: [
-            { role: "system", content: SPARK_SYSTEM_PROMPT },
+            { role: "system", content: sparkSystemPrompt(lang) },
             {
               role: "user",
               content: [
-                { type: "text", text: sparkUserMessage(hint, strict) },
+                { type: "text", text: sparkUserMessage(hint, lang, strict) },
                 { type: "image_url", image_url: { url: toDataUrl(img) } },
               ],
             },

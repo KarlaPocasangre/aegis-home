@@ -59,9 +59,16 @@ async function createHousehold() {
   return (await res.json()) as { token: string; assessmentId: string; expiresAt: string };
 }
 
-async function uploadRoom(token: string, assessmentId: string, file: Blob, roomType = "bathroom") {
+async function uploadRoom(
+  token: string,
+  assessmentId: string,
+  file: Blob,
+  roomType = "bathroom",
+  lang?: string,
+) {
   const form = new FormData();
   form.set("roomType", roomType);
+  if (lang) form.set("lang", lang);
   form.set("image", file, "room.jpg");
   return api(`/api/assessments/${assessmentId}/rooms`, { method: "POST", body: form }, token);
 }
@@ -158,6 +165,7 @@ describe("rooms, plan and hazards", () => {
       source: "mock",
       imageWidth: 1024,
       imageHeight: 768,
+      language: "es",
       notice: expect.stringContaining("Resultado de ejemplo"),
       hazards: [{ aiId: "h1", severity: "high", status: "pending", region: null }],
     });
@@ -170,6 +178,17 @@ describe("rooms, plan and hazards", () => {
       pendingCostUsd: 8,
       orderedHazardIds: [room.hazards[0].id],
     });
+  });
+
+  it("accepts a language for the hazard text and rejects unknown ones", async () => {
+    const { token, assessmentId } = await createHousehold();
+    // Mock mode has only Spanish fixtures here: the room says so instead of claiming English.
+    const room: any = await (
+      await uploadRoom(token, assessmentId, await jpegBlob(), "bathroom", "en")
+    ).json();
+    expect(room.language).toBe("es");
+    const bad = await uploadRoom(token, assessmentId, await jpegBlob(), "bathroom", "fr");
+    expect(bad.status).toBe(422);
   });
 
   it("resolves and undoes a hazard", async () => {

@@ -144,8 +144,10 @@ Rules:
 - "label_en" must be a short, concrete noun phrase (2–4 words) naming a visible object,
   e.g. "loose rug", "wet floor", "cluttered stairs", "missing grab bar". It will be used to
   locate the object in the image.
-- Write "label_es", "description_es" and "fix_es" in neutral Latin American Spanish,
-  in simple words a family member can act on.
+- Write "label_es", "description_es" and "fix_es" in {LANGUAGE}, in simple words a family
+  member can act on. (The "_es" suffix is only a field name; always use {LANGUAGE}.)
+
+`{LANGUAGE}` comes from the upload's `lang` field: neutral Latin American Spanish (`es`, default), Brazilian Portuguese (`pt`) or plain American English (`en`). The user message repeats it. `label_en` stays English because it is SAM's concept prompt. The JSON keys and DB columns keep their `Es` names to avoid a breaking migration; `Room.language` records the actual language.
 - "fix_es" must be a concrete change to the environment (move, fix, add, improve lighting).
   Never recommend medication, treatment, or medical equipment decisions.
 - "cost_estimate_usd" is a rough cost in USD of low-cost materials commonly available in
@@ -205,8 +207,10 @@ Implementations and wiring (`server/src/lib/metaClient.ts`, `server/src/services
 
 Order of preference when the live path fails (matches [ARCHITECTURE.md §8](ARCHITECTURE.md)):
 
-1. **Cached real response** — `server/fixtures/<sha256-of-normalized-image>.json`, produced by `npm run record-fixture` from a *real* live call. Best-quality fallback: authentic model output.
-2. **Generic mock** — one fixture per room type (`server/fixtures/generic-<room_type>.json`), flagged as sample data.
+1. **Cached real response** — `server/fixtures/<sha256-of-normalized-image>[.pt|.en].json` (no suffix = Spanish), produced by `npm run record-fixture -w server -- <image> <room_type> [es|pt|en]` from a *real* live call. Best-quality fallback: authentic model output. The two bundled samples are recorded in all three languages.
+2. **Generic mock** — one fixture per room type (`server/fixtures/generic-<room_type>.json`, Spanish only), flagged as sample data.
+
+A fallback is served in the requested language when a fixture exists for it, otherwise in Spanish; the result's `language` says which, and the UI tells the user when it differs from the app's language.
 3. Response always sets `source: "cached" | "mock"` and the UI shows a visible banner.
 
 Constraints:
