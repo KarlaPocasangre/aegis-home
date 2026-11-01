@@ -12,8 +12,8 @@ const sample = (name: string) =>
 // A failure here usually means sharp's output changed: re-record with `npm run record-fixture`.
 describe("recorded sample fixtures", () => {
   it.each([
-    ["bathroom-wet-floor.jpg", "bathroom"],
-    ["stairs-no-handrail.jpg", "stairs"],
+    ["living-room.jpg", "living_room"],
+    ["bedroom.jpg", "bedroom"],
   ])("%s matches its cached fixture", async (file, roomType) => {
     const image = await normalizeImage(await readFile(sample(file)));
     expect(fixtures.byHash(image.sha256)?.roomType).toBe(roomType);

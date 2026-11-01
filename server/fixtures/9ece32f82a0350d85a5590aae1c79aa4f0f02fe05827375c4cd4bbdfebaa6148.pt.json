@@ -1,0 +1,130 @@
+{
+  "roomType": "living_room",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "wet floor puddle",
+      "label_es": "piso molhado",
+      "severity": "high",
+      "description_es": "Poça de líquido no piso de madeira que pode causar escorregão e queda.",
+      "fix_es": "Seque o líquido agora com um pano e veja de onde veio para não molhar de novo.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.95,
+      "box": [
+        721,
+        670,
+        880,
+        775
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.7255859375,
+          0.667262969588551,
+          0.130859375,
+          0.09302325581395349
+        ]
+      }
+    },
+    {
+      "id": "h2",
+      "label_en": "tangled electrical cords",
+      "label_es": "fios elétricos enrolados",
+      "severity": "high",
+      "description_es": "Fios soltos e enrolados no chão na frente do sofá que podem enroscar no pé.",
+      "fix_es": "Junte os fios, prenda com abraçadeira e tire do caminho de passagem.",
+      "cost_estimate_usd": 3,
+      "confidence": 0.92,
+      "box": [
+        70,
+        760,
+        335,
+        875
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.0947265625,
+          0.4347048300536673,
+          0.26953125,
+          0.4543828264758497
+        ]
+      }
+    },
+    {
+      "id": "h3",
+      "label_en": "scattered newspapers",
+      "label_es": "jornais espalhados no chão",
+      "severity": "medium",
+      "description_es": "Jornais abertos no meio do tapete que podem fazer escorregar ou tropeçar.",
+      "fix_es": "Recolha os jornais do chão e guarde em uma mesa ou caixa fora do caminho.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.9,
+      "box": [
+        474,
+        734,
+        618,
+        806
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.4765625,
+          0.738819320214669,
+          0.1298828125,
+          0.08765652951699464
+        ]
+      }
+    },
+    {
+      "id": "h4",
+      "label_en": "loose slippers",
+      "label_es": "chinelos soltos",
+      "severity": "medium",
+      "description_es": "Chinelos largados no tapete que podem causar tropeço ao caminhar.",
+      "fix_es": "Guarde os chinelos juntos em um canto fora da área de passagem.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.88,
+      "box": [
+        470,
+        833,
+        565,
+        962
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.4697265625,
+          0.855098389982111,
+          0.05859375,
+          0.059033989266547404
+        ]
+      }
+    },
+    {
+      "id": "h5",
+      "label_en": "loose papers",
+      "label_es": "papéis soltos no chão",
+      "severity": "low",
+      "description_es": "Papéis e óculos largados na borda do tapete que podem fazer tropeçar.",
+      "fix_es": "Pegue os papéis e os óculos do chão e coloque sobre a mesa.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.85,
+      "box": [
+        312,
+        827,
+        410,
+        907
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.3408203125,
+          0.8264758497316637,
+          0.1005859375,
+          0.08050089445438283
+        ]
+      }
+    }
+  ]
+}

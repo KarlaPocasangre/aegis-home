@@ -1,0 +1,130 @@
+{
+  "roomType": "bedroom",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "loose electrical cords",
+      "label_es": "cables eléctricos sueltos",
+      "severity": "high",
+      "description_es": "Hay muchos cables sueltos y enredados en el piso junto a la cama que pueden enredar los pies y causar una caída.",
+      "fix_es": "Recoja los cables del piso, enróllelos y sujételos con amarres detrás del buró, lejos del paso.",
+      "cost_estimate_usd": 5,
+      "confidence": 0.95,
+      "box": [
+        205,
+        695,
+        360,
+        860
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.2294921875,
+          0.4561717352415027,
+          0.1611328125,
+          0.40429338103756707
+        ]
+      }
+    },
+    {
+      "id": "h2",
+      "label_en": "wet floor patch",
+      "label_es": "mancha de piso mojado",
+      "severity": "high",
+      "description_es": "Se ve una mancha de líquido en el piso de madera cerca del baño que puede hacer resbalar.",
+      "fix_es": "Seque bien el líquido, limpie el piso y revise que no haya derrames.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.65,
+      "box": [
+        716,
+        594,
+        785,
+        647
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.716,
+          0.5940000000000001,
+          0.069,
+          0.053000000000000005
+        ]
+      }
+    },
+    {
+      "id": "h3",
+      "label_en": "magazines on floor",
+      "label_es": "revistas en el piso",
+      "severity": "high",
+      "description_es": "Hay libros, revistas, periódicos y un teléfono tirados en el piso sobre el tapete que pueden provocar un tropiezo.",
+      "fix_es": "Levante todos los objetos del piso y guárdelos en un estante o cajón, dejando el paso libre.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.95,
+      "box": [
+        504,
+        802,
+        824,
+        972
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.504,
+          0.802,
+          0.32,
+          0.17000000000000004
+        ]
+      }
+    },
+    {
+      "id": "h4",
+      "label_en": "loose slippers",
+      "label_es": "pantuflas sueltas",
+      "severity": "medium",
+      "description_es": "Hay pantuflas sueltas tiradas en el piso de madera y sobre el tapete que pueden causar un resbalón o tropiezo.",
+      "fix_es": "Recoja las pantuflas del piso y guárdelas junto a la cama, fuera del camino.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.9,
+      "box": [
+        200,
+        898,
+        271,
+        943
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.2021484375,
+          0.8622540250447227,
+          0.0673828125,
+          0.07692307692307693
+        ]
+      }
+    },
+    {
+      "id": "h5",
+      "label_en": "loose area rug",
+      "label_es": "tapete suelto",
+      "severity": "medium",
+      "description_es": "El tapete grande bajo la cama está suelto y sus bordes se pueden levantar y hacer tropezar.",
+      "fix_es": "Fije el tapete al piso con cinta antideslizante y estire bien los bordes.",
+      "cost_estimate_usd": 10,
+      "confidence": 0.7,
+      "box": [
+        462,
+        642,
+        925,
+        984
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.4375,
+          0.6207513416815742,
+          0.517578125,
+          0.3756708407871199
+        ]
+      }
+    }
+  ]
+}

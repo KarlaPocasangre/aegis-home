@@ -1,0 +1,130 @@
+{
+  "roomType": "bedroom",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "tangled electrical cords",
+      "label_es": "tangled cords by bed",
+      "severity": "high",
+      "description_es": "Long white cords are tangled on the floor beside the bed where feet walk.",
+      "fix_es": "Unplug cords you do not need, bundle the rest with a tie, and move them behind the nightstand off the walking path.",
+      "cost_estimate_usd": 2,
+      "confidence": 0.95,
+      "box": [
+        188,
+        745,
+        372,
+        868
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.2294921875,
+          0.7084078711985689,
+          0.1611328125,
+          0.1520572450805009
+        ]
+      }
+    },
+    {
+      "id": "h2",
+      "label_en": "wet floor patch",
+      "label_es": "wet spot on floor",
+      "severity": "high",
+      "description_es": "There is a shiny wet looking spot on the wood floor between the bed and the bathroom door.",
+      "fix_es": "Wipe up the liquid right away, dry the floor fully, and check for a leak from the bathroom.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.75,
+      "box": [
+        692,
+        600,
+        785,
+        655
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.6920000000000001,
+          0.6000000000000001,
+          0.093,
+          0.05500000000000001
+        ]
+      }
+    },
+    {
+      "id": "h3",
+      "label_en": "magazines on floor",
+      "label_es": "papers and phone on floor",
+      "severity": "high",
+      "description_es": "Books, magazines, and a phone are scattered on the rug right where someone steps out of bed.",
+      "fix_es": "Pick up all papers, books, and the phone from the floor and keep them on a table or shelf.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.92,
+      "box": [
+        505,
+        831,
+        830,
+        973
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.505,
+          0.8310000000000001,
+          0.325,
+          0.14200000000000002
+        ]
+      }
+    },
+    {
+      "id": "h4",
+      "label_en": "loose left slipper",
+      "label_es": "slipper by nightstand",
+      "severity": "medium",
+      "description_es": "A loose slipper sits on the wood floor by the nightstand in the walking path.",
+      "fix_es": "Remove loose footwear from the floor and store slippers by the bed where they are not a trip risk.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.88,
+      "box": [
+        200,
+        897,
+        299,
+        961
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.2021484375,
+          0.8622540250447227,
+          0.0673828125,
+          0.07692307692307693
+        ]
+      }
+    },
+    {
+      "id": "h5",
+      "label_en": "loose right slipper",
+      "label_es": "slipper on rug",
+      "severity": "medium",
+      "description_es": "A loose slipper sits on the rug in the middle of the walking path by the bed.",
+      "fix_es": "Pick up the slipper from the rug and keep walking areas clear of loose footwear.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.85,
+      "box": [
+        650,
+        913,
+        743,
+        965
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.68359375,
+          0.8801431127012522,
+          0.0732421875,
+          0.07871198568872988
+        ]
+      }
+    }
+  ]
+}

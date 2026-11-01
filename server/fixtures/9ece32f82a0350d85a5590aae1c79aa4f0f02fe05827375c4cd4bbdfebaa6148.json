@@ -1,0 +1,155 @@
+{
+  "roomType": "living_room",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "wet floor",
+      "label_es": "piso mojado",
+      "severity": "high",
+      "description_es": "Hay un charco de agua en el piso de madera que puede causar un resbalón.",
+      "fix_es": "Seque el agua de inmediato y revise de dónde viene para evitar que vuelva a mojarse.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.95,
+      "box": [
+        722,
+        676,
+        872,
+        773
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.7265625,
+          0.667262969588551,
+          0.1298828125,
+          0.09302325581395349
+        ]
+      }
+    },
+    {
+      "id": "h2",
+      "label_en": "tangled electrical cords",
+      "label_es": "cables enredados",
+      "severity": "high",
+      "description_es": "Hay cables sueltos y enredados en el piso frente al sofá que pueden causar una tropezada.",
+      "fix_es": "Recoja los cables del piso, desenrédelos y sujételos junto a la pared con cinta o amarres.",
+      "cost_estimate_usd": 5,
+      "confidence": 0.95,
+      "box": [
+        97,
+        751,
+        335,
+        879
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.0947265625,
+          0.4347048300536673,
+          0.26953125,
+          0.4543828264758497
+        ]
+      }
+    },
+    {
+      "id": "h3",
+      "label_en": "newspapers on floor",
+      "label_es": "periódicos en el piso",
+      "severity": "medium",
+      "description_es": "Hay periódicos y papeles tirados sobre la alfombra que pueden hacer tropezar o resbalar.",
+      "fix_es": "Recoja todos los papeles del piso y guárdelos en un estante o mesa alta.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.9,
+      "box": [
+        310,
+        750,
+        628,
+        905
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.4765625,
+          0.738819320214669,
+          0.1298828125,
+          0.08765652951699464
+        ]
+      }
+    },
+    {
+      "id": "h4",
+      "label_en": "loose slippers",
+      "label_es": "pantuflas sueltas",
+      "severity": "medium",
+      "description_es": "Hay un par de pantuflas sueltas en el borde de la alfombra que pueden causar una tropezada.",
+      "fix_es": "Guarde las pantuflas en un lugar fijo junto a la cama o en un zapatero.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.9,
+      "box": [
+        492,
+        857,
+        593,
+        963
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.509765625,
+          0.8980322003577818,
+          0.0791015625,
+          0.06440071556350627
+        ]
+      }
+    },
+    {
+      "id": "h5",
+      "label_en": "unsecured area rug",
+      "label_es": "alfombra suelta",
+      "severity": "medium",
+      "description_es": "La alfombra bajo la mesa no está fija y sus bordes pueden levantarse y hacer tropezar.",
+      "fix_es": "Fije la alfombra con cinta antideslizante por debajo y alise bien los bordes.",
+      "cost_estimate_usd": 10,
+      "confidence": 0.75,
+      "box": [
+        197,
+        617,
+        678,
+        958
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.1904296875,
+          0.6243291592128801,
+          0.4609375,
+          0.334525939177102
+        ]
+      }
+    },
+    {
+      "id": "h6",
+      "label_en": "low footstool",
+      "label_es": "banquito bajo",
+      "severity": "low",
+      "description_es": "Hay un banquito bajo frente al sillón que es poco visible y puede hacer tropezar.",
+      "fix_es": "Mueva el banquito fuera del paso o péguelo al sillón para que no estorbe al caminar.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.85,
+      "box": [
+        558,
+        554,
+        672,
+        738
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.5595703125,
+          0.5277280858676208,
+          0.111328125,
+          0.18604651162790697
+        ]
+      }
+    }
+  ]
+}

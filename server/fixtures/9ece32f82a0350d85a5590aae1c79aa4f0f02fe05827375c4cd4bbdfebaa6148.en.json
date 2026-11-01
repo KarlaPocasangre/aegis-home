@@ -1,0 +1,130 @@
+{
+  "roomType": "living_room",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "wet floor",
+      "label_es": "wet floor",
+      "severity": "high",
+      "description_es": "There is a large puddle of water on the wood floor near the kitchen door.",
+      "fix_es": "Dry up the water now and fix the leak so the floor stays dry.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.95,
+      "box": [
+        724,
+        648,
+        864,
+        739
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.7265625,
+          0.667262969588551,
+          0.1298828125,
+          0.09302325581395349
+        ]
+      }
+    },
+    {
+      "id": "h2",
+      "label_en": "tangled floor cords",
+      "label_es": "tangled floor cords",
+      "severity": "high",
+      "description_es": "Many loose electric cords are tangled in a pile on the floor by the couch.",
+      "fix_es": "Pick up the cords off the floor and tape them behind furniture against the wall.",
+      "cost_estimate_usd": 5,
+      "confidence": 0.92,
+      "box": [
+        92,
+        700,
+        341,
+        830
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.092,
+          0.7000000000000001,
+          0.249,
+          0.13
+        ]
+      }
+    },
+    {
+      "id": "h3",
+      "label_en": "papers on floor",
+      "label_es": "papers on floor",
+      "severity": "medium",
+      "description_es": "Newspapers and loose papers are lying on the rug where people walk.",
+      "fix_es": "Pick up all papers from the floor and keep walkways clear.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.9,
+      "box": [
+        312,
+        690,
+        605,
+        855
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.4765625,
+          0.738819320214669,
+          0.1298828125,
+          0.08765652951699464
+        ]
+      }
+    },
+    {
+      "id": "h4",
+      "label_en": "loose slippers",
+      "label_es": "loose slippers",
+      "severity": "medium",
+      "description_es": "A pair of loose slippers is left on the edge of the rug.",
+      "fix_es": "Move the slippers out of the walkway and store shoes in one spot.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.88,
+      "box": [
+        466,
+        807,
+        567,
+        917
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.4697265625,
+          0.855098389982111,
+          0.05859375,
+          0.059033989266547404
+        ]
+      }
+    },
+    {
+      "id": "h5",
+      "label_en": "low footstool",
+      "label_es": "low footstool",
+      "severity": "low",
+      "description_es": "A low small footstool sits in the middle of the walking path.",
+      "fix_es": "Move the footstool out of the walkway and push it under the chair.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.75,
+      "box": [
+        585,
+        525,
+        673,
+        695
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.5595703125,
+          0.5277280858676208,
+          0.111328125,
+          0.18604651162790697
+        ]
+      }
+    }
+  ]
+}

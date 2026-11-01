@@ -1,0 +1,155 @@
+{
+  "roomType": "bedroom",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "wet floor puddle",
+      "label_es": "poça de água no chão",
+      "severity": "high",
+      "description_es": "Tem água derramada no piso de madeira entre a cama e o banheiro que deixa o chão escorregadio.",
+      "fix_es": "Seque a água com um pano agora e veja se está vazando água do banheiro.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.78,
+      "box": [
+        705,
+        540,
+        815,
+        595
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.7666015625,
+          0.5670840787119857,
+          0.1123046875,
+          0.05366726296958855
+        ]
+      }
+    },
+    {
+      "id": "h2",
+      "label_en": "tangled electrical cords",
+      "label_es": "fios soltos no chão",
+      "severity": "high",
+      "description_es": "Fios de eletrônicos enrolados e caídos no chão ao lado da cama onde a pessoa passa e pode tropeçar.",
+      "fix_es": "Tire os fios do chão, junte com presilha ou caixa organizadora atrás do criado-mudo.",
+      "cost_estimate_usd": 5,
+      "confidence": 0.95,
+      "box": [
+        202,
+        785,
+        359,
+        869
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.2294921875,
+          0.7066189624329159,
+          0.1611328125,
+          0.15384615384615385
+        ]
+      }
+    },
+    {
+      "id": "h3",
+      "label_en": "floor clutter magazines",
+      "label_es": "revistas no chão",
+      "severity": "high",
+      "description_es": "Livros, revistas e celular espalhados no tapete bem na passagem em frente à cama.",
+      "fix_es": "Pegue tudo do chão e guarde em prateleira ou caixa, deixando a passagem livre.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.95,
+      "box": [
+        504,
+        800,
+        826,
+        972
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.478515625,
+          0.8479427549194991,
+          0.109375,
+          0.11985688729874776
+        ]
+      }
+    },
+    {
+      "id": "h4",
+      "label_en": "loose slipper",
+      "label_es": "chinelo solto no chão",
+      "severity": "medium",
+      "description_es": "Um chinelo largado sobre o tapete na passagem, fácil de pisar torto e tropeçar.",
+      "fix_es": "Guarde os chinelos juntos ao lado da cama ou em caixa, fora do caminho.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.9,
+      "box": [
+        680,
+        885,
+        756,
+        965
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.68359375,
+          0.8801431127012522,
+          0.0732421875,
+          0.08050089445438283
+        ]
+      }
+    },
+    {
+      "id": "h5",
+      "label_en": "stray slipper",
+      "label_es": "chinelo solto no tapete",
+      "severity": "medium",
+      "description_es": "Um chinelo largado no meio do tapete no caminho para o banheiro e o armário.",
+      "fix_es": "Recolha o chinelo e deixe calçados sempre no mesmo lugar fora da passagem.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.88,
+      "box": [
+        830,
+        705,
+        878,
+        752
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.8037109375,
+          0.6923076923076923,
+          0.048828125,
+          0.046511627906976744
+        ]
+      }
+    },
+    {
+      "id": "h6",
+      "label_en": "slipper by nightstand",
+      "label_es": "chinelo ao lado da cama",
+      "severity": "low",
+      "description_es": "Um chinelo largado no piso ao lado do criado-mudo, perto de onde se levanta da cama.",
+      "fix_es": "Guarde os chinelos embaixo da cama ou em caixa pequena ao lado do criado-mudo.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.9,
+      "box": [
+        200,
+        892,
+        273,
+        944
+      ],
+      "region": {
+        "type": "bbox",
+        "points": [
+          0.2,
+          0.8920000000000001,
+          0.073,
+          0.052000000000000005
+        ]
+      }
+    }
+  ]
+}

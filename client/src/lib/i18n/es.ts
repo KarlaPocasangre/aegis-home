@@ -41,8 +41,8 @@ export const es = {
     approx: (value: string) => `Aprox. ${value}`,
   },
   samples: {
-    bathroom: "Baño con piso mojado",
-    stairs: "Escalera sin barandal",
+    livingRoom: "Sala con cables y piso mojado",
+    bedroom: "Dormitorio con cosas en el piso",
   },
   errors: {
     generic: "Ocurrió un error inesperado. Intente de nuevo.",
@@ -121,11 +121,11 @@ export const es = {
       "Las fotos no se guardan",
       "En español, portugués e inglés",
     ],
-    photoAlt: "Ilustración de un baño con piso mojado y riesgos resaltados",
+    photoAlt: "Foto de ejemplo de una sala con riesgos resaltados",
     highRisk: "Riesgo alto",
-    planOf: "Plan de este baño",
+    planOf: "Plan de esta sala",
     fixes: "arreglos",
-    caption: "Resultado real de Muse Spark y SAM 3.1 sobre una ilustración de ejemplo.",
+    caption: "Resultado real de Muse Spark y SAM 3.1 sobre una foto de ejemplo.",
   },
   problem: {
     eyebrow: "Por qué importa",
@@ -172,12 +172,11 @@ export const es = {
     title: "Pruébelo ahora",
     intro:
       "Explore un resultado real o empiece con una foto de la casa. Si no tiene una a mano, use una imagen de prueba: el análisis se hace en vivo con la IA de Meta.",
-    demoTitle: "Ejemplo: un baño",
+    demoTitle: "Ejemplo: una sala",
     recorded: "Resultado real grabado",
     demoHint: "Toque un número o un riesgo para resaltarlo.",
-    demoAlt: "Ilustración de un baño con piso mojado",
-    demoCaption:
-      "Respuesta de Muse Spark y SAM 3.1 sobre una ilustración creada para esta demostración.",
+    demoAlt: "Foto de ejemplo de una sala",
+    demoCaption: "Respuesta de Muse Spark y SAM 3.1 sobre una foto de ejemplo, sin personas.",
     startTitle: "Empezar una evaluación",
     nameLabel: "Nombre para esta casa (opcional)",
     namePlaceholder: "Ej.: Casa de la abuela",
