@@ -96,19 +96,22 @@ export function LandingPage() {
         </div>
       )}
 
-      <ol className="grid gap-4 sm:grid-cols-3">
-        {STEPS.map((step, index) => (
-          <li key={step.title} className="rounded-lg bg-white p-4 ring-1 ring-stone-200">
-            <span className="flex size-8 items-center justify-center rounded-full bg-teal-700 font-bold text-white">
-              {index + 1}
-            </span>
-            <p className="mt-3 font-semibold">{step.title}</p>
-            <p className="mt-1 text-sm text-stone-600">{step.text}</p>
-          </li>
-        ))}
-      </ol>
+      <section id="como-funciona" className="space-y-3">
+        <h2 className="text-xl font-bold">Cómo funciona</h2>
+        <ol className="grid gap-4 sm:grid-cols-3">
+          {STEPS.map((step, index) => (
+            <li key={step.title} className="rounded-lg bg-white p-4 ring-1 ring-stone-200">
+              <span className="flex size-8 items-center justify-center rounded-full bg-teal-700 font-bold text-white">
+                {index + 1}
+              </span>
+              <p className="mt-3 font-semibold">{step.title}</p>
+              <p className="mt-1 text-sm text-stone-600">{step.text}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
 
-      <section className="space-y-4 rounded-xl bg-stone-100 p-4 sm:p-6">
+      <section id="empezar" className="space-y-4 rounded-xl bg-stone-100 p-4 sm:p-6">
         <h2 className="text-xl font-bold">Empezar una evaluación</h2>
         <PrivacyNotice accepted={accepted} onChange={setAccepted} />
         <div>

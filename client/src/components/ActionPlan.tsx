@@ -1,3 +1,4 @@
+import { linkHandler } from "../lib/router";
 import { capitalize, formatCost, formatUsd, ROOM_LABELS } from "../lib/labels";
 import type { Assessment, Hazard, HazardStatus, RoomType } from "../lib/types";
 import { SeverityBadge } from "./SeverityBadge";
@@ -6,18 +7,22 @@ interface Props {
   assessment: Assessment;
   onSetStatus: (hazardId: string, status: HazardStatus) => void;
   pendingHazardId: string | null;
+  /** Link to the hazard highlighted on its room's photo. */
+  photoHref?: (roomId: string, hazardId: string) => string;
 }
 
-type Item = Hazard & { roomType: RoomType };
+type Item = Hazard & { roomType: RoomType; roomId: string };
 
 function ActionItemRow({
   item,
   busy,
   onToggle,
+  photoHref,
 }: {
   item: Item;
   busy: boolean;
   onToggle: () => void;
+  photoHref?: string;
 }) {
   const resolved = item.status === "resolved";
   return (
@@ -33,6 +38,15 @@ function ActionItemRow({
         <p className="mt-1 text-xs text-stone-500">
           {ROOM_LABELS[item.roomType]} · {formatCost(item.costEstimateUsd)}
         </p>
+        {photoHref && (
+          <a
+            href={photoHref}
+            onClick={linkHandler(photoHref)}
+            className="mt-1 inline-flex min-h-10 items-center text-sm font-semibold text-teal-800 underline underline-offset-4 hover:text-teal-900"
+          >
+            Ver en la foto
+          </a>
+        )}
       </div>
       <button
         type="button"
@@ -46,10 +60,11 @@ function ActionItemRow({
   );
 }
 
-export function ActionPlan({ assessment, onSetStatus, pendingHazardId }: Props) {
+export function ActionPlan({ assessment, onSetStatus, pendingHazardId, photoHref }: Props) {
   const byId = new Map<string, Item>();
   for (const room of assessment.rooms) {
-    for (const hazard of room.hazards) byId.set(hazard.id, { ...hazard, roomType: room.type });
+    for (const hazard of room.hazards)
+      byId.set(hazard.id, { ...hazard, roomType: room.type, roomId: room.id });
   }
   const pending = assessment.plan.orderedHazardIds
     .map((id) => byId.get(id))
@@ -103,6 +118,7 @@ export function ActionPlan({ assessment, onSetStatus, pendingHazardId }: Props) 
                 item={item}
                 busy={pendingHazardId === item.id}
                 onToggle={() => onSetStatus(item.id, "resolved")}
+                photoHref={photoHref?.(item.roomId, item.id)}
               />
             ))}
           </ol>

@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+/* In-page anchors on the landing page; clear of the sticky header. */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+[id] {
+  scroll-margin-top: 5rem;
+}

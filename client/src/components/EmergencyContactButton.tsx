@@ -62,7 +62,7 @@ export function EmergencyContactButton() {
       <button
         type="button"
         onClick={() => dialogRef.current?.showModal()}
-        className="fixed right-4 bottom-4 z-20 flex items-center gap-2 rounded-full bg-rose-700 px-5 py-3.5 font-semibold text-white shadow-lg hover:bg-rose-800"
+        className="fixed right-4 bottom-[calc(5rem+env(safe-area-inset-bottom))] z-20 sm:bottom-6 flex items-center gap-2 rounded-full bg-rose-700 px-5 py-3.5 font-semibold text-white shadow-lg hover:bg-rose-800"
       >
         <svg aria-hidden viewBox="0 0 24 24" className="size-5 fill-current">
           <path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" />
