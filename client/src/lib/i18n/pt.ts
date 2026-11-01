@@ -126,7 +126,7 @@ export const pt: Dict = {
     highRisk: "Risco alto",
     planOf: "Plano desta sala",
     fixes: "ajustes",
-    caption: "Resultado real do Muse Spark e do SAM 3.1 sobre uma foto de exemplo.",
+    caption: "Resultado real do Muse Spark e do SAM 3.1 sobre uma imagem de exemplo gerada com IA.",
   },
   problem: {
     eyebrow: "Por que importa",
@@ -177,7 +177,8 @@ export const pt: Dict = {
     recorded: "Resultado real gravado",
     demoHint: "Toque em um número ou em um risco para destacá-lo.",
     demoAlt: "Foto de exemplo de uma sala",
-    demoCaption: "Resposta do Muse Spark e do SAM 3.1 sobre uma foto de exemplo, sem pessoas.",
+    demoCaption:
+      "Resposta do Muse Spark e do SAM 3.1 sobre uma imagem de exemplo gerada com IA (não é uma casa real).",
     startTitle: "Começar uma avaliação",
     nameLabel: "Nome para esta casa (opcional)",
     namePlaceholder: "Ex.: Casa da vovó",

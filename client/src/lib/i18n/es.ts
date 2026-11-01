@@ -125,7 +125,7 @@ export const es = {
     highRisk: "Riesgo alto",
     planOf: "Plan de esta sala",
     fixes: "arreglos",
-    caption: "Resultado real de Muse Spark y SAM 3.1 sobre una foto de ejemplo.",
+    caption: "Resultado real de Muse Spark y SAM 3.1 sobre una imagen de ejemplo generada con IA.",
   },
   problem: {
     eyebrow: "Por qué importa",
@@ -176,7 +176,8 @@ export const es = {
     recorded: "Resultado real grabado",
     demoHint: "Toque un número o un riesgo para resaltarlo.",
     demoAlt: "Foto de ejemplo de una sala",
-    demoCaption: "Respuesta de Muse Spark y SAM 3.1 sobre una foto de ejemplo, sin personas.",
+    demoCaption:
+      "Respuesta de Muse Spark y SAM 3.1 sobre una imagen de ejemplo generada con IA (no es una casa real).",
     startTitle: "Empezar una evaluación",
     nameLabel: "Nombre para esta casa (opcional)",
     namePlaceholder: "Ej.: Casa de la abuela",

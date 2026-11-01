@@ -126,7 +126,7 @@ export const en: Dict = {
     highRisk: "High risk",
     planOf: "Plan for this living room",
     fixes: "fixes",
-    caption: "Real Muse Spark and SAM 3.1 result on a sample photo.",
+    caption: "Real Muse Spark and SAM 3.1 result on an AI-generated sample image.",
   },
   problem: {
     eyebrow: "Why it matters",
@@ -177,7 +177,8 @@ export const en: Dict = {
     recorded: "Recorded real result",
     demoHint: "Tap a number or a hazard to highlight it.",
     demoAlt: "Sample photo of a living room",
-    demoCaption: "Muse Spark and SAM 3.1 response on a sample photo with no people in it.",
+    demoCaption:
+      "Muse Spark and SAM 3.1 response on an AI-generated sample image (not a real home).",
     startTitle: "Start an assessment",
     nameLabel: "Name for this home (optional)",
     namePlaceholder: "E.g.: Grandma's house",
