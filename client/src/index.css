@@ -54,6 +54,25 @@
   }
 }
 
+/* Scan line sweeping the photo while it is analyzed; still (hidden) with reduced motion. */
+.scan-line {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scan-line {
+    display: block;
+    animation: scan 2s ease-in-out infinite;
+  }
+}
+@keyframes scan {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(300%);
+  }
+}
+
 /* Button label that rolls up on hover: two stacked copies of the text. */
 .roll {
   display: inline-grid;

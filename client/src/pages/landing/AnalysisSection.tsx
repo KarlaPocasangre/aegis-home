@@ -90,6 +90,7 @@ function StartCard() {
   const [accepted, setAccepted] = useState(false);
   const [name, setName] = useState("");
   const [busy, setBusy] = useState<"create" | "sample" | null>(null);
+  const [sampleUrl, setSampleUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [needsConsent, setNeedsConsent] = useState(false);
   const consentRef = useRef<HTMLInputElement>(null);
@@ -131,6 +132,7 @@ function StartCard() {
   // One tap from the landing page to a full result: create the household and analyze a sample.
   const trySample = async (sample: SampleImage) => {
     setBusy("sample");
+    setSampleUrl(sample.url);
     setError(null);
     try {
       const household = await createHousehold();
@@ -185,7 +187,7 @@ function StartCard() {
       >
         {busy === "create" ? a.creating : <RollText>{a.start}</RollText>}
       </button>
-      {busy === "sample" && <AnalysisProgress />}
+      {busy === "sample" && <AnalysisProgress previewUrl={sampleUrl ?? undefined} />}
       {error && (
         <p role="alert" className="rounded-lg bg-red-500/10 px-4 py-3 text-base text-red-200">
           {error}

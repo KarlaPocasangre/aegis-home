@@ -76,9 +76,11 @@ export const en: Dict = {
     accept: "I understand and want to continue",
   },
   progress: {
-    title: (seconds: number) => `Analyzing the photo… ${seconds} s`,
-    searching: "Looking for fall hazards in the room.",
+    seconds: (seconds: number) => `${seconds} s`,
+    review: "Looking over the photo…",
+    search: "Looking for what could cause a fall…",
     slow: "It can take up to a minute if the service was asleep.",
+    previewAlt: "Photo being analyzed",
   },
   fallback: {
     cachedTitle: "Previously saved result",
@@ -381,6 +383,11 @@ export const en: Dict = {
     choosePhoto: "Choose photo",
     noFile: "No photo chosen",
     analyzing: "Analyzing…",
+    roomPlaceholder: "Choose the room",
+    roomRequired: "Choose which room it is to continue.",
+    photoRequired: "Take or choose a photo to continue.",
+    changePhoto: "Change photo",
+    chosenAlt: "Chosen photo",
   },
   roomsView: {
     languageNames: { es: "Spanish", pt: "Portuguese", en: "English" } as Record<string, string>,

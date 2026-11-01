@@ -75,9 +75,11 @@ export const es = {
     accept: "Entiendo y quiero continuar",
   },
   progress: {
-    title: (seconds: number) => `Analizando la foto… ${seconds} s`,
-    searching: "Buscando riesgos de caída en el espacio.",
+    seconds: (seconds: number) => `${seconds} s`,
+    review: "Revisando la foto…",
+    search: "Buscando lo que podría causar una caída…",
     slow: "Puede tardar hasta un minuto si el servicio estaba en reposo.",
+    previewAlt: "Foto que se está analizando",
   },
   fallback: {
     cachedTitle: "Resultado guardado previamente",
@@ -390,6 +392,11 @@ export const es = {
     choosePhoto: "Elegir foto",
     noFile: "Ninguna foto elegida",
     analyzing: "Analizando…",
+    roomPlaceholder: "Elija el espacio",
+    roomRequired: "Elija qué espacio es para continuar.",
+    photoRequired: "Tome o elija una foto para continuar.",
+    changePhoto: "Cambiar foto",
+    chosenAlt: "Foto elegida",
   },
   roomsView: {
     languageNames: { es: "español", pt: "portugués", en: "inglés" } as Record<string, string>,
