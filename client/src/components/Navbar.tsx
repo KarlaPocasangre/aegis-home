@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { householdPath, linkHandler, type HouseholdView } from "../lib/router";
 import { useT } from "../lib/i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 import { Logo } from "./Logo";
 
 const icon = (d: ReactNode) => (
@@ -80,7 +81,7 @@ function TabHint({
   const tr = useT();
   if (view === "plan" && pendingCount > 0) {
     return (
-      <span className="rounded-full bg-rose-700 px-2 py-0.5 text-xs leading-none font-bold whitespace-nowrap text-white">
+      <span className="rounded-full bg-rose-700 px-2 py-0.5 text-xs leading-none font-bold whitespace-nowrap text-snow">
         {pendingCount}
         <span className="sr-only"> {tr.nav.pending}</span>
       </span>
@@ -161,7 +162,8 @@ export function Navbar({ token, view, householdName, pendingCount, analyzing }: 
             </ul>
           </nav>
           {/* Phones have room next to the logo; sm–lg uses Ajustes so the tabs keep their space. */}
-          <div className="ml-auto sm:hidden lg:ml-0 lg:block">
+          <div className="ml-auto flex items-center gap-2 sm:hidden lg:ml-0 lg:flex">
+            <ThemeSwitcher />
             <LanguageSwitcher />
           </div>
         </div>

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { LanguageSwitcher } from "../../components/LanguageSwitcher";
 import { ShareLink } from "../../components/ShareLink";
+import { ThemeSwitcher } from "../../components/ThemeSwitcher";
 import { ViewTitle } from "../../components/ViewTitle";
 import { useT } from "../../lib/i18n";
 import { formatDate } from "../../lib/labels";
@@ -22,7 +23,8 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export function SettingsView({ token, expiresAt, deleting, onDelete }: Props) {
-  const s = useT().settings;
+  const tr = useT();
+  const s = tr.settings;
   return (
     <div className="space-y-8">
       <ViewTitle>{s.title}</ViewTitle>
@@ -30,6 +32,11 @@ export function SettingsView({ token, expiresAt, deleting, onDelete }: Props) {
       <Section title={s.languageTitle}>
         <p className="text-base text-stone-300">{s.languageText}</p>
         <LanguageSwitcher inline />
+      </Section>
+
+      <Section title={tr.theme.title}>
+        <p className="text-base text-stone-300">{tr.theme.text}</p>
+        <ThemeSwitcher inline />
       </Section>
 
       <ShareLink token={token} />

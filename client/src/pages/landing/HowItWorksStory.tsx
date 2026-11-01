@@ -75,7 +75,7 @@ function StoryVisual({ stage }: { stage: number }) {
             {hazards.slice(0, 3).map((h, i) => (
               <li key={h.id} className="flex items-center gap-2 text-stone-100">
                 <span
-                  className={`flex size-4 items-center justify-center rounded border ${i === 0 ? "border-emerald-600 bg-emerald-600 text-white" : "border-stone-400"}`}
+                  className={`flex size-4 items-center justify-center rounded border ${i === 0 ? "border-emerald-600 bg-emerald-600 text-snow" : "border-stone-400"}`}
                 >
                   {i === 0 && icon(ICONS.check, "size-3")}
                 </span>

@@ -15,6 +15,15 @@ export const es = {
     useSample: "Usar imagen de prueba",
     noPhotoAtHand: "¿No tiene una foto a mano?",
   },
+  theme: {
+    title: "Apariencia",
+    text: "Claro u oscuro. «Sistema» sigue la configuración de su dispositivo.",
+    system: "Sistema",
+    light: "Claro",
+    dark: "Oscuro",
+    toLight: "Cambiar a modo claro",
+    toDark: "Cambiar a modo oscuro",
+  },
   rooms: {
     bathroom: "Baño",
     kitchen: "Cocina",

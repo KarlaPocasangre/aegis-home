@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-/* Shared components opt into dark styles inside a `.dark` scope (the landing page). */
+/* Shared components use their `dark:` styles inside the app's `.dark` scope; the light theme
+   below keeps those classes and swaps the palette underneath them. */
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
@@ -13,6 +14,10 @@
   --color-mint: #9ff5a6;
   --color-mint-strong: #7ee88a;
   --color-mint-soft: #c9fbcd;
+  /* Always white, in both themes: text on red buttons and photo markers. */
+  --color-snow: #ffffff;
+  /* "Home" in the wordmark. */
+  --color-brand-home: #8fcfd6;
 }
 
 /* In-page anchors on the landing page; clear of the sticky header. */
@@ -79,19 +84,90 @@
 
 /* Perspective dot field behind the hero, fading into the page. */
 .dot-field {
-  background-image: radial-gradient(rgb(255 255 255 / 0.22) 1px, transparent 1.2px);
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-white) 22%, transparent) 1px,
+    transparent 1.2px
+  );
   background-size: 22px 22px;
   transform: perspective(700px) rotateX(62deg);
   transform-origin: 50% 100%;
   mask-image: linear-gradient(to top, black 10%, transparent 75%);
 }
 .dot-grid {
-  background-image: radial-gradient(rgb(255 255 255 / 0.08) 1px, transparent 1.2px);
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--color-white) 8%, transparent) 1px,
+    transparent 1.2px
+  );
   background-size: 24px 24px;
 }
 
-/* The whole app is dark: native controls (select menus, scrollbars, checkboxes) follow. */
+/* Native controls (select menus, scrollbars, checkboxes) follow the active theme. */
 :root {
   color-scheme: dark;
   background-color: var(--color-ink);
+}
+
+/*
+ * Light theme. Components are written for the dark palette, so the tokens invert:
+ * "white" becomes the brand navy (text, translucent surfaces and borders all follow), the stone
+ * grays flip, and mint becomes the brand teal (buttons keep "bg-mint text-ink": teal with light
+ * text). Status colors switch to darker shades that read on a light background.
+ * Applied for an explicit choice (data-theme, set by lib/theme.ts) or, before that script runs,
+ * from the system preference.
+ */
+@layer theme {
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --color-ink: #f3f6f7;
+    --color-ink-2: #ffffff;
+    --color-white: #10293b;
+    --color-mint: #1f7f80;
+    --color-mint-strong: #17696a;
+    --color-mint-soft: #17696a;
+    --color-brand-home: #1f7f80;
+    --color-stone-100: #1c1917;
+    --color-stone-200: #292524;
+    --color-stone-300: #3f3a36;
+    --color-stone-400: #57534e;
+    --color-stone-500: #625b56;
+    --color-red-200: #991b1b;
+    --color-red-300: #b91c1c;
+    --color-red-400: #c62828;
+    --color-amber-100: #78350f;
+    --color-amber-200: #92400e;
+    --color-emerald-200: #065f46;
+    --color-emerald-300: #047857;
+    --color-emerald-400: #065f46;
+    --color-emerald-500: #047857;
+    --color-sky-200: #075985;
+  }
+}
+@media (prefers-color-scheme: light) {
+  @layer theme {
+    :root:not([data-theme]) {
+      color-scheme: light;
+      --color-ink: #f3f6f7;
+      --color-ink-2: #ffffff;
+      --color-white: #10293b;
+      --color-mint: #1f7f80;
+      --color-mint-strong: #17696a;
+      --color-mint-soft: #17696a;
+      --color-brand-home: #1f7f80;
+      --color-stone-100: #1c1917;
+      --color-stone-200: #292524;
+      --color-stone-300: #3f3a36;
+      --color-stone-400: #57534e;
+      --color-stone-500: #625b56;
+      --color-red-200: #991b1b;
+      --color-red-300: #b91c1c;
+      --color-red-400: #c62828;
+      --color-amber-100: #78350f;
+      --color-amber-200: #92400e;
+      --color-emerald-200: #065f46;
+      --color-emerald-300: #047857;
+      --color-emerald-400: #065f46;
+      --color-emerald-500: #047857;
+      --color-sky-200: #075985;
+    }
+  }
 }

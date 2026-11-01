@@ -16,6 +16,15 @@ export const pt: Dict = {
     useSample: "Usar imagem de exemplo",
     noPhotoAtHand: "Não tem uma foto à mão?",
   },
+  theme: {
+    title: "Aparência",
+    text: "Claro ou escuro. «Sistema» segue a configuração do seu dispositivo.",
+    system: "Sistema",
+    light: "Claro",
+    dark: "Escuro",
+    toLight: "Mudar para o modo claro",
+    toDark: "Mudar para o modo escuro",
+  },
   rooms: {
     bathroom: "Banheiro",
     kitchen: "Cozinha",

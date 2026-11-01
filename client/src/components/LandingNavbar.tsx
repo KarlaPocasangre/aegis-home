@@ -4,6 +4,7 @@ import { scrollToHash } from "../lib/scrollTo";
 import { lastHousehold } from "../lib/storage";
 import { useT } from "../lib/i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 import { Logo } from "./Logo";
 
 /** In-page anchors; labels come from the `landingNav.sections` dictionary. */
@@ -77,7 +78,8 @@ export function LandingNavbar() {
           </ul>
         </nav>
         <div className="ml-auto flex items-center gap-2 lg:ml-2">
-          <div className="hidden lg:block">
+          <div className="hidden items-center gap-2 lg:flex">
+            <ThemeSwitcher />
             <LanguageSwitcher />
           </div>
           {cta}
@@ -122,6 +124,9 @@ export function LandingNavbar() {
           </ul>
           <div className="mx-auto mt-3 max-w-5xl border-t border-white/10 pt-3">
             <LanguageSwitcher inline />
+            <div className="mt-2">
+              <ThemeSwitcher inline />
+            </div>
           </div>
         </nav>
       )}

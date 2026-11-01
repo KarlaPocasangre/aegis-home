@@ -55,7 +55,7 @@ export function ImageCanvasOverlay({ src, alt, hazards, activeId, onSelect }: Pr
             type="button"
             onClick={() => onSelect(hazard.id)}
             aria-label={tr.roomsView.riskAria(number, hazard.labelEs)}
-            className={`absolute flex size-7 -translate-x-1/3 -translate-y-1/3 items-center justify-center rounded-full text-sm font-bold text-white shadow ring-2 ring-white ${SEVERITY_STYLES[hazard.severity].marker} ${hazard.id === activeId ? "scale-125" : ""}`}
+            className={`absolute flex size-7 -translate-x-1/3 -translate-y-1/3 items-center justify-center rounded-full text-sm font-bold text-snow shadow ring-2 ring-snow ${SEVERITY_STYLES[hazard.severity].marker} ${hazard.id === activeId ? "scale-125" : ""}`}
             style={{ left: `${anchor.x * 100}%`, top: `${anchor.y * 100}%` }}
           >
             {number}
