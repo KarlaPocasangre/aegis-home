@@ -1,6 +1,7 @@
 import type { Config } from "../config/env.js";
 import type { RoomTypeValue } from "../schemas/enums.js";
 import type { NormalizedImage } from "./imagePipeline.js";
+import { parseSamBoxes, pickSamBox } from "./samOutput.js";
 import { SPARK_OUTPUT_JSON_SCHEMA, SPARK_SYSTEM_PROMPT, sparkUserMessage } from "./sparkPrompt.js";
 
 export type ProviderErrorKind =
@@ -35,15 +36,36 @@ export interface DetectOptions {
 export interface MetaClient {
   /** Raw model output (string or parsed JSON); validated by the caller. */
   detectHazards(img: NormalizedImage, hint: RoomTypeValue, opts: DetectOptions): Promise<unknown>;
-  /** Absent while SAM is not wired: regions then come from Spark's own boxes. */
+  /**
+   * Optional: without it, regions come from Spark's own boxes. `near` is Spark's pixel box for
+   * the hazard, used to pick the right instance when the label matches several objects.
+   */
   segment?(
     img: NormalizedImage,
     label: string,
     signal: AbortSignal,
+    near?: [number, number, number, number],
   ): Promise<RawSegmentation | null>;
 }
 
-type MetaConfig = Pick<Config, "META_API_KEY" | "META_API_BASE_URL" | "META_MODEL_SPARK">;
+type MetaConfig = Pick<
+  Config,
+  "META_API_KEY" | "META_API_BASE_URL" | "META_MODEL_SPARK" | "META_MODEL_SAM"
+>;
+
+/** Non-streaming Responses API body: the text sits in output[].content[] parts of type output_text. */
+function responsesText(json: unknown): string {
+  const body = json as {
+    output_text?: unknown;
+    output?: { content?: { type?: string; text?: unknown }[] }[];
+  };
+  if (typeof body?.output_text === "string") return body.output_text;
+  return (body?.output ?? [])
+    .flatMap((item) => item?.content ?? [])
+    .filter((part) => part?.type === "output_text" && typeof part.text === "string")
+    .map((part) => part.text as string)
+    .join("");
+}
 
 function retryAfterMs(res: Response): number | undefined {
   const seconds = Number(res.headers.get("retry-after"));
@@ -76,18 +98,27 @@ async function post(url: string, apiKey: string, body: unknown, signal: AbortSig
 /**
  * Meta Model API client (OpenAI-compatible, https://api.meta.ai/v1, Bearer auth).
  * Muse Spark runs over Chat Completions with a JSON schema in `response_format`, so decoding
- * is constrained; the caller still validates with Zod.
+ * is constrained; the caller still validates with Zod. SAM 3.1 runs over the Responses API with
+ * the hazard label as a concept prompt; only its boxes are used.
  */
 export function createMetaClient(config: MetaConfig): MetaClient {
-  const { META_API_KEY: apiKey, META_API_BASE_URL: baseUrl, META_MODEL_SPARK: sparkModel } = config;
-  if (!apiKey || !baseUrl || !sparkModel) throw new Error("Meta API configuration is incomplete");
-  const endpoint = `${baseUrl.replace(/\/+$/, "")}/chat/completions`;
+  const {
+    META_API_KEY: apiKey,
+    META_API_BASE_URL: baseUrl,
+    META_MODEL_SPARK: sparkModel,
+    META_MODEL_SAM: samModel,
+  } = config;
+  if (!apiKey || !baseUrl || !sparkModel || !samModel) {
+    throw new Error("Meta API configuration is incomplete");
+  }
+  const root = baseUrl.replace(/\/+$/, "");
+  const toDataUrl = (img: NormalizedImage) =>
+    `data:image/jpeg;base64,${img.buffer.toString("base64")}`;
 
   return {
     async detectHazards(img, hint, { signal, strict }) {
-      const dataUrl = `data:image/jpeg;base64,${img.buffer.toString("base64")}`;
       const json = await post(
-        endpoint,
+        `${root}/chat/completions`,
         apiKey,
         {
           model: sparkModel,
@@ -97,7 +128,7 @@ export function createMetaClient(config: MetaConfig): MetaClient {
               role: "user",
               content: [
                 { type: "text", text: sparkUserMessage(hint, strict) },
-                { type: "image_url", image_url: { url: dataUrl } },
+                { type: "image_url", image_url: { url: toDataUrl(img) } },
               ],
             },
           ],
@@ -112,6 +143,32 @@ export function createMetaClient(config: MetaConfig): MetaClient {
         ?.message?.content;
       if (typeof content !== "string") throw new ProviderError("invalid_output", "no content");
       return content;
+    },
+
+    async segment(img, label, signal, near) {
+      const json = await post(
+        `${root}/responses`,
+        apiKey,
+        {
+          model: samModel,
+          input: [
+            {
+              type: "message",
+              role: "user",
+              content: [
+                { type: "input_text", text: label },
+                { type: "input_image", image_url: toDataUrl(img) },
+              ],
+            },
+          ],
+          // Masks aren't decoded; one_bit keeps the payload small.
+          metadata: { include_confidence: "true", mask_encoding: "one_bit" },
+        },
+        signal,
+      );
+      // Zero matches is a normal, empty result.
+      const rect = pickSamBox(parseSamBoxes(responsesText(json)), img, near);
+      return rect ? { kind: "bbox", box: rect } : null;
     },
   };
 }

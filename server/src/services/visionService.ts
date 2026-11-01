@@ -106,8 +106,9 @@ export function createVisionService(deps: VisionDeps): VisionService {
     hazards: SparkHazard[],
     budget: AbortSignal,
   ): Promise<AnalyzedHazard[]> {
+    const sparkBox = (hazard: SparkHazard) => sparkBoxToSegmentation(hazard.box, image);
     const fromBox = (hazard: SparkHazard) => {
-      const seg = sparkBoxToSegmentation(hazard.box, image);
+      const seg = sparkBox(hazard);
       return seg ? toNormalizedRegion(seg, image) : null;
     };
     const segment = ai.segment?.bind(ai);
@@ -117,7 +118,13 @@ export function createVisionService(deps: VisionDeps): VisionService {
     return mapWithConcurrency(hazards, SAM_CONCURRENCY, async (hazard) => {
       if (!segment || !allowed) return { ...hazard, region: fromBox(hazard) };
       try {
-        const seg = await segment(image, hazard.label_en, withTimeout(budget, timing.samTimeoutMs));
+        const near = sparkBox(hazard);
+        const seg = await segment(
+          image,
+          hazard.label_en,
+          withTimeout(budget, timing.samTimeoutMs),
+          near?.kind === "bbox" ? near.box : undefined,
+        );
         const region = seg ? toNormalizedRegion(seg, image) : null;
         return { ...hazard, region: region ?? fromBox(hazard) };
       } catch {

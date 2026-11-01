@@ -182,8 +182,8 @@ for (const h of validated.hazards) {
 export interface MetaClient {
   // raw output (string or parsed JSON); `strict` adds the "return only valid JSON" reminder on retry
   detectHazards(img: NormalizedImage, hint: RoomType, opts: { signal: AbortSignal; strict: boolean }): Promise<unknown>;
-  // optional: while SAM is not wired, regions come from Spark's grounding boxes
-  segment?(img: NormalizedImage, label: string, signal: AbortSignal): Promise<RawSegmentation | null>;
+  // optional (without it, regions come from Spark's boxes); `near` = Spark's pixel box for the hazard
+  segment?(img: NormalizedImage, label: string, signal: AbortSignal, near?: [x, y, w, h]): Promise<RawSegmentation | null>;
 }
 
 // Pixel space of the normalized image; the real adapter maps SAM's actual output into this.
@@ -194,7 +194,8 @@ type RawSegmentation =
 
 Implementations and wiring (`server/src/lib/metaClient.ts`, `server/src/services/visionService.ts`):
 - `createMetaClient(config)` — calls the Meta Model API (`META_API_BASE_URL`, `META_API_KEY` as a Bearer token). Spark runs over `POST /chat/completions` with the image as a base64 data URL and `response_format: { type: "json_schema" }` (constrained decoding; Zod still validates). HTTP 429 → `rate_limited` (honors `Retry-After`), other errors → `unavailable`, abort → `timeout`.
-- Each hazard also carries Spark's grounding `box` (`[x_min, y_min, x_max, y_max]` on a 0–1000 grid). It is the region when SAM returns nothing; a malformed box is dropped without failing the answer. SAM 3.1 (`sam-3.1`, Responses API, streamed special-token output) is not wired yet, so no SAM calls are made or counted.
+- Each hazard also carries Spark's grounding `box` (`[x_min, y_min, x_max, y_max]` on a 0–1000 grid); a malformed box is dropped without failing the answer.
+- SAM 3.1 runs over `POST /responses` (non-streaming) with `label_en` as the concept prompt and `metadata: { include_confidence: "true", mask_encoding: "one_bit" }`. Only the `<|box;x1;y1;x2;y2;w;h;c|>` tokens are parsed (`server/src/lib/samOutput.ts`); masks are not decoded. A concept matches every instance, so the box that best overlaps Spark's box wins; if none overlaps, or SAM finds nothing (empty output is normal), Spark's box is the region.
 - `MOCK_AI=true` passes **no** client to `visionService`: every analysis goes straight to the fallback ladder, so mock output can never be labeled `live`.
 - Tests inject scripted `MetaClient` fakes through the same factory (lightweight dependency injection).
 - Failures are thrown as `ProviderError` (`rate_limited` with `retryAfterMs`, `timeout`, `invalid_output`, `unavailable`, `spend_cap`).
@@ -241,7 +242,7 @@ Constraints:
 |---|---|---|---|
 | 1 | Base URL and auth scheme | `https://api.meta.ai/v1`, `Authorization: Bearer LLM_…`, OpenAI-compatible | ✅ |
 | 2 | Exact model IDs | `muse-spark-1.3` (Standard mode; `-contributor` suffix = Contributor mode), `sam-3.1` | ✅ |
-| 3 | SAM 3.1 input/output | Text noun phrase (or boxes/points) + image over `POST /v1/responses`, streamed special-token text with boxes and masks. Parsing format still to read ("Reading segmentation output") | ⚠️ PARTIAL |
+| 3 | SAM 3.1 input/output | Concept prompt (short noun phrase, one concept per request) or box/point tokens + image over `POST /v1/responses`; output is one line per frame `<0f>id<|box;…|><|mask;…|>,…`, pixel boxes (x2/y2 inclusive) in the source size, base85 masks | ✅ |
 | 4 | Structured output for Spark | `response_format: { type: "json_schema", json_schema: { name, schema } }`, constrained decoding; no recursive schemas | ✅ |
 | 5 | Image input and limits | Base64 data URL or public URL; ≤ 50 MB inline; JPEG/PNG/GIF/WebP; images only in user messages; Spark coordinates on a 0–1000 grid | ✅ |
 | 6 | Rate limits and error format (429 body, `Retry-After`) | API docs | ⚠️ VERIFY |
