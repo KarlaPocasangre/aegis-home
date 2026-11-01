@@ -47,9 +47,9 @@ helmet → cors(FRONTEND_URL only) → trust proxy set → body limits
 
 ### Must do (≈ 2–3 h)
 - [x] `.env` ignored before the first commit; `.env.example` committed; no secrets in history
-- [ ] GitHub secret scanning on (repo settings, owner); `gitleaks` in CI ✅
+- [x] GitHub secret scanning and push protection on; `gitleaks` in CI
 - [x] `META_API_KEY` only in backend environment (never `VITE_*`)
-- [ ] Billing alert set in the Meta dashboard (owner). Standard data mode ✅ via the model ID (`muse-spark-1.3`, not `-contributor`); daily cap ✅
+- [x] Daily spend cap: `AI_DAILY_CALL_CAP` enforced atomically in Postgres (`DailyUsage` upsert + conditional update in `usageService`) before every Meta call; over the cap, results fall back with a banner. Standard data mode via the model ID (`muse-spark-1.3`, not `-contributor`). No billing alert in the Meta dashboard (owner decision): the cap only covers calls made through this backend, so a leaked key is handled by revoking it (§6)
 - [x] `app.set('trust proxy', 1)`; global + analysis rate limits; `/health` exempt
 - [x] `express.json({ limit: '100kb' })`, Multer memory storage, 5 MB limit, MIME allow-list
 - [x] Magic-byte check with `file-type`; `sharp` with `limitInputPixels`; re-encode and resize
