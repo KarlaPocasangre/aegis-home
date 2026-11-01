@@ -30,7 +30,8 @@ export function CountUp({ to, format = (v) => String(Math.round(v)), delay = 0 }
           onUpdate: () => {
             el.textContent = format(state.value);
           },
-          scrollTrigger: { trigger: el, start: "top 92%", once: true },
+          // Start as soon as any of it is visible: a number frozen at 0 on screen reads as a real 0.
+          scrollTrigger: { trigger: el, start: "top bottom", once: true },
         });
         return () => {
           el.textContent = format(to);
