@@ -117,7 +117,7 @@ Details: [docs/SECURITY.md](docs/SECURITY.md).
 
 All code in this repository was written during the hackathon (Oct 27 – Nov 4, 2026). Reused code from earlier work: none.
 
-The two sample photos in `client/public/samples/` (a living room and a bedroom) were provided by the project author for this hackathon. They show no people and carry no metadata (EXIF/GPS removed). The recorded results in `server/fixtures/<sha256>[.pt|.en].json` come from live Muse Spark + SAM 3.1 calls on those photos, in Spanish, Portuguese and English.
+The two sample images in `client/public/samples/` (a living room and a bedroom) are AI-generated, created by the project author for this hackathon; they do not depict a real home. They show no people and carry no metadata (EXIF/GPS removed). The recorded results in `server/fixtures/<sha256>[.pt|.en].json` come from live Muse Spark + SAM 3.1 calls on those photos, in Spanish, Portuguese and English.
 
 ## Documentation
 
