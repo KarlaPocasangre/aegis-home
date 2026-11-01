@@ -46,30 +46,30 @@ helmet → cors(FRONTEND_URL only) → trust proxy set → body limits
 ## 4. Hardening checklist
 
 ### Must do (≈ 2–3 h)
-- [ ] `.env` ignored before the first commit; `.env.example` committed; no secrets in history
-- [ ] GitHub secret scanning on; `gitleaks` pre-commit or CI
-- [ ] `META_API_KEY` only in backend environment (never `VITE_*`)
-- [ ] Meta account in **standard** data mode (⚠️ VERIFY); billing alert set; daily cap implemented
-- [ ] `app.set('trust proxy', 1)`; global + analysis rate limits; `/health` exempt
-- [ ] `express.json({ limit: '100kb' })`, Multer memory storage, 5 MB limit, MIME allow-list
-- [ ] Magic-byte check with `file-type`; `sharp` with `limitInputPixels`; re-encode and resize
-- [ ] Zod: bounded AI output schema; Zod: all request inputs; invalid AI output → retry → fallback
-- [ ] Household-scoped queries everywhere; 404 for foreign resources
-- [ ] Generic error messages; no request bodies or tokens in logs
-- [ ] `NODE_ENV=production`; Helmet defaults on (HSTS, nosniff, no `X-Powered-By`)
+- [x] `.env` ignored before the first commit; `.env.example` committed; no secrets in history
+- [ ] GitHub secret scanning on (repo settings, owner); `gitleaks` in CI ✅
+- [x] `META_API_KEY` only in backend environment (never `VITE_*`)
+- [ ] Billing alert set in the Meta dashboard (owner). Standard data mode ✅ via the model ID (`muse-spark-1.3`, not `-contributor`); daily cap ✅
+- [x] `app.set('trust proxy', 1)`; global + analysis rate limits; `/health` exempt
+- [x] `express.json({ limit: '100kb' })`, Multer memory storage, 5 MB limit, MIME allow-list
+- [x] Magic-byte check with `file-type`; `sharp` with `limitInputPixels`; re-encode and resize
+- [x] Zod: bounded AI output schema; Zod: all request inputs; invalid AI output → retry → fallback
+- [x] Household-scoped queries everywhere; 404 for foreign resources
+- [x] Generic error messages; no request bodies or tokens in logs
+- [x] `NODE_ENV=production`; Helmet defaults on (HSTS, nosniff, no `X-Powered-By`)
 
 ### Should do (≈ 1–2 h)
-- [ ] `Referrer-Policy: no-referrer`, `noindex` meta/header on the SPA
-- [ ] CSP in `vercel.json` (`default-src 'self'`; `connect-src` limited to the API origin; `img-src 'self' blob: data:`)
-- [ ] Phone validation + `encodeURIComponent` for `tel:`/`sms:`/`wa.me`; geolocation only on tap
-- [ ] Privacy/consent notice before upload; "anyone with this link" warning
-- [ ] Fallback banner when `source !== "live"`
-- [ ] `npm audit` clean (or accepted) before submission
-- [ ] DB connection over SSL with a least-privilege user; Prisma query methods only
+- [x] `Referrer-Policy: no-referrer`, `noindex` meta/header on the SPA
+- [x] CSP in `vercel.json` (`default-src 'self'`; `connect-src` limited to the API origin; `img-src 'self' blob: data:`)
+- [x] Phone validation + `encodeURIComponent` for `tel:`/`sms:`/`wa.me`; geolocation only on tap
+- [x] Privacy/consent notice before upload; "anyone with this link" warning
+- [x] Fallback banner when `source !== "live"`
+- [x] `npm audit --omit=dev` clean; remaining moderate advisories are dev-only (ESLint → `minimatch`), accepted
+- [x] DB connection over SSL (`sslmode=verify-full`); Prisma query methods only. Least-privilege role: Neon default owner role (accepted for the hackathon)
 
 ### Nice to have
-- [ ] Token expiry/revoke UI; "delete my data" button
-- [ ] Per-household daily room cap enforcement (already in API spec)
+- [x] Token expiry/revoke UI; "delete my data" button
+- [x] Per-household daily room cap enforcement (already in API spec)
 
 ### Out of scope (deliberately)
 Login/OAuth/JWT, WAF, penetration testing, compliance certifications, medical-device regulation. Say so plainly in the README.
