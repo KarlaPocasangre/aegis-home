@@ -47,9 +47,9 @@ normalized image
 
 | Call | Timeout | Retry policy |
 |---|---|---|
-| Muse Spark | 15 s | 1 retry on invalid JSON (add "return only valid JSON" reminder); on HTTP 429 up to 2 retries honoring `Retry-After`, exponential backoff |
+| Muse Spark | 25 s (measured ~13 s on a 1024 px photo) | 1 retry on invalid JSON (add "return only valid JSON" reminder); on HTTP 429 up to 2 retries honoring `Retry-After`, exponential backoff |
 | SAM 3.1 | 10 s per call | Run labels in parallel (cap concurrency at 4); a failed label → `region = null`, never fails the whole room |
-| Whole request | ~30 s budget | On budget exhaustion → fallback ladder |
+| Whole request | ~45 s budget | On budget exhaustion → fallback ladder |
 
 All outbound calls use `AbortController`. Values are suggestions; tune after measuring real latency.
 

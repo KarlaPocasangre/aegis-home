@@ -36,8 +36,8 @@ export interface VisionTiming {
 }
 
 const DEFAULT_TIMING: VisionTiming = {
-  budgetMs: 30_000,
-  sparkTimeoutMs: 15_000,
+  budgetMs: 45_000,
+  sparkTimeoutMs: 25_000,
   samTimeoutMs: 10_000,
   maxRetryDelayMs: 8_000,
 };
