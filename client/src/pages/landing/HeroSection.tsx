@@ -32,8 +32,20 @@ export function HeroSection() {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
         const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-        tl.from("[data-hero-copy]", { y: 28, opacity: 0, duration: 0.8, stagger: 0.1 }, 0.35)
-          .from("[data-hero-photo]", { y: 40, opacity: 0, scale: 0.96, duration: 1 }, 0.2)
+        // fromTo everywhere: explicit end states, so a re-created timeline (dev StrictMode,
+        // remounts) can never "finish" on the hidden starting values.
+        tl.fromTo(
+          "[data-hero-copy]",
+          { y: 28, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8, stagger: 0.1 },
+          0.35,
+        )
+          .fromTo(
+            "[data-hero-photo]",
+            { y: 40, opacity: 0, scale: 0.96 },
+            { y: 0, opacity: 1, scale: 1, duration: 1 },
+            0.2,
+          )
           .fromTo(
             "[data-scan]",
             { yPercent: -100, opacity: 1 },
@@ -41,25 +53,31 @@ export function HeroSection() {
             0.9,
           )
           .to("[data-scan]", { opacity: 0, duration: 0.3 }, ">-0.2")
-          .from(
+          // Only scale: each box's opacity attribute dims resolved hazards and must stay theirs.
+          .fromTo(
             "[data-hero-photo] svg rect",
-            {
-              scale: 0,
-              transformOrigin: "50% 50%",
-              opacity: 0,
-              duration: 0.6,
-              ease: "back.out(1.6)",
-              stagger: 0.18,
-            },
+            { scale: 0, transformOrigin: "50% 50%" },
+            { scale: 1, duration: 0.6, ease: "back.out(1.6)", stagger: 0.18 },
             1.5,
           )
-          .from(
+          .fromTo(
             "[data-hero-photo] button",
-            { scale: 0, duration: 0.45, ease: "back.out(2.5)", stagger: 0.18 },
+            { scale: 0 },
+            { scale: 1, duration: 0.45, ease: "back.out(2.5)", stagger: 0.18 },
             1.65,
           )
-          .from("[data-hero-card='plan']", { x: 30, opacity: 0, duration: 0.7 }, 2.2)
-          .from("[data-hero-card='hazard']", { y: 24, opacity: 0, duration: 0.7 }, 2.4);
+          .fromTo(
+            "[data-hero-card='plan']",
+            { x: 30, opacity: 0 },
+            { x: 0, opacity: 1, duration: 0.7 },
+            2.2,
+          )
+          .fromTo(
+            "[data-hero-card='hazard']",
+            { y: 24, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.7 },
+            2.4,
+          );
       });
       return () => mm.revert();
     },

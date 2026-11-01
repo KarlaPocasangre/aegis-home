@@ -32,7 +32,7 @@ export function ProblemSection() {
             <li
               data-stagger
               key={risk.title}
-              className="rounded-2xl bg-ink-2 p-5 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.06] shadow-(--shadow-card) hover:shadow-(--shadow-float)"
+              className="rounded-2xl bg-ink-2 p-5 ring-1 ring-white/10 transition-[translate,box-shadow,background-color] duration-300 hover:-translate-y-1 hover:bg-white/[0.06] shadow-(--shadow-card) hover:shadow-(--shadow-float)"
             >
               <p className="text-lg font-semibold">{risk.title}</p>
               <p className="mt-1 text-base text-stone-400">{risk.text}</p>
@@ -56,7 +56,7 @@ export function FeaturesSection() {
           <li
             data-stagger
             key={item.title}
-            className="rounded-2xl bg-ink-2 p-6 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 shadow-(--shadow-card) hover:shadow-(--shadow-float)"
+            className="rounded-2xl bg-ink-2 p-6 ring-1 ring-white/10 transition-[translate,box-shadow,background-color] duration-300 hover:-translate-y-1 shadow-(--shadow-card) hover:shadow-(--shadow-float)"
           >
             <span className="flex size-11 items-center justify-center rounded-xl bg-mint/10 text-mint">
               {icon(FEATURE_ICONS[i])}
@@ -131,7 +131,7 @@ export function PrivacySection() {
             <li
               data-stagger
               key={item.title}
-              className="rounded-2xl bg-ink-2 p-5 ring-1 ring-white/10 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.06] shadow-(--shadow-card) hover:shadow-(--shadow-float)"
+              className="rounded-2xl bg-ink-2 p-5 ring-1 ring-white/10 transition-[translate,box-shadow,background-color] duration-300 hover:-translate-y-1 hover:bg-white/[0.06] shadow-(--shadow-card) hover:shadow-(--shadow-float)"
             >
               <span className="text-mint">{icon(PRIVACY_ICONS[i])}</span>
               <p className="mt-3 text-lg font-semibold">{item.title}</p>

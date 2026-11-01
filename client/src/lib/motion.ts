@@ -36,14 +36,18 @@ export function useLineReveal(ref: RefObject<HTMLElement | null>, opts: { delay?
           linesClass: "split-line",
           autoSplit: true,
           onSplit: (self) =>
-            gsap.from(self.lines, {
-              yPercent: 110,
-              duration: 0.9,
-              ease: "expo.out",
-              stagger: 0.08,
-              delay: opts.delay ?? 0,
-              scrollTrigger: { trigger: el, start: "top 88%", once: true },
-            }),
+            gsap.fromTo(
+              self.lines,
+              { yPercent: 110 },
+              {
+                yPercent: 0,
+                duration: 0.9,
+                ease: "expo.out",
+                stagger: 0.08,
+                delay: opts.delay ?? 0,
+                scrollTrigger: { trigger: el, start: "top 88%", once: true },
+              },
+            ),
         });
         return () => split.revert();
       });
@@ -53,20 +57,28 @@ export function useLineReveal(ref: RefObject<HTMLElement | null>, opts: { delay?
   );
 }
 
-/** Children marked `[data-stagger]` fade up one after another when the container appears. */
+/**
+ * Children marked `[data-stagger]` fade up one after another when the container appears.
+ * They must not have CSS transitions on opacity/transform: GSAP drives those every frame.
+ */
 export function useStaggerIn(ref: RefObject<HTMLElement | null>) {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
-        gsap.from("[data-stagger]", {
-          y: 32,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          stagger: 0.09,
-          scrollTrigger: { trigger: ref.current, start: "top 82%", once: true },
-        });
+        // fromTo: explicit end values, so a re-created tween can't end on the hidden start.
+        gsap.fromTo(
+          "[data-stagger]",
+          { y: 32, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: "power3.out",
+            stagger: 0.09,
+            scrollTrigger: { trigger: ref.current, start: "top 82%", once: true },
+          },
+        );
       });
       return () => mm.revert();
     },
