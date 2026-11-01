@@ -1,4 +1,5 @@
 import { useSyncExternalStore, type MouseEvent } from "react";
+import { flushSync } from "react-dom";
 import { isToken } from "./storage";
 
 // A handful of routes don't justify a router dependency.
@@ -23,9 +24,15 @@ function subscribe(onChange: () => void) {
 }
 
 export function navigate(path: string) {
-  window.history.pushState(null, "", path);
-  window.dispatchEvent(new PopStateEvent("popstate"));
-  window.scrollTo(0, 0);
+  const go = () => {
+    window.history.pushState(null, "", path);
+    // flushSync: the new view must be in the DOM before the transition snapshots it.
+    flushSync(() => window.dispatchEvent(new PopStateEvent("popstate")));
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (document.startViewTransition && !reduced) document.startViewTransition(go);
+  else go();
 }
 
 /** For <a href> elements: client-side navigation, but ctrl/cmd-click still opens a new tab. */

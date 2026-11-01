@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+  /* Editorial serif for display headings; body text stays in the system sans. */
+  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
+}
+
 /* In-page anchors on the landing page; clear of the sticky header. */
 @media (prefers-reduced-motion: no-preference) {
   html {
@@ -8,4 +13,56 @@
 }
 [id] {
   scroll-margin-top: 5rem;
+}
+
+/* Route changes cross-fade (View Transitions API, see lib/router.ts). */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+  animation-timing-function: ease-out;
+}
+
+/* FAQ: <details> opens with a height animation where supported; elsewhere it just opens. */
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+  details.faq::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size 300ms ease,
+      content-visibility 300ms allow-discrete;
+  }
+  details.faq[open]::details-content {
+    block-size: auto;
+  }
+}
+
+/* Button label that rolls up on hover: two stacked copies of the text. */
+.roll {
+  display: inline-grid;
+  overflow: hidden;
+  line-height: 1.25;
+}
+.roll > span {
+  grid-area: 1 / 1;
+  transition: transform 350ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+.roll > span + span {
+  transform: translateY(110%);
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :where(a, button):hover > .roll > span:first-child {
+    transform: translateY(-110%);
+  }
+  :where(a, button):hover > .roll > span + span {
+    transform: translateY(0);
+  }
+}
+
+/* Line masks created by SplitText keep descenders visible. */
+.split-line {
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
 }
