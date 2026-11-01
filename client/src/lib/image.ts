@@ -1,3 +1,5 @@
+import { t } from "./i18n";
+
 const MAX_SIDE = 1600; // the server normalizes to 1024; this just keeps uploads small
 const MAX_INPUT_BYTES = 25 * 1024 * 1024;
 
@@ -9,14 +11,14 @@ export class ImagePrepError extends Error {}
  */
 export async function prepareImage(source: Blob): Promise<Blob> {
   if (source.size > MAX_INPUT_BYTES) {
-    throw new ImagePrepError("La foto es demasiado grande. Use una de menos de 25 MB.");
+    throw new ImagePrepError(t().errors.imageTooBig);
   }
 
   let bitmap: ImageBitmap;
   try {
     bitmap = await createImageBitmap(source, { imageOrientation: "from-image" });
   } catch {
-    throw new ImagePrepError("No se pudo leer la imagen. Use una foto JPG, PNG o WebP.");
+    throw new ImagePrepError(t().errors.imageUnreadable);
   }
 
   try {
@@ -27,12 +29,11 @@ export async function prepareImage(source: Blob): Promise<Blob> {
     canvas.width = width;
     canvas.height = height;
     const ctx = canvas.getContext("2d");
-    if (!ctx) throw new ImagePrepError("Su navegador no puede procesar la imagen.");
+    if (!ctx) throw new ImagePrepError(t().errors.imageUnsupported);
     ctx.drawImage(bitmap, 0, 0, width, height);
     return await new Promise<Blob>((resolve, reject) =>
       canvas.toBlob(
-        (blob) =>
-          blob ? resolve(blob) : reject(new ImagePrepError("No se pudo preparar la imagen.")),
+        (blob) => (blob ? resolve(blob) : reject(new ImagePrepError(t().errors.imagePrepare))),
         "image/jpeg",
         0.9,
       ),

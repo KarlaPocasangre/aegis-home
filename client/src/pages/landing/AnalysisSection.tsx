@@ -11,27 +11,29 @@ import { DEMO_HAZARDS, DEMO_IMAGE } from "../../lib/demoResult";
 import { userMessage } from "../../lib/errors";
 import { householdPath, navigate } from "../../lib/router";
 import { fetchSample, type SampleImage } from "../../lib/samples";
+import { useT } from "../../lib/i18n";
 import { lastHousehold } from "../../lib/storage";
 import { Band, SectionHeading } from "./layout";
 
 /** A recorded real result, explorable before creating anything. */
 function DemoResult() {
+  const a = useT().analysis;
   const [activeId, setActiveId] = useState<string | null>(DEMO_HAZARDS[0]?.id ?? null);
   const select = (id: string) => setActiveId((current) => (current === id ? null : id));
 
   return (
     <div id="ejemplo" className="rounded-2xl bg-white/[0.04] p-4 ring-1 ring-white/10 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="font-display text-3xl">Ejemplo: un baño</h3>
+        <h3 className="font-display text-3xl">{a.demoTitle}</h3>
         <span className="rounded-full bg-white/5 px-3 py-1 text-sm font-semibold text-stone-300">
-          Resultado real grabado
+          {a.recorded}
         </span>
       </div>
-      <p className="mt-1 text-base text-stone-400">Toque un número o un riesgo para resaltarlo.</p>
+      <p className="mt-1 text-base text-stone-400">{a.demoHint}</p>
       <div className="mt-4">
         <ImageCanvasOverlay
           src={DEMO_IMAGE}
-          alt="Ilustración de un baño con piso mojado"
+          alt={a.demoAlt}
           hazards={DEMO_HAZARDS}
           activeId={activeId}
           onSelect={select}
@@ -48,15 +50,14 @@ function DemoResult() {
           />
         ))}
       </ol>
-      <p className="mt-3 text-sm text-stone-400">
-        Respuesta de Muse Spark y SAM 3.1 sobre una ilustración creada para esta demostración.
-      </p>
+      <p className="mt-3 text-sm text-stone-400">{a.demoCaption}</p>
     </div>
   );
 }
 
 /** Consent, household creation and the one-tap sample analysis. */
 function StartCard() {
+  const a = useT().analysis;
   const [accepted, setAccepted] = useState(false);
   const [name, setName] = useState("");
   const [busy, setBusy] = useState<"create" | "sample" | null>(null);
@@ -110,18 +111,18 @@ function StartCard() {
       id="empezar"
       className="space-y-4 rounded-2xl bg-white/[0.04] p-4 shadow-lg ring-2 ring-white/10 sm:p-6"
     >
-      <h3 className="font-display text-4xl">Empezar una evaluación</h3>
+      <h3 className="font-display text-4xl">{a.startTitle}</h3>
       <PrivacyNotice accepted={accepted} onChange={setAccepted} />
       <div>
         <label htmlFor={nameId} className="block text-base font-semibold text-stone-100">
-          Nombre para esta casa (opcional)
+          {a.nameLabel}
         </label>
         <input
           id={nameId}
           value={name}
           onChange={(e) => setName(e.target.value)}
           maxLength={80}
-          placeholder="Ej.: Casa de la abuela"
+          placeholder={a.namePlaceholder}
           className="mt-1 block min-h-12 w-full rounded-lg border border-white/15 bg-white/[0.04] px-3 text-base"
         />
       </div>
@@ -131,7 +132,7 @@ function StartCard() {
         disabled={!accepted || busy !== null}
         className="flex min-h-14 w-full items-center justify-center rounded-xl bg-mint px-4 text-lg font-semibold text-ink transition hover:bg-mint-soft active:scale-[0.98] disabled:opacity-50"
       >
-        {busy === "create" ? "Creando…" : <RollText>Empezar evaluación</RollText>}
+        {busy === "create" ? a.creating : <RollText>{a.start}</RollText>}
       </button>
       {busy === "sample" && <AnalysisProgress />}
       {error && (
@@ -140,22 +141,16 @@ function StartCard() {
         </p>
       )}
       <SampleImagePicker onPick={trySample} disabled={!accepted || busy !== null} />
-      {!accepted && (
-        <p className="text-sm text-stone-400">Marque la casilla de arriba para continuar.</p>
-      )}
+      {!accepted && <p className="text-sm text-stone-400">{a.checkFirst}</p>}
     </div>
   );
 }
 
 export function AnalysisSection() {
+  const a = useT().analysis;
   return (
     <Band id="analizar" labelledBy="analizar-title">
-      <SectionHeading
-        id="analizar-title"
-        eyebrow="Análisis con IA"
-        title="Pruébelo ahora"
-        intro="Explore un resultado real o empiece con una foto de la casa. Si no tiene una a mano, use una imagen de prueba: el análisis se hace en vivo con la IA de Meta."
-      />
+      <SectionHeading id="analizar-title" eyebrow={a.eyebrow} title={a.title} intro={a.intro} />
       <div className="mt-10 grid items-start gap-8 lg:grid-cols-2">
         <DemoResult />
         <StartCard />

@@ -9,6 +9,7 @@ import {
   saveContacts,
   type Contact,
 } from "../lib/contacts";
+import { useT } from "../lib/i18n";
 
 type LocationState =
   | { status: "off" }
@@ -18,6 +19,8 @@ type LocationState =
 
 // A shortcut to the user's own contacts via native phone links. Not an emergency service.
 export function EmergencyContactButton() {
+  const c = useT().contact;
+  const tr = useT();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [contacts, setContacts] = useState<Contact[]>(loadContacts);
   const [location, setLocation] = useState<LocationState>({ status: "off" });
@@ -46,9 +49,9 @@ export function EmergencyContactButton() {
     const data = new FormData(event.currentTarget);
     const name = normalizeName(String(data.get("name") ?? ""));
     const phone = normalizePhone(String(data.get("phone") ?? ""));
-    if (!name) return setFormError("Escriba un nombre (máximo 40 letras).");
+    if (!name) return setFormError(c.nameError);
     if (!phone) {
-      return setFormError("Escriba el número con código de país, por ejemplo +503 7000 0000.");
+      return setFormError(c.phoneError);
     }
     setFormError(null);
     updateContacts([...contacts, { name, phone }]);
@@ -67,7 +70,7 @@ export function EmergencyContactButton() {
         <svg aria-hidden viewBox="0 0 24 24" className="size-5 fill-current">
           <path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" />
         </svg>
-        Contactar a un familiar
+        {c.button}
       </button>
 
       <dialog
@@ -78,20 +81,19 @@ export function EmergencyContactButton() {
         <div className="max-h-[85dvh] overflow-y-auto p-5">
           <div className="flex items-start justify-between gap-3">
             <h2 id={ids.title} className="text-xl font-bold">
-              Contactar a un familiar
+              {c.title}
             </h2>
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}
               className="rounded-lg px-2 py-1 text-stone-400 hover:bg-white/5"
-              aria-label="Cerrar"
+              aria-label={tr.common.close}
             >
               ✕
             </button>
           </div>
           <p className="mt-2 rounded-lg bg-white/5 px-3 py-2 text-sm text-stone-300">
-            Este botón abre su teléfono para llamar o escribir a sus contactos. No es un servicio de
-            emergencias y no avisa a nadie por sí solo. En una emergencia, llame al 911.
+            {c.disclaimer}
           </p>
 
           {contacts.length > 0 && (
@@ -103,15 +105,13 @@ export function EmergencyContactButton() {
                   checked={location.status === "on" || location.status === "locating"}
                   onChange={(e) => toggleLocation(e.target.checked)}
                 />
-                Incluir mi ubicación en el mensaje
+                {c.includeLocation}
               </label>
               {location.status === "locating" && (
-                <p className="mt-1 text-xs text-stone-400">Obteniendo ubicación…</p>
+                <p className="mt-1 text-xs text-stone-400">{c.locating}</p>
               )}
               {location.status === "error" && (
-                <p className="mt-1 text-xs text-red-300">
-                  No se pudo obtener la ubicación. El mensaje se enviará sin ella.
-                </p>
+                <p className="mt-1 text-xs text-red-300">{c.locationError}</p>
               )}
 
               <ul className="mt-4 space-y-3">
@@ -128,9 +128,10 @@ export function EmergencyContactButton() {
                         <button
                           type="button"
                           onClick={() => updateContacts(contacts.filter((_, i) => i !== index))}
+                          aria-label={c.removeAria(contact.name)}
                           className="text-xs text-stone-400 underline hover:text-red-300"
                         >
-                          Quitar
+                          {c.remove}
                         </button>
                       </div>
                       <p className="text-sm text-stone-400">{contact.phone}</p>
@@ -139,7 +140,7 @@ export function EmergencyContactButton() {
                           href={links.call}
                           className="rounded-lg bg-mint px-2 py-2.5 text-ink hover:bg-mint-soft"
                         >
-                          Llamar
+                          {c.call}
                         </a>
                         <a
                           href={links.whatsapp}
@@ -169,17 +170,11 @@ export function EmergencyContactButton() {
               className="mt-5 space-y-3 border-t border-white/10 pt-4"
               noValidate
             >
-              <p className="font-semibold">
-                {contacts.length === 0
-                  ? "Agregue un contacto de confianza"
-                  : "Agregar otro contacto"}
-              </p>
-              <p className="text-xs text-stone-400">
-                Los contactos se guardan solo en este teléfono o computadora.
-              </p>
+              <p className="font-semibold">{contacts.length === 0 ? c.addFirst : c.addAnother}</p>
+              <p className="text-xs text-stone-400">{c.storedLocally}</p>
               <div>
                 <label htmlFor={ids.name} className="block text-sm font-semibold text-stone-300">
-                  Nombre
+                  {c.name}
                 </label>
                 <input
                   id={ids.name}
@@ -191,7 +186,7 @@ export function EmergencyContactButton() {
               </div>
               <div>
                 <label htmlFor={ids.phone} className="block text-sm font-semibold text-stone-300">
-                  Teléfono con código de país
+                  {c.phone}
                 </label>
                 <input
                   id={ids.phone}
@@ -212,7 +207,7 @@ export function EmergencyContactButton() {
                 type="submit"
                 className="w-full rounded-lg border border-mint/60 px-4 py-2.5 font-semibold text-mint hover:bg-mint/10"
               >
-                Guardar contacto
+                {c.save}
               </button>
             </form>
           )}

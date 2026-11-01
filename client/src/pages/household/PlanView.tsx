@@ -1,6 +1,7 @@
 import { ActionPlan } from "../../components/ActionPlan";
 import { EmptyState } from "../../components/EmptyState";
 import { ViewTitle } from "../../components/ViewTitle";
+import { useT } from "../../lib/i18n";
 import { roomPath } from "../../lib/router";
 import type { Assessment, HazardStatus } from "../../lib/types";
 
@@ -21,14 +22,12 @@ export function PlanView({
   statusError,
   onSetStatus,
 }: Props) {
+  const p = useT().plan;
   return (
     <div className="space-y-6">
-      <ViewTitle subtitle={householdName ?? undefined}>Plan de acción</ViewTitle>
+      <ViewTitle subtitle={householdName ?? undefined}>{p.title}</ViewTitle>
       {assessment.rooms.length === 0 ? (
-        <EmptyState
-          token={token}
-          text="Aún no hay riesgos en el plan. Analice la foto de un espacio de la casa para empezar."
-        />
+        <EmptyState token={token} text={p.empty} />
       ) : (
         <ActionPlan
           assessment={assessment}

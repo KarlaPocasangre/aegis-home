@@ -1,3 +1,4 @@
+import { useT } from "../lib/i18n";
 import { SAMPLE_IMAGES, type SampleImage } from "../lib/samples";
 
 interface Props {
@@ -6,10 +7,11 @@ interface Props {
 }
 
 export function SampleImagePicker({ onPick, disabled }: Props) {
+  const tr = useT();
   return (
     <div>
       <p className="text-sm font-semibold text-stone-700 dark:text-stone-300">
-        ¿No tiene una foto a mano?
+        {tr.common.noPhotoAtHand}
       </p>
       <div className="mt-2 grid grid-cols-2 gap-3">
         {SAMPLE_IMAGES.map((sample) => (
@@ -28,9 +30,11 @@ export function SampleImagePicker({ onPick, disabled }: Props) {
             />
             <span className="block px-3 py-2 text-sm">
               <span className="block font-semibold text-teal-800 group-hover:underline dark:text-mint">
-                Usar imagen de prueba
+                {tr.common.useSample}
               </span>
-              <span className="text-stone-600 dark:text-stone-400">{sample.label}</span>
+              <span className="text-stone-600 dark:text-stone-400">
+                {tr.samples[sample.labelKey]}
+              </span>
             </span>
           </button>
         ))}

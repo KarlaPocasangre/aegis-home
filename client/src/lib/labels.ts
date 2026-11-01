@@ -1,22 +1,9 @@
+import { t } from "./i18n";
 import type { RoomType, Severity } from "./types";
 
-export const ROOM_LABELS: Record<RoomType, string> = {
-  bathroom: "Baño",
-  kitchen: "Cocina",
-  bedroom: "Dormitorio",
-  living_room: "Sala",
-  hallway: "Pasillo",
-  stairs: "Escaleras",
-  entrance: "Entrada",
-  outdoor: "Patio o exterior",
-  other: "Otro espacio",
-};
+export const roomLabel = (type: RoomType): string => t().rooms[type];
 
-export const SEVERITY_LABELS: Record<Severity, string> = {
-  high: "Riesgo alto",
-  medium: "Riesgo medio",
-  low: "Riesgo bajo",
-};
+export const severityLabel = (severity: Severity): string => t().severity[severity];
 
 export const SEVERITY_STYLES: Record<Severity, { badge: string; stroke: string; marker: string }> =
   {
@@ -37,14 +24,19 @@ export const SEVERITY_STYLES: Record<Severity, { badge: string; stroke: string; 
     },
   };
 
-const usd = new Intl.NumberFormat("es-SV", { style: "currency", currency: "USD" });
+// Formatters are cheap; built per call so they follow the current language.
+const usd = () => new Intl.NumberFormat(t().meta.locale, { style: "currency", currency: "USD" });
 
 export function formatCost(value: number): string {
-  return value === 0 ? "Sin costo" : `Aprox. ${usd.format(value)}`;
+  return value === 0 ? t().cost.free : t().cost.approx(usd().format(value));
 }
 
 export function formatUsd(value: number): string {
-  return usd.format(value);
+  return usd().format(value);
+}
+
+export function formatDate(iso: string): string {
+  return new Intl.DateTimeFormat(t().meta.locale, { dateStyle: "long" }).format(new Date(iso));
 }
 
 /** Model labels arrive lowercase ("piso mojado"); display them as sentences. */

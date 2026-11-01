@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 import { householdPath, linkHandler, type HouseholdView } from "../lib/router";
+import { useT } from "../lib/i18n";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
 
 const icon = (d: ReactNode) => (
@@ -17,10 +19,9 @@ const icon = (d: ReactNode) => (
   </svg>
 );
 
-const TABS: { view: HouseholdView; label: string; icon: ReactNode }[] = [
+const TABS: { view: HouseholdView; icon: ReactNode }[] = [
   {
     view: "plan",
-    label: "Plan",
     icon: icon(
       <>
         <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
@@ -31,7 +32,6 @@ const TABS: { view: HouseholdView; label: string; icon: ReactNode }[] = [
   },
   {
     view: "analizar",
-    label: "Analizar",
     icon: icon(
       <>
         <path d="M4 8a2 2 0 0 1 2-2h1.5l1.5-2h6l1.5 2H18a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" />
@@ -41,7 +41,6 @@ const TABS: { view: HouseholdView; label: string; icon: ReactNode }[] = [
   },
   {
     view: "espacios",
-    label: "Espacios",
     icon: icon(
       <>
         <rect x="3" y="4" width="18" height="16" rx="2" />
@@ -52,7 +51,6 @@ const TABS: { view: HouseholdView; label: string; icon: ReactNode }[] = [
   },
   {
     view: "ajustes",
-    label: "Ajustes",
     icon: icon(
       <>
         <path d="M4 7h10M18 7h2M4 17h2M10 17h10" />
@@ -79,11 +77,12 @@ function TabHint({
 }: Pick<Props, "pendingCount" | "analyzing"> & {
   view: HouseholdView;
 }) {
+  const tr = useT();
   if (view === "plan" && pendingCount > 0) {
     return (
       <span className="rounded-full bg-rose-700 px-2 py-0.5 text-xs leading-none font-bold whitespace-nowrap text-white">
         {pendingCount}
-        <span className="sr-only"> pendientes</span>
+        <span className="sr-only"> {tr.nav.pending}</span>
       </span>
     );
   }
@@ -104,6 +103,7 @@ function TabHint({
  * Only one of the two <nav>s is displayed at a time, so assistive tech sees a single menu.
  */
 export function Navbar({ token, view, householdName, pendingCount, analyzing }: Props) {
+  const tr = useT();
   const tab = (t: (typeof TABS)[number], variant: "top" | "bottom") => {
     const path = householdPath(token, t.view);
     const current = t.view === view;
@@ -118,7 +118,7 @@ export function Navbar({ token, view, householdName, pendingCount, analyzing }: 
           className={`flex min-h-12 items-center gap-2 rounded-lg px-3 text-base font-semibold focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint ${current ? "bg-mint/10 text-mint underline decoration-2 underline-offset-8" : "text-stone-300 hover:bg-white/5 hover:text-white"}`}
         >
           {t.icon}
-          {t.label}
+          {tr.nav.tabs[t.view]}
           {hint}
         </a>
       );
@@ -138,7 +138,7 @@ export function Navbar({ token, view, householdName, pendingCount, analyzing }: 
           {t.icon}
           <span className="absolute -top-1.5 left-4 flex">{hint}</span>
         </span>
-        {t.label}
+        {tr.nav.tabs[t.view]}
       </a>
     );
   };
@@ -153,18 +153,22 @@ export function Navbar({ token, view, householdName, pendingCount, analyzing }: 
               {householdName}
             </p>
           )}
-          <nav aria-label="Secciones de la evaluación" className="ml-auto hidden sm:block">
+          <nav aria-label={tr.nav.aria} className="ml-auto hidden sm:block">
             <ul className="flex gap-1">
               {TABS.map((t) => (
                 <li key={t.view}>{tab(t, "top")}</li>
               ))}
             </ul>
           </nav>
+          {/* Phones have room next to the logo; sm–lg uses Ajustes so the tabs keep their space. */}
+          <div className="ml-auto sm:hidden lg:ml-0 lg:block">
+            <LanguageSwitcher />
+          </div>
         </div>
       </header>
 
       <nav
-        aria-label="Secciones de la evaluación"
+        aria-label={tr.nav.aria}
         className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-ink/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md shadow-[0_-8px_24px_rgba(0,0,0,0.5)] sm:hidden"
       >
         <ul className="flex">

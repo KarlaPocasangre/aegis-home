@@ -2,36 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { ImageCanvasOverlay } from "../../components/ImageCanvasOverlay";
 import { DEMO_HAZARDS, DEMO_IMAGE } from "../../lib/demoResult";
 import { capitalize, formatUsd, SEVERITY_STYLES } from "../../lib/labels";
+import { useT } from "../../lib/i18n";
 import { Band, ICONS, SectionHeading, icon } from "./layout";
 
-const STEPS = [
-  {
-    icon: ICONS.camera,
-    title: "Tome una foto",
-    text: "De pie, mostrando el piso y por donde se camina: baño, cocina, escaleras, pasillos. La foto se reduce y se le quitan los datos de ubicación en su dispositivo.",
-  },
-  {
-    icon: ICONS.sparkle,
-    title: "Muse Spark revisa",
-    text: "El modelo de visión de Meta identifica cada riesgo, qué tan grave es, cómo arreglarlo en palabras sencillas y cuánto puede costar.",
-  },
-  {
-    icon: ICONS.target,
-    title: "SAM 3.1 los señala",
-    text: "El modelo de segmentación de Meta ubica cada riesgo en la imagen para resaltarlo sobre su propia foto, con un número.",
-  },
-  {
-    icon: ICONS.list,
-    title: "Siga su plan",
-    text: "Los arreglos quedan ordenados por prioridad, con el costo pendiente. Márquelos al terminarlos y compártalos con la familia.",
-  },
-];
+const STEP_ICONS = [ICONS.camera, ICONS.sparkle, ICONS.target, ICONS.list];
 
 const fade = (on: boolean) =>
   `transition-all duration-500 ease-out motion-reduce:transition-none ${on ? "opacity-100 translate-y-0" : "pointer-events-none opacity-0 translate-y-3"}`;
 
 /** The same photo at each stage of the pipeline. Decorative: the step text carries the meaning. */
 function StoryVisual({ stage }: { stage: number }) {
+  const tr = useT();
   const demoCost = DEMO_HAZARDS.reduce((sum, h) => sum + h.costEstimateUsd, 0);
   return (
     <div
@@ -83,7 +64,7 @@ function StoryVisual({ stage }: { stage: number }) {
           className={`absolute inset-x-3 bottom-3 rounded-2xl bg-ink/90 p-4 shadow-xl ring-1 ring-white/10 backdrop-blur ${fade(stage === 3)}`}
         >
           <div className="flex items-baseline justify-between">
-            <p className="font-semibold text-white">Plan de acción</p>
+            <p className="font-semibold text-white">{tr.how.planTitle}</p>
             <p className="text-sm text-stone-400">{formatUsd(demoCost)}</p>
           </div>
           <div className="mt-2 h-2 overflow-hidden rounded-full bg-white/10">
@@ -114,6 +95,7 @@ function StoryVisual({ stage }: { stage: number }) {
  * the screen drives the phone's stage. Phones: each step shows its own stage, no pinning.
  */
 export function HowItWorksStory() {
+  const how = useT().how;
   const [active, setActive] = useState(0);
   const stepRefs = useRef<(HTMLLIElement | null)[]>([]);
 
@@ -134,9 +116,9 @@ export function HowItWorksStory() {
     <Band id="como-funciona" tone="stone" labelledBy="como-funciona-title">
       <SectionHeading
         id="como-funciona-title"
-        eyebrow="Cómo funciona"
-        title="De una foto a un plan de acción"
-        intro="Dos modelos de inteligencia artificial de Meta trabajan en cadena sobre su foto."
+        eyebrow={how.eyebrow}
+        title={how.title}
+        intro={how.intro}
       />
 
       <div className="mt-14 lg:grid lg:grid-cols-2 lg:gap-16">
@@ -145,7 +127,7 @@ export function HowItWorksStory() {
         </div>
 
         <ol>
-          {STEPS.map((step, index) => (
+          {how.steps.map((step, index) => (
             <li
               key={step.title}
               ref={(el) => {
@@ -159,7 +141,7 @@ export function HowItWorksStory() {
               >
                 <div className="flex items-center gap-4">
                   <span className="flex size-12 items-center justify-center rounded-xl bg-mint text-ink">
-                    {icon(step.icon)}
+                    {icon(STEP_ICONS[index])}
                   </span>
                   <span className="font-display text-5xl text-white/15" aria-hidden>
                     0{index + 1}

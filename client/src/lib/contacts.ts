@@ -1,3 +1,4 @@
+import { t } from "./i18n";
 import { readJson, writeJson } from "./storage";
 
 export interface Contact {
@@ -23,11 +24,12 @@ export function normalizeName(input: string): string | null {
 }
 
 export function helpMessage(coords?: { lat: number; lng: number }): string {
-  const base = "Hola, necesito que me contactes, por favor.";
+  const { help, myLocation } = t().contact;
+  const base = help;
   if (!coords || !Number.isFinite(coords.lat) || !Number.isFinite(coords.lng)) return base;
   const lat = coords.lat.toFixed(5);
   const lng = coords.lng.toFixed(5);
-  return `${base} Mi ubicación: https://maps.google.com/?q=${lat},${lng}`;
+  return `${base} ${myLocation} https://maps.google.com/?q=${lat},${lng}`;
 }
 
 /** Native phone links only: no server involved (docs/API_SPECS.md §3). */

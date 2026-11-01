@@ -2,6 +2,13 @@ import { describe, expect, it } from "vitest";
 import { contactLinks, helpMessage, normalizeName, normalizePhone } from "./contacts";
 import { isValidRegion, polygonPoints, regionAnchor } from "./regions";
 import { householdPath, parseRoute, roomPath } from "./router";
+import { ApiError } from "./api";
+import { userMessage } from "./errors";
+import { setLang } from "./i18n";
+import { en } from "./i18n/en";
+import { es } from "./i18n/es";
+import { pt } from "./i18n/pt";
+import { formatCost, roomLabel } from "./labels";
 
 describe("normalizePhone", () => {
   it.each([
@@ -110,5 +117,44 @@ describe("parseRoute", () => {
     expect(householdPath(token)).toBe(`/h/${token}`);
     expect(householdPath(token, "ajustes")).toBe(`/h/${token}/ajustes`);
     expect(roomPath(token, room, hazard)).toBe(`/h/${token}/espacios/${room}?riesgo=${hazard}`);
+  });
+});
+
+describe("i18n", () => {
+  // Same keys and list lengths in every language: a missing string would show up blank.
+  function shape(value: unknown): unknown {
+    if (typeof value === "function") return "fn";
+    if (Array.isArray(value)) return value.map(shape);
+    if (value && typeof value === "object") {
+      return Object.fromEntries(
+        Object.entries(value)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([k, v]) => [k, shape(v)]),
+      );
+    }
+    return typeof value;
+  }
+
+  it("has the same structure in Spanish, Portuguese and English", () => {
+    expect(shape(pt)).toEqual(shape(es));
+    expect(shape(en)).toEqual(shape(es));
+  });
+
+  it("translates formatters, errors and the help message with the current language", () => {
+    setLang("en");
+    expect(formatCost(0)).toBe("No cost");
+    expect(formatCost(8)).toBe("About $8.00");
+    expect(userMessage(new ApiError(429, "RATE_LIMITED", "Demasiadas solicitudes"))).toBe(
+      en.errors.codes.RATE_LIMITED,
+    );
+    expect(userMessage(new ApiError(0, "NETWORK", "x"))).toBe(en.errors.network);
+
+    setLang("pt");
+    expect(roomLabel("bathroom")).toBe("Banheiro");
+    expect(helpMessage()).toBe(pt.contact.help);
+
+    setLang("es");
+    expect(formatCost(0)).toBe("Sin costo");
+    expect(userMessage(new ApiError(500, "SOMETHING_NEW", "x"))).toBe(es.errors.generic);
   });
 });

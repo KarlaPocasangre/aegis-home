@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
+import { LanguageSwitcher } from "../../components/LanguageSwitcher";
 import { ShareLink } from "../../components/ShareLink";
 import { ViewTitle } from "../../components/ViewTitle";
-
-const dateFormat = new Intl.DateTimeFormat("es-SV", { dateStyle: "long" });
+import { useT } from "../../lib/i18n";
+import { formatDate } from "../../lib/labels";
 
 interface Props {
   token: string;
@@ -21,40 +22,43 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export function SettingsView({ token, expiresAt, deleting, onDelete }: Props) {
+  const s = useT().settings;
   return (
     <div className="space-y-8">
-      <ViewTitle>Ajustes</ViewTitle>
+      <ViewTitle>{s.title}</ViewTitle>
+
+      <Section title={s.languageTitle}>
+        <p className="text-base text-stone-300">{s.languageText}</p>
+        <LanguageSwitcher inline />
+      </Section>
 
       <ShareLink token={token} />
 
-      <Section title="Contactos de confianza">
+      <Section title={s.contactsTitle}>
         <p className="text-base text-stone-300">
-          Use el botón rojo <strong>Contactar a un familiar</strong> para agregar hasta 3 contactos
-          y llamarlos o escribirles. Se guardan solo en este dispositivo.
+          {s.contactsBefore} <strong>{s.contactsButton}</strong> {s.contactsAfter}
         </p>
       </Section>
 
-      <Section title="Privacidad">
+      <Section title={s.privacyTitle}>
         <ul className="list-disc space-y-1 pl-5 text-base text-stone-300">
-          <li>Las fotos se analizan y no se guardan; solo se guarda la lista de riesgos.</li>
+          <li>{s.privacyPhotos}</li>
           <li>
-            Esta evaluación estará disponible hasta el{" "}
-            <strong>{dateFormat.format(new Date(expiresAt))}</strong>. Después se borra sola.
+            {s.availableBefore} <strong>{formatDate(expiresAt)}</strong>
+            {s.availableAfter}
           </li>
         </ul>
       </Section>
 
-      <Section title="Borrar datos">
-        <p className="text-base text-stone-300">
-          Borra la evaluación, sus espacios y riesgos. El enlace compartido dejará de funcionar.
-        </p>
+      <Section title={s.deleteTitle}>
+        <p className="text-base text-stone-300">{s.deleteText}</p>
         <button
           type="button"
           onClick={onDelete}
           disabled={deleting}
           className="min-h-12 rounded-lg border-2 border-red-400/60 bg-transparent px-5 text-base font-semibold text-red-300 hover:bg-red-500/10 disabled:opacity-50"
         >
-          {deleting ? "Borrando…" : "Borrar esta evaluación y sus datos"}
+          {deleting ? s.deleting : s.delete}
         </button>
       </Section>
     </div>

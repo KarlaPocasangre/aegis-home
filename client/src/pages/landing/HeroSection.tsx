@@ -7,10 +7,9 @@ import { capitalize, formatUsd } from "../../lib/labels";
 import { gsap, MOTION_OK, useGSAP } from "../../lib/motion";
 import { householdPath, linkHandler } from "../../lib/router";
 import { scrollToHash } from "../../lib/smoothScroll";
+import { useT } from "../../lib/i18n";
 import { lastHousehold } from "../../lib/storage";
 import { DisplayHeading, ICONS, icon } from "./layout";
-
-const TRUST = ["Gratis y sin crear cuenta", "Las fotos no se guardan", "Pensado en español"];
 
 const topHazard = DEMO_HAZARDS[0];
 const demoCost = DEMO_HAZARDS.reduce((sum, h) => sum + h.costEstimateUsd, 0);
@@ -21,6 +20,7 @@ const primaryCta =
   "inline-flex min-h-14 items-center rounded-full bg-mint px-7 text-lg font-semibold text-ink shadow-[0_0_40px_-10px] shadow-mint/70 transition hover:bg-mint-soft active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint";
 
 export function HeroSection() {
+  const h = useT().hero;
   const saved = lastHousehold.get();
   const root = useRef<HTMLElement>(null);
 
@@ -87,15 +87,13 @@ export function HeroSection() {
             className="inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3 py-1 text-sm font-semibold text-mint ring-1 ring-mint/30"
           >
             {icon(ICONS.sparkle, "size-4")}
-            Con Muse Spark y SAM 3.1 de Meta
+            {h.badge}
           </p>
           <DisplayHeading as="h1" id="hero-title" className="mt-6 text-5xl text-white sm:text-7xl">
-            Una casa más segura para <em className="text-stone-400">quienes más queremos</em>
+            {h.titleA} <em className="text-stone-400">{h.titleB}</em>
           </DisplayHeading>
           <p data-hero-copy className="mt-6 max-w-xl text-lg text-stone-300 sm:text-xl">
-            Tome fotos de la casa de su mamá, papá o abuelos. La inteligencia artificial señala lo
-            que puede provocar una caída y le da un plan de arreglos sencillos, en orden y con costo
-            aproximado.
+            {h.intro}
           </p>
 
           <div data-hero-copy className="mt-9 flex flex-wrap gap-3">
@@ -105,18 +103,18 @@ export function HeroSection() {
                 onClick={linkHandler(householdPath(saved))}
                 className={primaryCta}
               >
-                <RollText>Continuar mi evaluación</RollText>
+                <RollText>{h.continue}</RollText>
               </a>
             ) : (
               <a href="#empezar" className={primaryCta}>
-                <RollText>Analizar mi casa</RollText>
+                <RollText>{h.analyze}</RollText>
               </a>
             )}
             <a
               href="#ejemplo"
               className="inline-flex min-h-14 items-center rounded-full bg-white/5 px-7 text-lg font-semibold text-white ring-1 ring-white/15 transition hover:bg-white/10 active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint"
             >
-              <RollText>Ver un ejemplo real</RollText>
+              <RollText>{h.seeExample}</RollText>
             </a>
           </div>
 
@@ -124,7 +122,7 @@ export function HeroSection() {
             data-hero-copy
             className="mt-9 flex flex-wrap gap-x-6 gap-y-2 text-base text-stone-300"
           >
-            {TRUST.map((item) => (
+            {h.trust.map((item) => (
               <li key={item} className="flex items-center gap-2">
                 <span className="text-mint">{icon(ICONS.check, "size-5")}</span>
                 {item}
@@ -141,7 +139,7 @@ export function HeroSection() {
             <div className="relative overflow-hidden rounded-lg">
               <ImageCanvasOverlay
                 src={DEMO_IMAGE}
-                alt="Ilustración de un baño con piso mojado y riesgos resaltados"
+                alt={h.photoAlt}
                 hazards={DEMO_HAZARDS}
                 activeId={topHazard?.id ?? null}
                 onSelect={scrollTo("ejemplo")}
@@ -158,24 +156,26 @@ export function HeroSection() {
               data-hero-card="hazard"
               className="relative z-10 -mt-2 ml-4 max-w-[17rem] rounded-xl bg-white/[0.04] p-3 shadow-lg ring-1 ring-white/10 sm:-ml-6"
             >
-              <p className="text-xs font-bold tracking-wide text-red-400 uppercase">Riesgo alto</p>
-              <p className="mt-0.5 font-semibold text-white">{capitalize(topHazard.labelEs)}</p>
-              <p className="mt-0.5 text-sm text-stone-400">{topHazard.fixEs.split(".")[0]}.</p>
+              <p className="text-xs font-bold tracking-wide text-red-400 uppercase">{h.highRisk}</p>
+              <p lang="es" className="mt-0.5 font-semibold text-white">
+                {capitalize(topHazard.labelEs)}
+              </p>
+              <p lang="es" className="mt-0.5 text-sm text-stone-400">
+                {topHazard.fixEs.split(".")[0]}.
+              </p>
             </div>
           )}
           <div
             data-hero-card="plan"
             className="absolute -top-4 -right-2 rounded-xl bg-mint px-4 py-3 text-ink shadow-lg sm:-right-4"
           >
-            <p className="text-xs font-semibold text-ink/70">Plan de este baño</p>
+            <p className="text-xs font-semibold text-ink/70">{h.planOf}</p>
             <p className="text-lg font-bold">
-              <CountUp to={DEMO_HAZARDS.length} delay={2.2} /> arreglos ·{" "}
+              <CountUp to={DEMO_HAZARDS.length} delay={2.2} /> {h.fixes} ·{" "}
               <CountUp to={demoCost} format={formatUsd} delay={2.2} />
             </p>
           </div>
-          <figcaption className="sr-only">
-            Resultado real de Muse Spark y SAM 3.1 sobre una ilustración de ejemplo.
-          </figcaption>
+          <figcaption className="sr-only">{h.caption}</figcaption>
         </figure>
       </div>
     </section>

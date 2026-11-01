@@ -15,6 +15,7 @@ import { isUnauthorized, userMessage } from "../../lib/errors";
 import { roomImages } from "../../lib/roomImages";
 import { navigate, parseRoute, roomPath, type Route } from "../../lib/router";
 import { fetchSample, type SampleImage } from "../../lib/samples";
+import { t, useT } from "../../lib/i18n";
 import { lastHousehold } from "../../lib/storage";
 import type { RoomType } from "../../lib/types";
 import { AnalyzeView } from "./AnalyzeView";
@@ -31,6 +32,7 @@ type HouseholdRoute = Extract<Route, { name: "household" }>;
  */
 export function HouseholdLayout({ route }: { route: HouseholdRoute }) {
   const { token, view } = route;
+  const tr = useT();
   const queryClient = useQueryClient();
   const household = useHousehold(token);
   // Newest assessment first: re-checks get their own assessment.
@@ -70,12 +72,7 @@ export function HouseholdLayout({ route }: { route: HouseholdRoute }) {
   };
 
   const remove = async () => {
-    if (
-      !window.confirm(
-        "¿Borrar esta evaluación y todos sus datos? Esta acción no se puede deshacer.",
-      )
-    )
-      return;
+    if (!window.confirm(t().household.confirmDelete)) return;
     setDeleting(true);
     try {
       await api.deleteHousehold(token);
@@ -101,16 +98,14 @@ export function HouseholdLayout({ route }: { route: HouseholdRoute }) {
         </header>
         <main id="contenido" className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 text-center">
           <h1 className="text-xl font-bold">
-            {expired
-              ? "Este enlace ya no es válido o la evaluación expiró."
-              : userMessage(household.error ?? assessment.error)}
+            {expired ? tr.household.expired : userMessage(household.error ?? assessment.error)}
           </h1>
           <button
             type="button"
             onClick={() => navigate("/")}
             className="mt-6 min-h-12 rounded-lg bg-mint px-5 text-base font-semibold text-ink hover:bg-mint-soft"
           >
-            Ir al inicio
+            {tr.household.goHome}
           </button>
         </main>
         <SiteFooter />
@@ -134,7 +129,7 @@ export function HouseholdLayout({ route }: { route: HouseholdRoute }) {
       {/* Bottom padding keeps the last content clear of the tab bar and the contact button. */}
       <main id="contenido" className="mx-auto w-full max-w-3xl flex-1 px-4 pt-8 pb-44 sm:pb-28">
         {!data || !household.data ? (
-          <p className="py-12 text-center text-lg text-stone-400">Cargando la evaluación…</p>
+          <p className="py-12 text-center text-lg text-stone-400">{tr.household.loading}</p>
         ) : view === "plan" ? (
           <PlanView
             token={token}

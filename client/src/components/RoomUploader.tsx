@@ -1,5 +1,6 @@
 import { useId, useRef, useState, type FormEvent } from "react";
-import { ROOM_LABELS } from "../lib/labels";
+import { useT } from "../lib/i18n";
+import { roomLabel } from "../lib/labels";
 import type { SampleImage } from "../lib/samples";
 import { ROOM_TYPES, type RoomType } from "../lib/types";
 import { AnalysisProgress } from "./AnalysisProgress";
@@ -13,6 +14,7 @@ interface Props {
 }
 
 export function RoomUploader({ busy, error, onUpload, onSample }: Props) {
+  const a = useT().analyze;
   const [roomType, setRoomType] = useState<RoomType>("bathroom");
   const [file, setFile] = useState<File | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -31,7 +33,7 @@ export function RoomUploader({ busy, error, onUpload, onSample }: Props) {
       <form onSubmit={submit} className="space-y-4">
         <div>
           <label htmlFor={ids.type} className="block text-sm font-semibold text-stone-300">
-            ¿Qué espacio es?
+            {a.roomQuestion}
           </label>
           <select
             id={ids.type}
@@ -42,34 +44,45 @@ export function RoomUploader({ busy, error, onUpload, onSample }: Props) {
           >
             {ROOM_TYPES.map((type) => (
               <option key={type} value={type}>
-                {ROOM_LABELS[type]}
+                {roomLabel(type)}
               </option>
             ))}
           </select>
         </div>
         <div>
           <label htmlFor={ids.file} className="block text-sm font-semibold text-stone-300">
-            Foto del espacio
+            {a.photoLabel}
           </label>
-          <input
-            ref={inputRef}
-            id={ids.file}
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            disabled={busy}
-            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-            className="mt-1 block w-full text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-white/10 file:text-white file:px-4 file:py-2.5 file:font-semibold hover:file:bg-white/20"
-          />
-          <p className="mt-1 text-xs text-stone-400">
-            Tome la foto de pie, mostrando el piso y los lugares por donde se camina.
-          </p>
+          {/* The native file button is labeled in the browser's language, not the app's:
+              the input stays for keyboard and screen readers, a translated button sits on top. */}
+          <div className="mt-1 flex items-center gap-3">
+            <label
+              htmlFor={ids.file}
+              className={`inline-flex min-h-12 shrink-0 cursor-pointer items-center rounded-lg bg-white/10 px-4 font-semibold text-white hover:bg-white/20 has-[:focus-visible]:outline-3 has-[:focus-visible]:outline-mint ${busy ? "pointer-events-none opacity-50" : ""}`}
+            >
+              {a.choosePhoto}
+              <input
+                ref={inputRef}
+                id={ids.file}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                disabled={busy}
+                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                className="sr-only"
+              />
+            </label>
+            <span className="min-w-0 truncate text-sm text-stone-400">
+              {file ? file.name : a.noFile}
+            </span>
+          </div>
+          <p className="mt-1 text-xs text-stone-400">{a.photoHint}</p>
         </div>
         <button
           type="submit"
           disabled={busy || !file}
           className="w-full rounded-lg bg-mint px-4 py-3 font-semibold text-ink hover:bg-mint-soft disabled:opacity-50"
         >
-          Analizar foto
+          {busy ? a.analyzing : a.submit}
         </button>
       </form>
 

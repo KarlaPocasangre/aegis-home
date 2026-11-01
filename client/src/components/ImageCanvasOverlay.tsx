@@ -1,3 +1,4 @@
+import { useT } from "../lib/i18n";
 import { SEVERITY_STYLES } from "../lib/labels";
 import { isValidRegion, polygonPoints, regionAnchor } from "../lib/regions";
 import type { Hazard } from "../lib/types";
@@ -12,6 +13,7 @@ interface Props {
 
 // Regions are normalized 0–1, so a 1×1 viewBox stretched over the image lines them up at any size.
 export function ImageCanvasOverlay({ src, alt, hazards, activeId, onSelect }: Props) {
+  const tr = useT();
   const visible = hazards
     .map((hazard, index) => ({ hazard, number: index + 1 }))
     .filter(({ hazard }) => isValidRegion(hazard.region));
@@ -52,7 +54,7 @@ export function ImageCanvasOverlay({ src, alt, hazards, activeId, onSelect }: Pr
             key={hazard.id}
             type="button"
             onClick={() => onSelect(hazard.id)}
-            aria-label={`Riesgo ${number}: ${hazard.labelEs}`}
+            aria-label={tr.roomsView.riskAria(number, hazard.labelEs)}
             className={`absolute flex size-7 -translate-x-1/3 -translate-y-1/3 items-center justify-center rounded-full text-sm font-bold text-white shadow ring-2 ring-white ${SEVERITY_STYLES[hazard.severity].marker} ${hazard.id === activeId ? "scale-125" : ""}`}
             style={{ left: `${anchor.x * 100}%`, top: `${anchor.y * 100}%` }}
           >

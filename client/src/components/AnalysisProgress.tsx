@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useT } from "../lib/i18n";
 
 export function AnalysisProgress() {
+  const p = useT().progress;
   const [seconds, setSeconds] = useState(0);
   useEffect(() => {
     const timer = window.setInterval(() => setSeconds((s) => s + 1), 1000);
@@ -17,12 +19,8 @@ export function AnalysisProgress() {
         className="mt-1 inline-block size-4 shrink-0 animate-spin rounded-full border-2 border-teal-700 border-t-transparent dark:border-mint dark:border-t-transparent"
       />
       <div className="text-sm">
-        <p className="font-semibold">Analizando la foto… {seconds} s</p>
-        <p className="mt-0.5">
-          {seconds < 20
-            ? "Buscando riesgos de caída en el espacio."
-            : "Puede tardar hasta un minuto si el servicio estaba en reposo."}
-        </p>
+        <p className="font-semibold">{p.title(seconds)}</p>
+        <p className="mt-0.5">{seconds < 20 ? p.searching : p.slow}</p>
       </div>
     </div>
   );

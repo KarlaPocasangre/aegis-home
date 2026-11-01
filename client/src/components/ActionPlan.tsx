@@ -1,5 +1,6 @@
 import { linkHandler } from "../lib/router";
-import { capitalize, formatCost, formatUsd, ROOM_LABELS } from "../lib/labels";
+import { useT } from "../lib/i18n";
+import { capitalize, formatCost, formatUsd, roomLabel } from "../lib/labels";
 import type { Assessment, Hazard, HazardStatus, RoomType } from "../lib/types";
 import { SeverityBadge } from "./SeverityBadge";
 
@@ -24,19 +25,22 @@ function ActionItemRow({
   onToggle: () => void;
   photoHref?: string;
 }) {
+  const p = useT().plan;
   const resolved = item.status === "resolved";
   return (
     <li className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/[0.04] p-3">
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <p className={`font-semibold ${resolved ? "text-stone-400 line-through" : ""}`}>
-            {capitalize(item.labelEs)}
+            <span lang="es">{capitalize(item.labelEs)}</span>
           </p>
           {!resolved && <SeverityBadge severity={item.severity} />}
         </div>
-        <p className="mt-1 text-sm text-stone-300">{item.fixEs}</p>
+        <p lang="es" className="mt-1 text-sm text-stone-300">
+          {item.fixEs}
+        </p>
         <p className="mt-1 text-xs text-stone-400">
-          {ROOM_LABELS[item.roomType]} · {formatCost(item.costEstimateUsd)}
+          {roomLabel(item.roomType)} · {formatCost(item.costEstimateUsd)}
         </p>
         {photoHref && (
           <a
@@ -44,7 +48,7 @@ function ActionItemRow({
             onClick={linkHandler(photoHref)}
             className="mt-1 inline-flex min-h-10 items-center text-sm font-semibold text-mint underline underline-offset-4 hover:text-mint"
           >
-            Ver en la foto
+            {p.seePhoto}
           </a>
         )}
       </div>
@@ -54,13 +58,14 @@ function ActionItemRow({
         disabled={busy}
         className={`shrink-0 rounded-lg px-3 py-2 text-sm font-semibold disabled:opacity-50 ${resolved ? "border border-white/15 bg-white/5 text-stone-200 hover:bg-white/10" : "bg-mint text-ink hover:bg-mint-soft"}`}
       >
-        {resolved ? "Deshacer" : "Ya lo arreglé"}
+        {resolved ? p.undo : p.fixed}
       </button>
     </li>
   );
 }
 
 export function ActionPlan({ assessment, onSetStatus, pendingHazardId, photoHref }: Props) {
+  const p = useT().plan;
   const byId = new Map<string, Item>();
   for (const room of assessment.rooms) {
     for (const hazard of room.hazards)
@@ -74,23 +79,16 @@ export function ActionPlan({ assessment, onSetStatus, pendingHazardId, photoHref
   const progress = totalHazards === 0 ? 0 : Math.round((resolvedCount / totalHazards) * 100);
 
   if (totalHazards === 0) {
-    return (
-      <p className="text-stone-400">
-        Aún no hay riesgos en el plan. Suba una foto de un espacio de la casa para empezar.
-      </p>
-    );
+    return <p className="text-stone-400">{p.emptyShort}</p>;
   }
 
   return (
     <div className="space-y-4">
       <div className="rounded-lg bg-white/[0.04] p-4 ring-1 ring-white/10">
         <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <p className="font-semibold">
-            {resolvedCount} de {totalHazards} riesgos resueltos
-          </p>
+          <p className="font-semibold">{p.progress(resolvedCount, totalHazards)}</p>
           <p className="text-sm text-stone-400">
-            Costo pendiente aprox.:{" "}
-            <span className="font-semibold">{formatUsd(pendingCostUsd)}</span>
+            {p.pendingCost} <span className="font-semibold">{formatUsd(pendingCostUsd)}</span>
           </p>
         </div>
         <div
@@ -99,7 +97,7 @@ export function ActionPlan({ assessment, onSetStatus, pendingHazardId, photoHref
           aria-valuenow={progress}
           aria-valuemin={0}
           aria-valuemax={100}
-          aria-label="Progreso del plan"
+          aria-label={p.progressAria}
         >
           <div
             className="h-full rounded-full bg-emerald-500 transition-all"
@@ -110,7 +108,7 @@ export function ActionPlan({ assessment, onSetStatus, pendingHazardId, photoHref
 
       {pending.length > 0 && (
         <section>
-          <h3 className="mb-2 font-semibold">Por hacer, en orden de prioridad</h3>
+          <h3 className="mb-2 font-semibold">{p.todo}</h3>
           <ol className="space-y-2">
             {pending.map((item) => (
               <ActionItemRow
@@ -127,7 +125,7 @@ export function ActionPlan({ assessment, onSetStatus, pendingHazardId, photoHref
 
       {resolved.length > 0 && (
         <section>
-          <h3 className="mb-2 font-semibold">Ya resueltos</h3>
+          <h3 className="mb-2 font-semibold">{p.done}</h3>
           <ul className="space-y-2">
             {resolved.map((item) => (
               <ActionItemRow
