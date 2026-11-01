@@ -1,0 +1,80 @@
+{
+  "roomType": "stairs",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "shoes on stairs",
+      "label_es": "zapatos en escalera",
+      "severity": "high",
+      "description_es": "Hay un par de zapatos oscuros sobre un escalón que pueden causar un tropiezo al subir o bajar.",
+      "fix_es": "Quite los zapatos de la escalera y guárdelos en un armario o estante fuera del paso.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.95,
+      "box": [536, 508, 688, 553],
+      "region": {
+        "type": "bbox",
+        "points": [0.536, 0.508, 0.152, 0.045000000000000005]
+      }
+    },
+    {
+      "id": "h2",
+      "label_en": "cardboard box on step",
+      "label_es": "caja de cartón",
+      "severity": "high",
+      "description_es": "Hay una caja sobre un escalón bajo que bloquea el paso y puede provocar una caída.",
+      "fix_es": "Mueva la caja fuera de la escalera y mantenga los escalones siempre libres.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.9,
+      "box": [318, 647, 428, 738],
+      "region": {
+        "type": "bbox",
+        "points": [0.318, 0.647, 0.11, 0.09100000000000001]
+      }
+    },
+    {
+      "id": "h3",
+      "label_en": "missing handrail",
+      "label_es": "pasamanos faltante",
+      "severity": "high",
+      "description_es": "La escalera no tiene pasamanos para agarrarse, lo que aumenta el riesgo de caída.",
+      "fix_es": "Instale un pasamanos firme a lo largo de la escalera con ayuda de un carpintero.",
+      "cost_estimate_usd": 30,
+      "confidence": 0.8,
+      "box": [109, 18, 912, 788],
+      "region": {
+        "type": "bbox",
+        "points": [0.109, 0.018, 0.803, 0.77]
+      }
+    },
+    {
+      "id": "h4",
+      "label_en": "small blue object",
+      "label_es": "objeto azul pequeño",
+      "severity": "medium",
+      "description_es": "Hay un objeto azul pequeño en un escalón alto que puede hacer tropezar.",
+      "fix_es": "Recoja el objeto y mantenga todos los escalones despejados.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.8,
+      "box": [710, 376, 808, 431],
+      "region": {
+        "type": "bbox",
+        "points": [0.6826171875, 0.3776041666666667, 0.0693359375, 0.052083333333333336]
+      }
+    },
+    {
+      "id": "h5",
+      "label_en": "dim stair lighting",
+      "label_es": "luz tenue",
+      "severity": "medium",
+      "description_es": "La escalera se ve oscura con solo una luz pequeña arriba, cuesta ver los escalones.",
+      "fix_es": "Agregue un foco más brillante y manténgalo encendido al usar la escalera.",
+      "cost_estimate_usd": 12,
+      "confidence": 0.7,
+      "box": [840, 55, 904, 101],
+      "region": {
+        "type": "bbox",
+        "points": [0.84, 0.055, 0.064, 0.046000000000000006]
+      }
+    }
+  ]
+}

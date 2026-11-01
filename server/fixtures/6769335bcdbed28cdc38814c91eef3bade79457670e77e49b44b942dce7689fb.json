@@ -1,0 +1,65 @@
+{
+  "roomType": "bathroom",
+  "hazards": [
+    {
+      "id": "h1",
+      "label_en": "wet floor",
+      "label_es": "piso mojado",
+      "severity": "high",
+      "description_es": "Hay un charco grande de agua en el piso de loseta frente a la ducha, muy resbaloso para una persona mayor.",
+      "fix_es": "Seque el agua con un trapeador y coloque un tapete antideslizante plano fuera de la ducha.",
+      "cost_estimate_usd": 5,
+      "confidence": 0.95,
+      "box": [333, 688, 912, 857],
+      "region": {
+        "type": "bbox",
+        "points": [0.333, 0.6880000000000001, 0.579, 0.169]
+      }
+    },
+    {
+      "id": "h2",
+      "label_en": "loose bath mat",
+      "label_es": "tapete enrollado",
+      "severity": "high",
+      "description_es": "El tapete naranja está doblado y arrugado sobre el piso mojado y puede hacer tropezar.",
+      "fix_es": "Extienda el tapete bien plano sobre el piso seco y fíjelo con base antideslizante.",
+      "cost_estimate_usd": 5,
+      "confidence": 0.9,
+      "box": [388, 815, 734, 992],
+      "region": {
+        "type": "bbox",
+        "points": [0.388, 0.815, 0.34600000000000003, 0.17700000000000002]
+      }
+    },
+    {
+      "id": "h3",
+      "label_en": "missing grab bar",
+      "label_es": "barra de apoyo faltante",
+      "severity": "medium",
+      "description_es": "No hay barra de apoyo en la zona de la ducha para sostenerse al entrar y salir sobre el piso mojado.",
+      "fix_es": "Instale una barra de apoyo atornillada a la pared de la ducha a la altura de la mano.",
+      "cost_estimate_usd": 20,
+      "confidence": 0.6,
+      "box": [720, 350, 985, 420],
+      "region": {
+        "type": "bbox",
+        "points": [0.72, 0.35000000000000003, 0.265, 0.06999999999999999]
+      }
+    },
+    {
+      "id": "h4",
+      "label_en": "loose slipper",
+      "label_es": "chancla suelta",
+      "severity": "medium",
+      "description_es": "Hay una chancla verde suelta sobre el piso mojado que puede causar un resbalón o tropezón.",
+      "fix_es": "Recoja la chancla del piso y mantenga el piso libre de objetos pequeños.",
+      "cost_estimate_usd": 0,
+      "confidence": 0.65,
+      "box": [292, 886, 408, 978],
+      "region": {
+        "type": "bbox",
+        "points": [0.292, 0.886, 0.116, 0.09200000000000001]
+      }
+    }
+  ]
+}

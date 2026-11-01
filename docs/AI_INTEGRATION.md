@@ -213,6 +213,7 @@ Constraints:
 - Fixtures must be generated from images you own or have permission to use; never from real people's homes without consent. The repository is public.
 - The **3-minute demo video must be recorded with live calls**. Fallback exists for a reviewer who opens the product during an outage, not to simulate the AI.
 - Hash matching is best-effort (re-encoding must be deterministic for the same `sharp` version). If it misses, level 2 applies.
+- The bundled sample images are uploaded byte-for-byte (no canvas re-encoding, which varies by browser), so their recorded fixtures always match. `server/tests/sampleFixtures.test.ts` fails if a `sharp` upgrade changes the hash: re-record with `npm run record-fixture -w server -- <image> <room_type>`, which only writes a fixture when the call was live.
 
 ## 8. Security of AI input/output
 

@@ -9,8 +9,11 @@ import type { AssessmentService } from "../services/assessmentService.js";
 import type { VisionService } from "../services/visionService.js";
 import { idParam } from "./params.js";
 
-const FALLBACK_NOTICE =
-  "Resultado de ejemplo: el servicio de análisis no está disponible en este momento.";
+const FALLBACK_NOTICE = {
+  cached:
+    "El servicio de análisis no está disponible en este momento. Se muestra un análisis real hecho antes para esta misma foto.",
+  mock: "Resultado de ejemplo: el servicio de análisis no está disponible en este momento.",
+} as const;
 const MAX_CONCURRENT_ANALYSES = 2;
 
 export function assessmentsRouter(
@@ -50,7 +53,11 @@ export function assessmentsRouter(
         imageHeight: image.height,
         result,
       });
-      res.status(201).json(result.source === "live" ? room : { ...room, notice: FALLBACK_NOTICE });
+      res
+        .status(201)
+        .json(
+          result.source === "live" ? room : { ...room, notice: FALLBACK_NOTICE[result.source] },
+        );
     },
   );
 

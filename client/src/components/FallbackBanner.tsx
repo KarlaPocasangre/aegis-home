@@ -1,7 +1,10 @@
 import type { AnalysisSource } from "../lib/types";
 
-const DEFAULT_NOTICE =
-  "Resultado de ejemplo: el servicio de análisis no está disponible en este momento.";
+const DEFAULT_NOTICE = {
+  cached:
+    "El servicio de análisis no está disponible en este momento. Se muestra un análisis real hecho antes para esta misma foto.",
+  mock: "Resultado de ejemplo: el servicio de análisis no está disponible en este momento.",
+};
 
 // Shown whenever a result did not come from a live model call (docs/ARCHITECTURE.md §8).
 export function FallbackBanner({ source, notice }: { source: AnalysisSource; notice?: string }) {
@@ -14,7 +17,7 @@ export function FallbackBanner({ source, notice }: { source: AnalysisSource; not
       <p className="font-semibold">
         {source === "cached" ? "Resultado guardado previamente" : "Resultado de ejemplo"}
       </p>
-      <p className="mt-1">{notice ?? DEFAULT_NOTICE}</p>
+      <p className="mt-1">{notice ?? DEFAULT_NOTICE[source]}</p>
     </div>
   );
 }
