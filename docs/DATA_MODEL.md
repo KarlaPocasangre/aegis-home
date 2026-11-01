@@ -187,7 +187,7 @@ Validation rules (enforced by Zod before saving):
 - `type` ∈ `bbox | polygon`.
 - Every value is a finite number in `[0, 1]`.
 - `bbox` has exactly 4 values; `polygon` has an even count, 6–200 values.
-- If SAM returns a pixel-space mask/box, the adapter converts it to this format (⚠️ VERIFY SAM 3.1 output shape — see [AI_INTEGRATION.md](AI_INTEGRATION.md)).
+- SAM's mask becomes a `polygon` (its outline); Spark's grounding box or SAM's box without a usable mask becomes a `bbox` (see [AI_INTEGRATION.md](AI_INTEGRATION.md) §6).
 
 ## 5. Derived data (not stored)
 

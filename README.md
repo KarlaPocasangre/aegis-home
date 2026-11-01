@@ -17,7 +17,7 @@ Falls are a leading cause of injury among older adults, and many of them happen 
 
 1. A family member photographs a room (or taps **"Usar imagen de prueba"** to try a bundled sample).
 2. **Muse Spark** looks at the photo and returns the visible environmental hazards as validated JSON: label, severity, what to do in simple Spanish, a rough cost in USD, and a grounding box.
-3. **SAM 3.1** gets each hazard's short label as a concept prompt and finds the object; its box is matched to Spark's box so the right instance is highlighted. If SAM finds nothing (common for _missing_ things like a grab bar), Spark's box is used.
+3. **SAM 3.1** gets each hazard's short label as a concept prompt and segments the object; the instance whose box best matches Spark's box is chosen, and its pixel mask is traced into an outline so the photo shows the exact shape of the rug or cable, not just a rectangle. If SAM finds nothing (common for _missing_ things like a grab bar), Spark's box is used.
 4. The app builds an action plan ordered by severity, with "Ya lo arreglé" tracking, pending cost, and a quick-contact button (call / WhatsApp / SMS) to the family's own contacts.
 
 ```mermaid
@@ -25,7 +25,7 @@ flowchart LR
     U["Browser<br/>React + Vite"] -- "photo (resized, EXIF removed)" --> A["Express API<br/>validation, rate limits, daily cap"]
     A --> P["Image pipeline<br/>file-type + sharp, 1024 px"]
     P --> S["Muse Spark 1.3<br/>hazards as JSON + boxes"]
-    S --> M["SAM 3.1<br/>one concept prompt per hazard"]
+    S --> M["SAM 3.1<br/>one concept prompt per hazard<br/>mask → outline"]
     M --> V["Zod validation<br/>regions normalized 0–1"]
     V --> D[("Postgres (Neon)<br/>hazards, no photos")]
     V --> U
@@ -46,7 +46,7 @@ Photos are processed in memory and **never stored**; only the hazard text and re
 
 ## Tech stack
 
-React 19 + Vite + Tailwind 4 + TanStack Query (TypeScript) · Node.js 22 + Express 5 (TypeScript, tsx) · PostgreSQL on Neon + Prisma 7 · Zod 4 · sharp · Meta Model API (`muse-spark-1.3`, `sam-3.1`) · Vercel · Render · Vitest (with in-memory Postgres via PGlite).
+React 19 + Vite + Tailwind 4 + TanStack Query (TypeScript) · Node.js 22 + Express 5 (TypeScript, tsx) · PostgreSQL on Neon + Prisma 7 · Zod 4 · sharp · Meta Model API (`muse-spark-1.3`, `sam-3.1`, masks decoded with Meta's [`@meta-sam/parser`](https://www.npmjs.com/package/@meta-sam/parser), SAM License) · Vercel · Render · Vitest (with in-memory Postgres via PGlite).
 
 ## Local development
 
@@ -111,7 +111,7 @@ Details: [docs/SECURITY.md](docs/SECURITY.md).
 - **Not medical advice.** It reports environmental hazards only; it doesn't diagnose, detect falls, or act as an emergency or monitoring service.
 - Hazard detection is AI-generated and can miss risks or flag false ones; costs are rough estimates.
 - Photos are sent to Meta's Model API for analysis (Standard mode: not used for training).
-- Highlights are boxes, not pixel masks, and a hazard that is something _missing_ is boxed where it should be.
+- A hazard that is something _missing_ (no mask to find) is boxed where it should be. Outlines keep the largest part of the mask and are simplified to at most 100 points.
 
 ## Provenance
 

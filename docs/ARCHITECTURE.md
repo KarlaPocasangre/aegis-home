@@ -158,7 +158,7 @@ sequenceDiagram
     S-->>A: hazards[] (id, label_en, severity, ...)
     A->>A: Zod validation (one retry on failure)
     A->>M: Image + labels from hazards[]
-    M-->>A: Masks / boxes per label
+    M-->>A: Masks + boxes per label (mask → outline polygon)
     A->>A: Match by hazard id, normalize coords to 0–1
     A->>D: Save Room + Hazards (transaction)
     A-->>U: Room JSON (source: live | cached | mock)

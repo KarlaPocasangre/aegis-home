@@ -1,7 +1,7 @@
 import type { Config } from "../config/env.js";
 import type { LanguageValue, RoomTypeValue } from "../schemas/enums.js";
 import type { NormalizedImage } from "./imagePipeline.js";
-import { parseSamBoxes, pickSamBox } from "./samOutput.js";
+import { maskToPolygon, parseSamBoxes, parseSamMasks, pickSamBox } from "./samOutput.js";
 import { SPARK_OUTPUT_JSON_SCHEMA, sparkSystemPrompt, sparkUserMessage } from "./sparkPrompt.js";
 
 export type ProviderErrorKind =
@@ -163,14 +163,19 @@ export function createMetaClient(config: MetaConfig): MetaClient {
               ],
             },
           ],
-          // Masks aren't decoded; one_bit keeps the payload small.
+          // one_bit keeps the mask payload small; we only need its outline.
           metadata: { include_confidence: "true", mask_encoding: "one_bit" },
         },
         signal,
       );
       // Zero matches is a normal, empty result.
-      const rect = pickSamBox(parseSamBoxes(responsesText(json)), img, near);
-      return rect ? { kind: "bbox", box: rect } : null;
+      const text = responsesText(json);
+      const picked = pickSamBox(parseSamBoxes(text), img, near);
+      if (!picked) return null;
+      // The chosen instance's mask outline; its box when the mask is missing or unusable.
+      const mask = (await parseSamMasks(text).catch(() => null))?.get(picked.box.id);
+      const points = mask ? maskToPolygon(mask, picked.box, img) : null;
+      return points ? { kind: "polygon", points } : { kind: "bbox", box: picked.rect };
     },
   };
 }
