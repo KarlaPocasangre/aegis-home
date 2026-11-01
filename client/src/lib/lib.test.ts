@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { contactLinks, helpMessage, normalizeName, normalizePhone } from "./contacts";
-import { isValidRegion, polygonPoints, regionAnchor } from "./regions";
+import { isValidRegion, placeMarkers, polygonPoints, regionAnchor } from "./regions";
 import { householdPath, parseRoute, roomPath } from "./router";
 import { ApiError } from "./api";
 import { userMessage } from "./errors";
@@ -66,12 +66,27 @@ describe("regions", () => {
     expect(isValidRegion(region)).toBe(false);
   });
 
-  it("anchors markers at the top-left corner", () => {
+  it("anchors markers at a box's corner or a polygon's topmost vertex", () => {
+    expect(regionAnchor({ type: "bbox", points: [0.1, 0.2, 0.3, 0.4] })).toEqual({
+      x: 0.1,
+      y: 0.2,
+    });
     expect(regionAnchor({ type: "polygon", points: [0.5, 0.4, 0.2, 0.9, 0.7, 0.6] })).toEqual({
-      x: 0.2,
+      x: 0.5,
       y: 0.4,
     });
     expect(polygonPoints([0, 0.5, 1, 1])).toBe("0,0.5 1,1");
+  });
+
+  it("keeps markers inside the photo and apart", () => {
+    const [a, b, c] = placeMarkers([
+      { x: 0, y: 0.7 },
+      { x: 0, y: 0.72 },
+      { x: 1, y: 1 },
+    ]);
+    expect(a).toEqual({ x: 0.03, y: 0.7 });
+    expect(b!.x - a!.x).toBeGreaterThanOrEqual(0.07);
+    expect(c).toEqual({ x: 0.97, y: 0.97 });
   });
 });
 

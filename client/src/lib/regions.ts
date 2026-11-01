@@ -13,12 +13,51 @@ export function isValidRegion(region: Region | null | undefined): region is Regi
   return false;
 }
 
-/** Top-left corner of a region, as fractions — where the numbered marker goes. */
-export function regionAnchor(region: Region): { x: number; y: number } {
+export interface Point {
+  x: number;
+  y: number;
+}
+
+/**
+ * Where the numbered marker goes, as fractions: a box's top-left corner, or a polygon's
+ * topmost vertex (its bounding corner can sit far outside an irregular outline).
+ */
+export function regionAnchor(region: Region): Point {
   if (region.type === "bbox") return { x: region.points[0] ?? 0, y: region.points[1] ?? 0 };
-  const xs = region.points.filter((_, i) => i % 2 === 0);
-  const ys = region.points.filter((_, i) => i % 2 === 1);
-  return { x: Math.min(...xs), y: Math.min(...ys) };
+  let best: Point = { x: region.points[0] ?? 0, y: region.points[1] ?? 0 };
+  for (let i = 2; i + 1 < region.points.length; i += 2) {
+    const p = { x: region.points[i] ?? 0, y: region.points[i + 1] ?? 0 };
+    if (p.y < best.y || (p.y === best.y && p.x < best.x)) best = p;
+  }
+  return best;
+}
+
+// Roughly one marker's size on a phone-width photo, as fractions of the image.
+const GAP_X = 0.07;
+const GAP_Y = 0.09;
+const EDGE = 0.03;
+
+const clampUnit = (v: number) => Math.min(1 - EDGE, Math.max(EDGE, v));
+
+/**
+ * Keeps markers inside the photo and apart from each other: each one that would cover an
+ * earlier one slides right (or down near the right edge) until it is clear.
+ */
+export function placeMarkers(anchors: Point[]): Point[] {
+  const placed: Point[] = [];
+  for (const anchor of anchors) {
+    let p = { x: clampUnit(anchor.x), y: clampUnit(anchor.y) };
+    for (let tries = 0; tries < 20; tries++) {
+      const hit = placed.some((q) => Math.abs(q.x - p.x) < GAP_X && Math.abs(q.y - p.y) < GAP_Y);
+      if (!hit) break;
+      p =
+        p.x + GAP_X <= 1 - EDGE
+          ? { x: p.x + GAP_X, y: p.y }
+          : { x: clampUnit(anchor.x), y: clampUnit(p.y + GAP_Y) };
+    }
+    placed.push(p);
+  }
+  return placed;
 }
 
 export function polygonPoints(points: number[]): string {

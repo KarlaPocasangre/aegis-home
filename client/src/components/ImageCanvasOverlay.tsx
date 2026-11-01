@@ -1,6 +1,6 @@
 import { useT } from "../lib/i18n";
 import { SEVERITY_STYLES } from "../lib/labels";
-import { isValidRegion, polygonPoints, regionAnchor } from "../lib/regions";
+import { isValidRegion, placeMarkers, polygonPoints, regionAnchor } from "../lib/regions";
 import type { Hazard } from "../lib/types";
 
 interface Props {
@@ -17,6 +17,7 @@ export function ImageCanvasOverlay({ src, alt, hazards, activeId, onSelect }: Pr
   const visible = hazards
     .map((hazard, index) => ({ hazard, number: index + 1 }))
     .filter(({ hazard }) => isValidRegion(hazard.region));
+  const markers = placeMarkers(visible.map(({ hazard }) => regionAnchor(hazard.region!)));
 
   return (
     <div className="relative overflow-hidden rounded-lg bg-stone-200 dark:bg-white/5">
@@ -49,8 +50,8 @@ export function ImageCanvasOverlay({ src, alt, hazards, activeId, onSelect }: Pr
           );
         })}
       </svg>
-      {visible.map(({ hazard, number }) => {
-        const anchor = regionAnchor(hazard.region!);
+      {visible.map(({ hazard, number }, index) => {
+        const anchor = markers[index]!;
         const active = hazard.id === activeId;
         // A 44px invisible hit area around a 32px badge: big enough for a shaky finger.
         return (
@@ -61,7 +62,11 @@ export function ImageCanvasOverlay({ src, alt, hazards, activeId, onSelect }: Pr
             aria-label={tr.roomsView.riskAria(number, hazard.labelEs)}
             aria-pressed={active}
             className={`group absolute flex size-11 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full focus-visible:outline-3 focus-visible:outline-mint ${active ? "z-10" : ""}`}
-            style={{ left: `${anchor.x * 100}%`, top: `${anchor.y * 100}%` }}
+            // clamp() keeps the 44px hit area inside the photo at any width.
+            style={{
+              left: `clamp(22px, ${anchor.x * 100}%, calc(100% - 22px))`,
+              top: `clamp(22px, ${anchor.y * 100}%, calc(100% - 22px))`,
+            }}
           >
             <span
               aria-hidden
