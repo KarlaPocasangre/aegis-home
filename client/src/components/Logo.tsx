@@ -1,14 +1,43 @@
 import { linkHandler } from "../lib/router";
+import { BrandMark } from "./BrandMark";
+
+/** Full lockup: shield, "Aegis Home" wordmark and, optionally, the tagline. */
+export function Wordmark({
+  tagline = false,
+  large = false,
+}: {
+  tagline?: boolean;
+  large?: boolean;
+}) {
+  return (
+    <span className="flex items-center gap-2.5">
+      <BrandMark className={large ? "h-14 w-auto" : "h-9 w-auto"} />
+      <span className="flex flex-col leading-none">
+        <span className={`tracking-tight ${large ? "text-3xl" : "text-xl"}`}>
+          <span className="font-extrabold text-white">Aegis</span>{" "}
+          <span className="font-medium text-[#8fcfd6]">Home</span>
+        </span>
+        {tagline && (
+          <span
+            className={`mt-1.5 font-semibold tracking-[0.22em] text-stone-300 uppercase ${large ? "text-xs" : "text-[0.6rem]"}`}
+          >
+            El escudo del hogar
+          </span>
+        )}
+      </span>
+    </span>
+  );
+}
 
 export function Logo() {
   return (
     <a
       href="/"
       onClick={linkHandler("/")}
-      className="flex min-h-12 shrink-0 items-center gap-2 rounded-lg text-lg font-bold text-teal-800 dark:text-white focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-teal-700 dark:focus-visible:outline-mint"
+      aria-label="Aegis Home, inicio"
+      className="flex min-h-12 shrink-0 items-center rounded-lg focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-mint"
     >
-      <img src="/favicon.svg" alt="" className="size-7" />
-      aegis-home
+      <Wordmark />
     </a>
   );
 }

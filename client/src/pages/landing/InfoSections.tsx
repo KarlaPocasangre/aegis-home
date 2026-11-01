@@ -194,7 +194,7 @@ export function PrivacySection() {
             id="privacidad-title"
             eyebrow="Privacidad y seguridad"
             title="Hecho para cuidar, también sus datos"
-            intro="Las fotos de una casa son información sensible. aegis-home guarda lo mínimo y por el menor tiempo posible."
+            intro="Las fotos de una casa son información sensible. Aegis Home guarda lo mínimo y por el menor tiempo posible."
           />
           <p className="mt-6 flex items-start gap-3 rounded-xl bg-amber-400/10 p-4 text-base text-amber-100 ring-1 ring-amber-400/30">
             {icon(ICONS.shield, "mt-0.5 size-5")}
@@ -245,7 +245,7 @@ export function AboutSection() {
         <div>
           <SectionHeading
             id="acerca-title"
-            eyebrow="Detrás de aegis-home"
+            eyebrow="Detrás de Aegis Home"
             title="Una herramienta para la familia que cuida a distancia"
           />
           <div className="mt-4 space-y-4 text-lg text-stone-300">
@@ -255,7 +255,7 @@ export function AboutSection() {
               las herramientas que existen suelen estar en inglés y pensadas para otros países.
             </p>
             <p>
-              aegis-home nació en el <strong>Meta Global AI Developer Hackathon 2026</strong>, con
+              Aegis Home nació en el <strong>Meta Global AI Developer Hackathon 2026</strong>, con
               el tema <em>Build for Your World</em>: construir para el mundo propio, en nuestro
               idioma y con nuestra realidad.
             </p>
@@ -294,7 +294,7 @@ const FAQ = [
   },
   {
     q: "¿Reemplaza a un profesional o a un médico?",
-    a: "No. aegis-home señala riesgos del entorno para ayudarle a empezar. No da consejos médicos ni detecta caídas, y no reemplaza la visita de un profesional.",
+    a: "No. Aegis Home señala riesgos del entorno para ayudarle a empezar. No da consejos médicos ni detecta caídas, y no reemplaza la visita de un profesional.",
   },
   {
     q: "¿Y si la IA se equivoca?",

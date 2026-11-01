@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
 import { LANDING_SECTIONS } from "./LandingNavbar";
+import { Wordmark } from "./Logo";
 
 const REPO_URL = "https://github.com/KarlaPocasangre/aegis-home";
 
 const DISCLAIMER =
-  "aegis-home señala riesgos del entorno con inteligencia artificial y puede equivocarse. No da consejos médicos, no detecta caídas y no es un servicio de emergencias. Los costos son aproximados.";
+  "Aegis Home señala riesgos del entorno con inteligencia artificial y puede equivocarse. No da consejos médicos, no detecta caídas y no es un servicio de emergencias. Los costos son aproximados.";
 
 function Column({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -41,10 +42,7 @@ export function SiteFooter({
     <footer className={`border-t border-white/10 bg-ink px-4 pt-16 pb-8 ${className}`}>
       <div className="mx-auto grid max-w-5xl gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.2fr_1.2fr]">
         <Column title="Identidad y propósito">
-          <p className="flex items-center gap-2 text-xl font-bold text-white">
-            <img src="/favicon.svg" alt="" className="size-7" />
-            aegis-home
-          </p>
+          <Wordmark tagline />
           <p className="mt-3">
             Prevención de caídas en casa para familias de Centroamérica y Latinoamérica: de una foto
             a un plan claro, en español.
@@ -102,13 +100,13 @@ export function SiteFooter({
         aria-hidden
         className="mx-auto mt-14 max-w-6xl text-center font-display text-[18vw] leading-[0.85] tracking-tight text-white/[0.07] select-none lg:text-[11.5rem]"
       >
-        aegis-home
+        Aegis Home
       </p>
 
       <div className="mx-auto mt-10 max-w-5xl border-t border-white/10 pt-6 text-sm text-stone-400">
         <p>{DISCLAIMER}</p>
         <p className="mt-2">En una emergencia, llame al 911.</p>
-        <p className="mt-4">© 2026 aegis-home</p>
+        <p className="mt-4">© 2026 Aegis Home</p>
       </div>
     </footer>
   );
