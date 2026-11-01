@@ -1,11 +1,11 @@
 import { AnalysisSection } from "./landing/AnalysisSection";
 import { HeroSection } from "./landing/HeroSection";
+import { HowItWorksStory } from "./landing/HowItWorksStory";
 import {
   AboutSection,
   FaqSection,
   FeaturesSection,
   FinalCta,
-  HowItWorksSection,
   PrivacySection,
   ProblemSection,
   TechSection,
@@ -16,7 +16,7 @@ export function LandingPage() {
     <>
       <HeroSection />
       <ProblemSection />
-      <HowItWorksSection />
+      <HowItWorksStory />
       <AnalysisSection />
       <FeaturesSection />
       <TechSection />

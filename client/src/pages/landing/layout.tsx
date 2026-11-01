@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
+import { useLineReveal, useStaggerIn } from "../../lib/motion";
 
 const TONES = {
   white: "bg-white",
@@ -6,7 +7,7 @@ const TONES = {
   teal: "bg-teal-900 text-white",
 } as const;
 
-/** Full-width landing band with a centered content column. */
+/** Full-width landing band with a centered column. Children marked `data-stagger` fade up in turn. */
 export function Band({
   id,
   tone = "white",
@@ -18,10 +19,38 @@ export function Band({
   labelledBy?: string;
   children: ReactNode;
 }) {
+  const ref = useRef<HTMLElement>(null);
+  useStaggerIn(ref);
   return (
-    <section id={id} aria-labelledby={labelledBy} className={`${TONES[tone]} px-4 py-16 sm:py-20`}>
+    <section
+      ref={ref}
+      id={id}
+      aria-labelledby={labelledBy}
+      className={`${TONES[tone]} px-4 py-20 sm:py-28`}
+    >
       <div className="mx-auto max-w-5xl">{children}</div>
     </section>
+  );
+}
+
+/** Display heading whose lines rise into view. */
+export function DisplayHeading({
+  id,
+  as: Tag = "h2",
+  className = "",
+  children,
+}: {
+  id?: string;
+  as?: "h1" | "h2";
+  className?: string;
+  children: ReactNode;
+}) {
+  const ref = useRef<HTMLHeadingElement>(null);
+  useLineReveal(ref);
+  return (
+    <Tag ref={ref} id={id} className={`font-display leading-[1.05] tracking-tight ${className}`}>
+      {children}
+    </Tag>
   );
 }
 
@@ -41,15 +70,15 @@ export function SectionHeading({
   return (
     <div className="max-w-2xl">
       <p
-        className={`text-sm font-bold tracking-wide uppercase ${invert ? "text-teal-200" : "text-teal-700"}`}
+        className={`text-sm font-bold tracking-widest uppercase ${invert ? "text-teal-200" : "text-teal-700"}`}
       >
         {eyebrow}
       </p>
-      <h2 id={id} className="mt-2 text-3xl leading-tight font-bold sm:text-4xl">
+      <DisplayHeading id={id} className="mt-3 text-4xl sm:text-6xl">
         {title}
-      </h2>
+      </DisplayHeading>
       {intro && (
-        <p className={`mt-4 text-lg ${invert ? "text-teal-50" : "text-stone-700"}`}>{intro}</p>
+        <p className={`mt-5 text-lg ${invert ? "text-teal-50" : "text-stone-700"}`}>{intro}</p>
       )}
     </div>
   );

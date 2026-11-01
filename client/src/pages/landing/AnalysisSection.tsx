@@ -2,6 +2,7 @@ import { useId, useState } from "react";
 import { AnalysisProgress } from "../../components/AnalysisProgress";
 import { HazardCard } from "../../components/HazardCard";
 import { ImageCanvasOverlay } from "../../components/ImageCanvasOverlay";
+import { RollText } from "../../components/RollText";
 import { PrivacyNotice } from "../../components/PrivacyNotice";
 import { SampleImagePicker } from "../../components/SampleImagePicker";
 import { analyzeRoom } from "../../hooks/useAssessment";
@@ -21,7 +22,7 @@ function DemoResult() {
   return (
     <div id="ejemplo" className="rounded-2xl bg-white p-4 ring-1 ring-stone-200 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-xl font-bold">Ejemplo: un baño</h3>
+        <h3 className="font-display text-3xl">Ejemplo: un baño</h3>
         <span className="rounded-full bg-stone-100 px-3 py-1 text-sm font-semibold text-stone-700">
           Resultado real grabado
         </span>
@@ -109,7 +110,7 @@ function StartCard() {
       id="empezar"
       className="space-y-4 rounded-2xl bg-white p-4 shadow-lg ring-2 ring-teal-700/15 sm:p-6"
     >
-      <h3 className="text-2xl font-bold">Empezar una evaluación</h3>
+      <h3 className="font-display text-4xl">Empezar una evaluación</h3>
       <PrivacyNotice accepted={accepted} onChange={setAccepted} />
       <div>
         <label htmlFor={nameId} className="block text-base font-semibold text-stone-800">
@@ -128,9 +129,9 @@ function StartCard() {
         type="button"
         onClick={start}
         disabled={!accepted || busy !== null}
-        className="min-h-14 w-full rounded-xl bg-teal-700 px-4 text-lg font-semibold text-white hover:bg-teal-800 disabled:opacity-50"
+        className="flex min-h-14 w-full items-center justify-center rounded-xl bg-teal-700 px-4 text-lg font-semibold text-white transition hover:bg-teal-800 active:scale-[0.98] disabled:opacity-50"
       >
-        {busy === "create" ? "Creando…" : "Empezar evaluación"}
+        {busy === "create" ? "Creando…" : <RollText>Empezar evaluación</RollText>}
       </button>
       {busy === "sample" && <AnalysisProgress />}
       {error && (

@@ -1,4 +1,6 @@
-import { Band, ICONS, SectionHeading, icon } from "./layout";
+import { RollText } from "../../components/RollText";
+import { ScrollFillText } from "../../components/ScrollFillText";
+import { Band, DisplayHeading, ICONS, SectionHeading, icon } from "./layout";
 
 const WHO_FALLS = "https://www.who.int/es/news-room/fact-sheets/detail/falls";
 
@@ -9,91 +11,47 @@ const COMMON_RISKS = [
   { title: "Poca luz de noche", text: "Pasillos oscuros camino al baño." },
 ];
 
+const PROBLEM_STORY =
+  "Su mamá se levanta de noche para ir al baño. El pasillo está oscuro, el piso sigue mojado y no hay dónde agarrarse. Son detalles que vemos todos los días y que casi nunca notamos.";
+
 export function ProblemSection() {
   return (
     <Band id="por-que" labelledBy="por-que-title">
-      <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-        <SectionHeading
-          id="por-que-title"
-          eyebrow="Por qué importa"
-          title="La mayoría de los riesgos están a simple vista"
-          intro={
-            <>
-              Según la{" "}
-              <a
-                href={WHO_FALLS}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-teal-800 underline underline-offset-4"
-              >
-                Organización Mundial de la Salud
-              </a>
-              , las caídas son la segunda causa de muerte por lesiones no intencionales en el mundo,
-              y las personas mayores de 60 años son las más afectadas. Muchas empiezan en casa, con
-              cosas que se pueden arreglar con poco dinero.
-            </>
-          }
-        />
+      <h2 className="text-sm font-bold tracking-widest text-teal-700 uppercase" id="por-que-title">
+        Por qué importa
+      </h2>
+      <ScrollFillText
+        text={PROBLEM_STORY}
+        className="mt-6 font-display text-4xl leading-[1.15] text-stone-900 sm:text-6xl"
+      />
+      <div className="mt-16 grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-start">
+        <p className="text-lg text-stone-700">
+          Según la{" "}
+          <a
+            href={WHO_FALLS}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold text-teal-800 underline underline-offset-4"
+          >
+            Organización Mundial de la Salud
+          </a>
+          , las caídas son la segunda causa de muerte por lesiones no intencionales en el mundo, y
+          las personas mayores de 60 años son las más afectadas. Muchas empiezan en casa, con cosas
+          que se pueden arreglar con poco dinero.
+        </p>
         <ul className="grid gap-4 sm:grid-cols-2">
           {COMMON_RISKS.map((risk) => (
-            <li key={risk.title} className="rounded-xl bg-stone-50 p-5 ring-1 ring-stone-200">
+            <li
+              data-stagger
+              key={risk.title}
+              className="rounded-2xl bg-stone-50 p-5 ring-1 ring-stone-200 transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl hover:shadow-stone-200/70"
+            >
               <p className="text-lg font-semibold">{risk.title}</p>
               <p className="mt-1 text-base text-stone-600">{risk.text}</p>
             </li>
           ))}
         </ul>
       </div>
-    </Band>
-  );
-}
-
-const STEPS = [
-  {
-    icon: ICONS.camera,
-    title: "Tome una foto",
-    text: "De pie, mostrando el piso y por donde se camina: baño, cocina, escaleras, pasillos.",
-  },
-  {
-    icon: ICONS.sparkle,
-    title: "Muse Spark revisa",
-    text: "El modelo de visión de Meta identifica los riesgos, qué tan graves son y cómo arreglarlos.",
-  },
-  {
-    icon: ICONS.target,
-    title: "SAM 3.1 los señala",
-    text: "El modelo de segmentación de Meta ubica cada riesgo para resaltarlo sobre su foto.",
-  },
-  {
-    icon: ICONS.list,
-    title: "Siga su plan",
-    text: "Arreglos ordenados por prioridad, con costo aproximado. Márquelos al terminarlos.",
-  },
-];
-
-export function HowItWorksSection() {
-  return (
-    <Band id="como-funciona" tone="stone" labelledBy="como-funciona-title">
-      <SectionHeading
-        id="como-funciona-title"
-        eyebrow="Cómo funciona"
-        title="De una foto a un plan de acción"
-      />
-      <ol className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {STEPS.map((step, index) => (
-          <li key={step.title} className="relative rounded-xl bg-white p-5 ring-1 ring-stone-200">
-            <div className="flex items-center justify-between">
-              <span className="flex size-11 items-center justify-center rounded-xl bg-teal-700 text-white">
-                {icon(step.icon)}
-              </span>
-              <span className="text-3xl font-bold text-stone-200" aria-hidden>
-                {index + 1}
-              </span>
-            </div>
-            <p className="mt-4 text-lg font-semibold">{step.title}</p>
-            <p className="mt-1 text-base text-stone-600">{step.text}</p>
-          </li>
-        ))}
-      </ol>
     </Band>
   );
 }
@@ -141,7 +99,11 @@ export function FeaturesSection() {
       />
       <ul className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {FEATURES.map((f) => (
-          <li key={f.title} className="rounded-xl bg-white p-6 ring-1 ring-stone-200">
+          <li
+            data-stagger
+            key={f.title}
+            className="rounded-2xl bg-white p-6 ring-1 ring-stone-200 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-stone-200/70"
+          >
             <span className="flex size-11 items-center justify-center rounded-xl bg-teal-50 text-teal-800">
               {icon(f.icon)}
             </span>
@@ -174,8 +136,9 @@ export function TechSection() {
       <ol className="mt-10 grid gap-4 lg:grid-cols-4">
         {PIPELINE.map((step, index) => (
           <li
+            data-stagger
             key={step.name}
-            className="relative rounded-xl bg-teal-800/70 p-5 ring-1 ring-teal-600"
+            className="relative rounded-2xl bg-teal-800/70 p-5 ring-1 ring-teal-600"
           >
             <p className="text-sm font-semibold text-teal-200">Paso {index + 1}</p>
             <p className="mt-1 text-xl font-bold">{step.name}</p>
@@ -241,7 +204,11 @@ export function PrivacySection() {
         </div>
         <ul className="grid gap-4 sm:grid-cols-2">
           {PRIVACY.map((p) => (
-            <li key={p.title} className="rounded-xl bg-stone-50 p-5 ring-1 ring-stone-200">
+            <li
+              data-stagger
+              key={p.title}
+              className="rounded-2xl bg-stone-50 p-5 ring-1 ring-stone-200 transition duration-300 hover:-translate-y-1 hover:bg-white hover:shadow-xl hover:shadow-stone-200/70"
+            >
               <span className="text-teal-800">{icon(p.icon)}</span>
               <p className="mt-3 text-lg font-semibold">{p.title}</p>
               <p className="mt-1 text-base text-stone-600">{p.text}</p>
@@ -296,7 +263,11 @@ export function AboutSection() {
         </div>
         <ul className="space-y-4">
           {VALUES.map((v) => (
-            <li key={v.title} className="flex gap-4 rounded-xl bg-white p-5 ring-1 ring-stone-200">
+            <li
+              data-stagger
+              key={v.title}
+              className="flex gap-4 rounded-xl bg-white p-5 ring-1 ring-stone-200"
+            >
               <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-800">
                 {icon(v.icon)}
               </span>
@@ -350,7 +321,7 @@ export function FaqSection() {
         />
         <div className="divide-y divide-stone-200 rounded-xl ring-1 ring-stone-200">
           {FAQ.map((item) => (
-            <details key={item.q} className="group px-5">
+            <details key={item.q} className="faq group px-5">
               <summary className="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 text-lg font-semibold [&::-webkit-details-marker]:hidden">
                 {item.q}
                 <span
@@ -371,18 +342,26 @@ export function FaqSection() {
 
 export function FinalCta() {
   return (
-    <section className="px-4 pb-16 sm:pb-20">
-      <div className="mx-auto max-w-5xl rounded-3xl bg-gradient-to-br from-teal-700 to-teal-900 px-6 py-12 text-center text-white sm:px-12">
-        <h2 className="text-3xl font-bold sm:text-4xl">Empiece por un solo espacio</h2>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-teal-50">
-          El baño suele ser el lugar más importante. Una foto basta para tener su primer plan.
-        </p>
-        <a
-          href="#empezar"
-          className="mt-8 inline-flex min-h-14 items-center rounded-xl bg-white px-7 text-lg font-semibold text-teal-900 hover:bg-teal-50 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-white"
-        >
-          Analizar mi casa
-        </a>
+    <section className="px-4 pb-20 sm:pb-28">
+      <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-gradient-to-br from-teal-700 via-teal-800 to-teal-950 px-6 py-16 text-center text-white sm:px-12 sm:py-24">
+        <div
+          aria-hidden
+          className="absolute -top-24 left-1/2 size-[36rem] -translate-x-1/2 rounded-full bg-teal-400/20 blur-3xl"
+        />
+        <div className="relative">
+          <DisplayHeading className="mx-auto max-w-3xl text-5xl sm:text-7xl">
+            Empiece por <em>un solo espacio</em>
+          </DisplayHeading>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-teal-50 sm:text-xl">
+            El baño suele ser el lugar más importante. Una foto basta para tener su primer plan.
+          </p>
+          <a
+            href="#empezar"
+            className="mt-10 inline-flex min-h-14 items-center rounded-xl bg-white px-8 text-lg font-semibold text-teal-900 transition hover:bg-teal-50 active:scale-[0.98] focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-white"
+          >
+            <RollText>Analizar mi casa</RollText>
+          </a>
+        </div>
       </div>
     </section>
   );

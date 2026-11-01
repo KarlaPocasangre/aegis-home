@@ -98,7 +98,14 @@ export function SiteFooter({
         </Column>
       </div>
 
-      <div className="mx-auto mt-12 max-w-5xl border-t border-stone-700 pt-6 text-sm text-stone-400">
+      <p
+        aria-hidden
+        className="mx-auto mt-14 max-w-6xl text-center font-display text-[18vw] leading-[0.85] tracking-tight text-stone-700 select-none lg:text-[11.5rem]"
+      >
+        aegis-home
+      </p>
+
+      <div className="mx-auto mt-10 max-w-5xl border-t border-stone-700 pt-6 text-sm text-stone-400">
         <p>{DISCLAIMER}</p>
         <p className="mt-2">En una emergencia, llame al 911.</p>
         <p className="mt-4">© 2026 aegis-home</p>
