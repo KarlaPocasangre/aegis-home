@@ -69,7 +69,7 @@ Messages are generic: no stack traces, no echoed input, no model output.
 | 415 | `UNSUPPORTED_MEDIA_TYPE` | Not JPEG/PNG/WebP, or the magic bytes don't match |
 | 422 | `VALIDATION_ERROR` | Invalid user input (Zod) |
 | 429 | `RATE_LIMITED` | A rate limit or room cap was hit (`Retry-After` set on rate limits) |
-| 502 | `AI_PROVIDER_ERROR` | The provider failed **and** no fallback could be produced |
+| 502 | `AI_PROVIDER_ERROR` | The live analysis failed and there is no recording of this exact photo. Nothing is saved; retry in a minute |
 | 500 | `INTERNAL_ERROR` | Anything unexpected |
 
 Invalid model output is **not** a 422. It is a provider fault, handled with a retry and then the fallback ladder; the client sees 502 only if every level fails.
@@ -82,7 +82,7 @@ Invalid model output is **not** a 422. It is a provider fault, handled with a re
 | `POST /api/households` | 10 / hour / IP |
 | `POST /api/assessments/:id/rooms` | 5 / minute / IP · 20 rooms / day / household · 8 rooms / assessment |
 | Concurrent analyses | 2 per instance |
-| Meta API calls | `AI_DAILY_CALL_CAP` per UTC day, then the app degrades to labeled fallbacks |
+| Meta API calls | `AI_DAILY_CALL_CAP` per UTC day; then only photos with a recorded result are answered (`cached`), others get 502 |
 | Request bodies | JSON 100 KB · image 5 MB |
 | `GET /health` | Excluded from all limits |
 

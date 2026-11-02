@@ -132,16 +132,17 @@ describe("visionService fallback ladder", () => {
           opts.signal.addEventListener("abort", () => reject(opts.signal.reason)),
         ),
     ],
-  ])("serves the generic mock on %s without throwing", async (_name, detectHazards) => {
+  ])("returns a retryable 502, not another room's sample, on %s", async (_name, detectHazards) => {
     const vision = createVisionService({
       client: client({ detectHazards: detectHazards as MetaClient["detectHazards"] }),
       fixtures,
       usage: unlimited,
       timing,
     });
-    const result = await vision.analyze(image, "bathroom", "es");
-    expect(result.source).toBe("mock");
-    expect(result.hazards[0]?.label_en).toBe("wet floor");
+    await expect(vision.analyze(image, "bathroom", "es")).rejects.toMatchObject({
+      code: "AI_PROVIDER_ERROR",
+      status: 502,
+    });
   });
 
   it("prefers a cached real response matching the image hash", async () => {
@@ -175,7 +176,9 @@ describe("visionService fallback ladder", () => {
       usage: { tryConsume: async () => false },
       timing,
     });
-    expect((await vision.analyze(image, "bathroom", "es")).source).toBe("mock");
+    await expect(vision.analyze(image, "bathroom", "es")).rejects.toMatchObject({
+      code: "AI_PROVIDER_ERROR",
+    });
     expect(detectHazards).not.toHaveBeenCalled();
   });
 

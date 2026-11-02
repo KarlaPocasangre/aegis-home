@@ -73,7 +73,7 @@ All outbound calls share an `AbortSignal` derived from the overall budget.
 |---|---|
 | Smaller input | Images are resized to 1024 px before any call |
 | Daily call cap | `AI_DAILY_CALL_CAP` outbound calls per UTC day, stored in `DailyUsage` with an atomic upsert so it survives restarts. Each Spark attempt counts 1; SAM reserves 1 per hazard, plus 1 for the floor when a hazard lies on it |
-| Degrade, don't overspend | Cap hit before Spark → labeled fallback. Cap hit after Spark → live hazards are kept with Spark's boxes |
+| Degrade, don't overspend | Cap hit before Spark → recorded result for that photo, or a retryable 502. Cap hit after Spark → live hazards are kept with Spark's boxes |
 | Request limits | Per-IP and per-household limits ([API specs §1.4](API_SPECS.md#14-limits)) |
 
 Meta's spend-limit notification does not stop billing, so this cap is the real brake.
@@ -227,8 +227,9 @@ type RawSegmentation =
 | Level | Source | `source` value |
 |---|---|---|
 | 1 | **Recorded real result** for this exact image: `server/fixtures/<sha256>[.pt\|.en].json` (no suffix = Spanish) | `cached` |
-| 2 | **Generic sample** for the room type: `server/fixtures/generic-<room_type>.json` (Spanish) | `mock` |
-| 3 | Nothing available | HTTP 502 |
+| 2 | No recording for this photo | HTTP 502 `AI_PROVIDER_ERROR`: "try again in a minute"; nothing saved |
+
+**Generic samples** (`server/fixtures/generic-<room_type>.json`, `source: mock`) are used **only when `MOCK_AI=true`**. In live mode they are never shown: they describe a different room, and on the user's own photo they would read as a real, wrong analysis.
 
 - A fallback is served in the requested language when a recording exists for it, otherwise in Spanish. The room's `language` field says which, and the UI says so too.
 - Every non-live result carries a `notice`, and the UI shows a **visible banner**.
@@ -260,7 +261,7 @@ type RawSegmentation =
 | Spark ↔ SAM | Instance choice by IoU, SAM size rescaling, zero matches, box fallback |
 | Masks | Real SAM 3.1 mask tokens decoded to polygons inside their bounds, scaled to the image, ≤ 100 vertices; malformed masks ignored |
 | Floor share | Area ratio with the floor ∪ hazard union, too-little-floor → null, one floor call only when needed, failure keeps the live result |
-| Fallback | 429, timeout, invalid JSON and daily cap all produce `cached`/`mock` and never throw |
+| Fallback | 429, timeout, invalid JSON and daily cap serve a matching recording (`cached`) or a retryable 502, never another room's sample; `mock` only in MOCK_AI mode |
 | Fixtures | Sample-image hashes still match their recordings |
 
 **Manual evaluation**, on owned or AI-generated photos:

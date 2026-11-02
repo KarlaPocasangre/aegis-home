@@ -79,7 +79,7 @@ x-powered-by off · trust proxy
 - [x] Zod on every request input and every model output
 - [x] JSON 100 KB; uploads 5 MB in memory; MIME allow-list; magic-byte check
 - [x] `sharp` with a pixel limit; re-encode and resize to 1024 px
-- [x] Invalid model output → retry → labeled fallback, never a client error
+- [x] Invalid model output → retry → labeled recording or retryable 502, never a 4xx
 
 ### Access control
 - [x] Household-scoped queries everywhere; 404 for foreign resources
@@ -123,7 +123,7 @@ The API path never contains the token. The SPA path `/h/<token>` appears only in
 | API key exposed | Revoke and rotate in the Meta console → update the Render env var → review usage |
 | Unexpected spend | Set `MOCK_AI` to `"true"` or lower `AI_DAILY_CALL_CAP` **in `render.yaml`** (a dashboard-only change is overwritten by the next Blueprint sync) → push → review rate-limit logs |
 | Household link shared by mistake | **Delete my data** (`DELETE /api/households/me`) and start a new household |
-| Meta API outage | The fallback ladder serves recorded or sample results, always with a visible banner |
+| Meta API outage | Bundled sample photos get their recorded real results with a visible banner; other photos get a clear "try again" error, never another room's sample |
 
 ---
 

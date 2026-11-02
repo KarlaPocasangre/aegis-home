@@ -63,7 +63,8 @@ export const es = {
       UNSUPPORTED_MEDIA_TYPE: "Tipo de archivo no soportado. Use una foto JPG, PNG o WebP.",
       VALIDATION_ERROR: "Algunos datos no son válidos.",
       RATE_LIMITED: "Demasiadas solicitudes. Espere un momento e intente de nuevo.",
-      AI_PROVIDER_ERROR: "El servicio de análisis no está disponible. Intente más tarde.",
+      AI_PROVIDER_ERROR:
+        "No pudimos analizar esta foto en este momento. Su foto sigue lista: intente de nuevo en un minuto.",
       INTERNAL_ERROR: "Ocurrió un error en el servidor. Intente de nuevo.",
     } as Record<string, string>,
   },

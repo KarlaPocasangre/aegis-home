@@ -64,7 +64,8 @@ export const en: Dict = {
       UNSUPPORTED_MEDIA_TYPE: "Unsupported file type. Use a JPG, PNG or WebP photo.",
       VALIDATION_ERROR: "Some of the information isn't valid.",
       RATE_LIMITED: "Too many requests. Wait a moment and try again.",
-      AI_PROVIDER_ERROR: "The analysis service isn't available. Try again later.",
+      AI_PROVIDER_ERROR:
+        "We couldn't analyze this photo right now. Your photo is still ready: try again in a minute.",
       INTERNAL_ERROR: "Something went wrong on the server. Please try again.",
     },
   },

@@ -64,7 +64,8 @@ export const pt: Dict = {
       UNSUPPORTED_MEDIA_TYPE: "Tipo de arquivo não suportado. Use uma foto JPG, PNG ou WebP.",
       VALIDATION_ERROR: "Alguns dados não são válidos.",
       RATE_LIMITED: "Muitas solicitações. Aguarde um momento e tente novamente.",
-      AI_PROVIDER_ERROR: "O serviço de análise não está disponível. Tente mais tarde.",
+      AI_PROVIDER_ERROR:
+        "Não conseguimos analisar esta foto agora. Sua foto continua pronta: tente de novo em um minuto.",
       INTERNAL_ERROR: "Ocorreu um erro no servidor. Tente novamente.",
     },
   },

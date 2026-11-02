@@ -103,7 +103,7 @@ flowchart LR
     M --> V["Zod validation<br/>regions normalized 0–1"]
     V --> D[("PostgreSQL · Neon<br/>hazard text + regions<br/>no photos")]
     V --> U
-    S -. "429 · timeout · invalid JSON · cap" .-> F["Labeled fallback<br/>recorded real result → generic sample"]
+    S -. "429 · timeout · invalid JSON · cap" .-> F["Labeled fallback<br/>recorded real result of the same photo<br/>else retryable error"]
     F --> U
 ```
 
@@ -125,7 +125,7 @@ flowchart LR
 | **Model output treated as untrusted input**    | Bounded Zod schemas, plain-text rendering, no actions triggered by model output.                        |
 | **Relational model (Postgres + Prisma)**       | Household → assessment → room → hazard maps directly to the domain; every query is scoped by household. |
 | **Token-per-household instead of accounts**    | Zero sign-up friction for older adults' families; the token is a random UUID sent in a header.          |
-| **Always-labeled fallback ladder**             | The demo survives outages, and a non-live result is **never** presented as live AI.                     |
+| **Always-labeled fallback ladder**             | The bundled samples survive outages; a non-live result is always labeled, and another room's sample is never shown on a user's photo.                     |
 | **Daily cap on Meta calls, stored in the DB**  | A hard budget brake that survives restarts; when it's hit, the app degrades instead of spending.        |
 | **Free-tier hosting (Vercel + Render + Neon)** | ~$0 infrastructure; the only variable cost is model calls, which the cap controls.                      |
 

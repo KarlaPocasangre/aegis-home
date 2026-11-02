@@ -179,6 +179,9 @@ export function createVisionService(deps: VisionDeps): VisionService {
   ): AnalysisResult {
     const cached = fixtures.byHash(image.sha256, lang);
     if (cached) return { source: "cached", language: cached.language, hazards: withShare(cached) };
+    // Generic samples describe some other room. Shown on the user's own photo they read as a real
+    // (wrong) analysis, so they are only for MOCK_AI mode; a live failure is an error to retry.
+    if (client) throw new HttpError("AI_PROVIDER_ERROR");
     const generic = fixtures.generic(hint, lang);
     if (generic) return { source: "mock", language: generic.language, hazards: withShare(generic) };
     throw new HttpError("AI_PROVIDER_ERROR");

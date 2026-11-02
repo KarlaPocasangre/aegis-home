@@ -131,7 +131,7 @@ The MVP has no queue, cache server, object storage or paid messaging provider.
 │       └── lib/               # api client, image prep, regions, i18n, storage
 ├── server/                    # Express API (Render)
 │   ├── prisma/                # schema + migrations
-│   ├── fixtures/              # recorded live results + generic samples (fallback)
+│   ├── fixtures/              # recorded live results (fallback) + generic samples (MOCK_AI only)
 │   ├── scripts/               # smoke-test, record-fixture
 │   ├── src/
 │   │   ├── config/            # env validated with Zod
@@ -188,7 +188,9 @@ Step-by-step AI details: [AI integration](AI_INTEGRATION.md).
 | 1 | Spark returns invalid JSON | One retry with a strict reminder | No |
 | 2 | SAM finds nothing, fails, or the cap is hit after Spark | Hazard kept, with Spark's box as its region | Box instead of outline |
 | 3 | 429 after retries, timeout (55 s budget), daily cap | Recorded **real** result for this exact image (SHA-256 match) | **Yes, banner** |
-| 4 | No recording for this image | Generic sample for the room type | **Yes, banner** |
+| 4 | No recording for this image | **No result**: HTTP 502 with "try again in a minute"; nothing is saved and the photo stays selected for a one-tap retry | **Yes, error message** |
+
+Generic per-room samples are served **only in `MOCK_AI` mode** (local development without a key). In live mode they would describe some other room on the user's own photo, which reads as a real, wrong analysis.
 
 Every room carries `source: live | cached | mock`. A non-live result is **always** labeled. It is never presented as live AI.
 
@@ -225,7 +227,7 @@ Environment variables are listed in the [README](../README.md#environment-variab
 | Instance choice | IoU between Spark's box and each SAM instance | A concept prompt returns *every* rug; this picks the one Spark described |
 | Region format | Normalized 0–1 bbox or polygon (≤ 100 vertices) | Resolution-independent, small, easy to validate |
 | Data access | Prisma from services, no repository layer | Fewer layers for a small API |
-| Fallback | Real recordings first, generic samples last, always labeled | Resilience without misrepresenting the product |
+| Fallback | A real recording of the same photo, always labeled; otherwise an honest, retryable error | Resilience without ever showing another room's hazards on the user's photo |
 | Cost control | Daily AI call cap stored in Postgres | Survives restarts; Meta's spend notification does not stop billing |
 
 ---
