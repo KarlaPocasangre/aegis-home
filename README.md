@@ -2,7 +2,7 @@
 
 # aegis-home
 
-**Snap a photo of an older adult's home. Get a visual, prioritized, low-cost fall-prevention plan, in Spanish.**
+**Snap a photo of an older adult's home. Get a visual, prioritized, low-cost plan to fix its fall hazards, in Spanish, Portuguese or English.**
 
 [![Live demo](https://img.shields.io/badge/demo-live-34d399?style=flat-square)](https://aegishome.vercel.app)
 [![API](https://img.shields.io/badge/API-health-34d399?style=flat-square)](https://aegis-home-api.onrender.com/health)
@@ -60,12 +60,12 @@ A family member photographs a room. **Muse Spark** finds the visible environment
 
 ## Key features
 
-|     | Feature                              | What it does                                                                                                                                           |
-| --- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|     | Feature                              | What it does                                                                                                                                                                                                                                       |
+| --- | ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 📸  | **Hazards outlined on the photo**    | Spark detects and explains; SAM 3.1 traces the exact outline of each object (the rug, the cable, the chair) and measures how much of the **visible floor** it covers ("Ocupa el 28 % del piso visible"). Tap a numbered marker to see the details. |
-| 📋  | **Prioritized action plan**          | High → low severity, a materials list per fix, estimated cost, a "Ya lo arreglé" toggle with undo, progress bar and room filter.                       |
-| 👨‍👩‍👧  | **Built for families at a distance** | Private share link per household; a quick-contact button (call, WhatsApp, SMS) to up to 3 contacts that are stored **only on the device**.             |
-| 🌎  | **Multilingual AI output**           | Spanish, Portuguese and English: the UI **and** the model's descriptions, fixes and materials come back in the chosen language.                        |
+| 📋  | **Prioritized action plan**          | High → low severity, a materials list per fix, estimated cost, a "Ya lo arreglé" toggle with undo, progress bar and room filter.                                                                                                                   |
+| 👨‍👩‍👧  | **Built for families at a distance** | Private share link per household; a quick-contact button (call, WhatsApp, SMS) to up to 3 contacts that are stored **only on the device**.                                                                                                         |
+| 🌎  | **Multilingual AI output**           | Spanish, Portuguese and English: the UI **and** the model's descriptions, fixes and materials come back in the chosen language.                                                                                                                    |
 
 Also included: a camera button for phones, two bundled sample rooms for an instant demo, light/dark themes, and a "delete my data" button.
 
@@ -118,16 +118,16 @@ flowchart LR
 
 ### Pragmatic architecture decisions
 
-| Decision                                       | Why it matters in a 7-day build                                                                         |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| **Sequential pipeline: Spark → SAM by label**  | No guessing which mask belongs to which description; each SAM call answers one hazard.                  |
-| **Photos processed in RAM, never persisted**   | No object storage to secure, nothing sensitive to leak, a simpler privacy story.                        |
-| **Model output treated as untrusted input**    | Bounded Zod schemas, plain-text rendering, no actions triggered by model output.                        |
-| **Relational model (Postgres + Prisma)**       | Household → assessment → room → hazard maps directly to the domain; every query is scoped by household. |
-| **Token-per-household instead of accounts**    | Zero sign-up friction for older adults' families; the token is a random UUID sent in a header.          |
-| **Always-labeled fallback ladder**             | The bundled samples survive outages; a non-live result is always labeled, and another room's sample is never shown on a user's photo.                     |
-| **Daily cap on Meta calls, stored in the DB**  | A hard budget brake that survives restarts; when it's hit, the app degrades instead of spending.        |
-| **Free-tier hosting (Vercel + Render + Neon)** | ~$0 infrastructure; the only variable cost is model calls, which the cap controls.                      |
+| Decision                                       | Why it matters in a 7-day build                                                                                                       |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| **Sequential pipeline: Spark → SAM by label**  | No guessing which mask belongs to which description; each SAM call answers one hazard.                                                |
+| **Photos processed in RAM, never persisted**   | No object storage to secure, nothing sensitive to leak, a simpler privacy story.                                                      |
+| **Model output treated as untrusted input**    | Bounded Zod schemas, plain-text rendering, no actions triggered by model output.                                                      |
+| **Relational model (Postgres + Prisma)**       | Household → assessment → room → hazard maps directly to the domain; every query is scoped by household.                               |
+| **Token-per-household instead of accounts**    | Zero sign-up friction for older adults' families; the token is a random UUID sent in a header.                                        |
+| **Always-labeled fallback ladder**             | The bundled samples survive outages; a non-live result is always labeled, and another room's sample is never shown on a user's photo. |
+| **Daily cap on Meta calls, stored in the DB**  | A hard budget brake that survives restarts; when it's hit, the app degrades instead of spending.                                      |
+| **Free-tier hosting (Vercel + Render + Neon)** | ~$0 infrastructure; the only variable cost is model calls, which the cap controls.                                                    |
 
 ---
 

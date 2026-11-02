@@ -209,7 +209,7 @@ export const es = {
     items: [
       {
         title: "Riesgos resaltados en la foto",
-        text: "Cada riesgo lleva un número y un recuadro sobre su propia foto.",
+        text: "Cada riesgo lleva un número y su contorno exacto sobre su propia foto.",
       },
       {
         title: "Plan por prioridad",
@@ -284,7 +284,7 @@ export const es = {
     p2After: ": construir para el mundo propio, en nuestro idioma y con nuestra realidad.",
     values: [
       {
-        title: "Prevención, no diagnóstico",
+        title: "Riesgos del entorno, no diagnóstico",
         text: "Solo riesgos del entorno y arreglos de la casa. Nunca consejos médicos.",
       },
       {

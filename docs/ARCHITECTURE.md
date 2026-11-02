@@ -1,6 +1,6 @@
 # Architecture
 
-> How aegis-home turns a room photo into an outlined, prioritized fall-prevention plan, and why it is built the way it is.
+> How aegis-home turns a room photo into an outlined, prioritized plan to fix fall hazards, and why it is built the way it is.
 
 **Related:** [Data model](DATA_MODEL.md) · [AI integration](AI_INTEGRATION.md) · [API specs](API_SPECS.md) · [Security](SECURITY.md) · [Context](CONTEXT.md)
 

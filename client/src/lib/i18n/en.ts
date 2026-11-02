@@ -278,7 +278,7 @@ export const en: Dict = {
     p2After: ": building for your own world, in your own language and reality.",
     values: [
       {
-        title: "Prevention, not diagnosis",
+        title: "Home hazards, not diagnosis",
         text: "Only hazards in the home and home fixes. Never medical advice.",
       },
       {

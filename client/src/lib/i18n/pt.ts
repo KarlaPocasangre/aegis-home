@@ -285,7 +285,7 @@ export const pt: Dict = {
     p2After: ": construir para o próprio mundo, no nosso idioma e com a nossa realidade.",
     values: [
       {
-        title: "Prevenção, não diagnóstico",
+        title: "Riscos do ambiente, não diagnóstico",
         text: "Apenas riscos do ambiente e ajustes na casa. Nunca conselhos médicos.",
       },
       {

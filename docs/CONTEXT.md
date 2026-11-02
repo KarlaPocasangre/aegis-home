@@ -8,7 +8,7 @@
 
 ## 1. One-line pitch
 
-A Spanish-first web app for Latin American families that turns photos of an older adult's home into a **visual, prioritized, locally-costed fall-prevention plan**, with hazards outlined on the photo, progress tracking, and a quick-contact button.
+A Spanish-first web app for Latin American families that turns photos of an older adult's home into a **visual, prioritized, locally-costed plan to fix the fall hazards in it**, with hazards outlined on the photo, progress tracking, and a quick-contact button.
 
 ---
 
