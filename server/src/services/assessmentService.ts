@@ -32,6 +32,7 @@ function toHazardDto(h: HazardRow) {
     materialsEs: h.materialsEs,
     confidence: h.confidence,
     region: region.success ? region.data : null,
+    floorShare: h.floorShare,
     status: toApiEnum(h.status),
     resolvedAt: h.resolvedAt,
   };
@@ -134,6 +135,7 @@ export function createAssessmentService(db: Db) {
               materialsEs: h.materials_es,
               confidence: h.confidence,
               region: h.region ?? Prisma.JsonNull,
+              floorShare: h.floor_share,
             })),
           },
         },

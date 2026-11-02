@@ -1,5 +1,6 @@
 import { mapWithConcurrency, sleep, withTimeout } from "../lib/async.js";
-import type { FixtureStore } from "../lib/fixtures.js";
+import { floorShare, rasterizeFloor } from "../lib/floorShare.js";
+import type { Fixture, FixtureStore } from "../lib/fixtures.js";
 import { HttpError } from "../lib/httpError.js";
 import type { NormalizedImage } from "../lib/imagePipeline.js";
 import { extractJsonObject } from "../lib/json.js";
@@ -16,6 +17,8 @@ import type { UsageService } from "./usageService.js";
 
 export interface AnalyzedHazard extends SparkHazard {
   region: Region | null;
+  /** Share (0–1) of the visible floor this hazard covers; null when not measurable. */
+  floor_share: number | null;
 }
 
 export interface AnalysisResult {
@@ -66,6 +69,10 @@ function failureKind(err: unknown): string {
   }
   return "unexpected";
 }
+
+// Fixtures recorded before the floor metric have no share.
+const withShare = (fixture: Fixture): AnalyzedHazard[] =>
+  fixture.hazards.map((h) => ({ ...h, floor_share: h.floor_share ?? null }));
 
 export function createVisionService(deps: VisionDeps): VisionService {
   const { client, fixtures, usage } = deps;
@@ -122,8 +129,13 @@ export function createVisionService(deps: VisionDeps): VisionService {
     // Spend cap hit after detection: keep the live hazards with Spark's boxes only (ladder level 2).
     const allowed =
       segment !== undefined && hazards.length > 0 && (await usage.tryConsume(hazards.length));
-    return mapWithConcurrency(hazards, SAM_CONCURRENCY, async (hazard) => {
-      if (!segment || !allowed) return { ...hazard, region: fromBox(hazard) };
+    // One extra SAM call for the floor, in parallel, only when a hazard lies on it.
+    const floorTask =
+      allowed && ai.segmentAll && hazards.some((h) => h.on_floor) && (await usage.tryConsume(1))
+        ? segmentFloor(ai, image, budget)
+        : Promise.resolve(null);
+    const regions = await mapWithConcurrency(hazards, SAM_CONCURRENCY, async (hazard) => {
+      if (!segment || !allowed) return fromBox(hazard);
       try {
         const near = sparkBox(hazard);
         const seg = await segment(
@@ -133,11 +145,30 @@ export function createVisionService(deps: VisionDeps): VisionService {
           near?.kind === "bbox" ? near.box : undefined,
         );
         const region = seg ? toNormalizedRegion(seg, image) : null;
-        return { ...hazard, region: region ?? fromBox(hazard) };
+        return region ?? fromBox(hazard);
       } catch {
-        return { ...hazard, region: fromBox(hazard) };
+        return fromBox(hazard);
       }
     });
+    const floor = await floorTask;
+    return hazards.map((hazard, i) => {
+      const region = regions[i] ?? null;
+      // Only mask outlines are measured: a box overstates the area of most objects.
+      const share =
+        floor && hazard.on_floor && region?.type === "polygon" ? floorShare(region, floor) : null;
+      return { ...hazard, region, floor_share: share };
+    });
+  }
+
+  /** Rasterized union of every "floor" instance SAM finds; null on failure or no floor. */
+  async function segmentFloor(ai: MetaClient, image: NormalizedImage, budget: AbortSignal) {
+    try {
+      const segs = await ai.segmentAll!(image, "floor", withTimeout(budget, timing.samTimeoutMs));
+      const regions = segs.flatMap((seg) => toNormalizedRegion(seg, image) ?? []);
+      return regions.length > 0 ? rasterizeFloor(regions) : null;
+    } catch {
+      return null;
+    }
   }
 
   function fallback(
@@ -146,9 +177,9 @@ export function createVisionService(deps: VisionDeps): VisionService {
     lang: LanguageValue,
   ): AnalysisResult {
     const cached = fixtures.byHash(image.sha256, lang);
-    if (cached) return { source: "cached", language: cached.language, hazards: cached.hazards };
+    if (cached) return { source: "cached", language: cached.language, hazards: withShare(cached) };
     const generic = fixtures.generic(hint, lang);
-    if (generic) return { source: "mock", language: generic.language, hazards: generic.hazards };
+    if (generic) return { source: "mock", language: generic.language, hazards: withShare(generic) };
     throw new HttpError("AI_PROVIDER_ERROR");
   }
 

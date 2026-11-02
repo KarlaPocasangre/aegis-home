@@ -62,7 +62,7 @@ A family member photographs a room. **Muse Spark** finds the visible environment
 
 |     | Feature                              | What it does                                                                                                                                           |
 | --- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 📸  | **Hazards outlined on the photo**    | Spark detects and explains; SAM 3.1 traces the exact outline of each object (the rug, the cable, the chair). Tap a numbered marker to see the details. |
+| 📸  | **Hazards outlined on the photo**    | Spark detects and explains; SAM 3.1 traces the exact outline of each object (the rug, the cable, the chair) and measures how much of the **visible floor** it covers ("Ocupa el 28 % del piso visible"). Tap a numbered marker to see the details. |
 | 📋  | **Prioritized action plan**          | High → low severity, a materials list per fix, estimated cost, a "Ya lo arreglé" toggle with undo, progress bar and room filter.                       |
 | 👨‍👩‍👧  | **Built for families at a distance** | Private share link per household; a quick-contact button (call, WhatsApp, SMS) to up to 3 contacts that are stored **only on the device**.             |
 | 🌎  | **Multilingual AI output**           | Spanish, Portuguese and English: the UI **and** the model's descriptions, fixes and materials come back in the chosen language.                        |
@@ -86,6 +86,7 @@ Two models in sequence, each doing what it is best at:
 - **Constrained decoding.** Spark is called with `response_format: json_schema`, then re-validated with Zod. On invalid JSON it gets one strict retry, then the fallback.
 - **Grounded instance matching.** A concept prompt like "rug" returns _every_ rug. We pick the one whose box has the best IoU with Spark's box, so the outline matches the hazard Spark described.
 - **Mask → polygon.** Masks are decoded with Meta's official [`@meta-sam/parser`](https://www.npmjs.com/package/@meta-sam/parser). We keep the largest contour, simplify it (Ramer–Douglas–Peucker) to ≤ 100 vertices, and normalize it to 0–1.
+- **Floor share, a metric only masks can give.** Spark flags hazards on the walking surface; one extra SAM call segments the `"floor"` in parallel; each hazard's share is `area(hazard) / area(floor ∪ hazard)` on a raster grid. A boxes-only pipeline couldn't measure this.
 - **Graceful degradation.** If SAM finds nothing (common for _missing_ things like a grab bar), the region falls back to Spark's box. A failed SAM call never fails the room.
 - **Shared pixel space.** Both models see the _same_ 1024 px re-encoded image, so their coordinates line up.
 
@@ -236,7 +237,7 @@ npm run smoke-test -- https://<api-url>                      # after each deploy
 npm run record-fixture -w server -- <image> <room_type> [es|pt|en]   # record a real result as fallback
 ```
 
-The server suite covers the Spark output contract, Spark ↔ SAM instance matching, SAM mask decoding into polygons, the fallback ladder (429, timeout, invalid JSON, daily cap), image validation, household scoping and rate limits. CI runs all checks plus a gitleaks secret scan on every push.
+The server suite covers the Spark output contract, Spark ↔ SAM instance matching, SAM mask decoding into polygons, floor-share measurement, the fallback ladder (429, timeout, invalid JSON, daily cap), image validation, household scoping and rate limits. CI runs all checks plus a gitleaks secret scan on every push.
 
 ---
 

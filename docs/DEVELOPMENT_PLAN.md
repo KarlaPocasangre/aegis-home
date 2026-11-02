@@ -29,6 +29,7 @@ All dates are 2026. The [commit history](https://github.com/KarlaPocasangre/aegi
 | **Oct 31 – Nov 1** | Reach & polish | Spanish/Portuguese/English UI **and** model output; camera button; light/dark themes; lazy-loaded chunks |
 | **Nov 1** | UX iteration | Tappable markers, undoable fixes, staged progress, photo preview, room filter, materials list per fix |
 | **Nov 1** | SAM masks | Mask decoding with `@meta-sam/parser` → outline polygons; markers kept inside the photo and apart |
+| **Nov 1** | Floor share | Spark flags floor-level hazards, SAM segments the floor, and each card shows the % of visible floor the hazard covers |
 
 ---
 
@@ -67,7 +68,6 @@ Features were prioritized against the judging criteria. When time ran short, sco
 
 | Horizon | Item | Why |
 |---|---|---|
-| Next | **Floor-area metrics from masks** (e.g. "this rug covers 18 % of the walkway") | Uses SAM's pixel masks for quantitative, comparable risk |
 | Next | **Reference price table** for common materials, by country | Grounds the model's rough costs |
 | Next | **Local currency display** | USD is a placeholder for the region |
 | Next | **Voice check-in** with Muse Voice Transcribe | A low-effort way for older adults to report near-falls |

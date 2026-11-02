@@ -1,4 +1,4 @@
-import { capitalize, formatCost } from "../lib/labels";
+import { capitalize, formatCost, SEVERITY_STYLES } from "../lib/labels";
 import type { ContentLanguage, Hazard } from "../lib/types";
 import { useT } from "../lib/i18n";
 import { SeverityBadge } from "./SeverityBadge";
@@ -20,6 +20,12 @@ interface Props {
 export function HazardCard({ hazard, number, active, onSelect, lang }: Props) {
   const tr = useT();
   const resolved = hazard.status === "resolved";
+  // Measured from SAM's masks; shown only when the server could measure it.
+  const share = hazard.floorShare;
+  const floorPct =
+    typeof share === "number" && Number.isFinite(share) && share > 0 && share <= 1
+      ? Math.max(1, Math.round(share * 100))
+      : null;
   return (
     <li id={hazardElementId(hazard.id)}>
       <button
@@ -46,6 +52,20 @@ export function HazardCard({ hazard, number, active, onSelect, lang }: Props) {
         <p lang={lang} className="mt-2 text-sm text-stone-700 dark:text-stone-300">
           {hazard.descriptionEs}
         </p>
+        {floorPct !== null ? (
+          <p className="mt-2 flex items-center gap-2 text-sm font-medium text-stone-800 dark:text-stone-200">
+            <span
+              aria-hidden
+              className="h-1.5 w-16 shrink-0 overflow-hidden rounded-full bg-stone-200 dark:bg-white/10"
+            >
+              <span
+                className={`block h-full rounded-full ${SEVERITY_STYLES[hazard.severity].marker}`}
+                style={{ width: `${Math.max(floorPct, 4)}%` }}
+              />
+            </span>
+            {tr.common.floorShare(floorPct)}
+          </p>
+        ) : null}
         <p className="mt-2 text-sm dark:text-stone-200">
           <span className="font-semibold">{tr.roomsView.whatToDo} </span>
           <span lang={lang}>{hazard.fixEs}</span>

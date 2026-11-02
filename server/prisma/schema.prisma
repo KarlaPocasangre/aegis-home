@@ -87,6 +87,7 @@ model Hazard {
   materialsEs     String[]     @default([]) // short shopping list for the fix; [] when none
   confidence      Float
   region          Json? // normalized 0–1, see docs/DATA_MODEL.md §4; null when SAM found nothing
+  floorShare      Float? // share (0–1) of the visible floor it covers; docs/AI_INTEGRATION.md §6.1
   status          HazardStatus @default(PENDING)
   resolvedAt      DateTime?
 

@@ -157,6 +157,18 @@ describe("SAM 3.1 output", () => {
     expect(seg?.kind).toBe("polygon");
   });
 
+  it("returns every instance of a concept for segmentAll", async () => {
+    stubFetch(
+      Response.json({ output: [{ content: [{ type: "output_text", text: SAM_MASK_LINE }] }] }),
+    );
+    const segs = await createMetaClient(config).segmentAll!(
+      { ...image, width: 320, height: 334 },
+      "floor",
+      new AbortController().signal,
+    );
+    expect(segs.map((s) => s.kind)).toEqual(["polygon", "polygon"]);
+  });
+
   it("treats zero matches as no region", async () => {
     stubFetch(Response.json({ output: [] }));
     const seg = await createMetaClient(config).segment!(

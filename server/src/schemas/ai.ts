@@ -16,6 +16,9 @@ export const HazardSchema = z.object({
   // failing the whole answer: the fix text already says what to do.
   materials_es: z.array(z.string().min(2).max(60)).max(5).catch([]),
   confidence: z.number().min(0).max(1),
+  // Whether the hazard lies on the walking surface; only those get a floor share (§6.1).
+  // Missing (older fixtures) or malformed is treated as unknown rather than failing the answer.
+  on_floor: z.boolean().optional().catch(undefined),
   // Spark grounding box [x_min, y_min, x_max, y_max] on a 0–1000 grid, the region when SAM has
   // none. A malformed box is dropped rather than failing the whole answer; values are clamped later.
   box: z.array(z.number()).length(4).optional().catch(undefined),

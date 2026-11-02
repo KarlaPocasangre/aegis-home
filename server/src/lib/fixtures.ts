@@ -13,7 +13,14 @@ import { LANGUAGES, ROOM_TYPES, type LanguageValue, type RoomTypeValue } from ".
 export const FixtureSchema = z
   .object({
     roomType: z.enum(ROOM_TYPES),
-    hazards: z.array(HazardSchema.extend({ region: RegionSchema.nullable() })).max(8),
+    hazards: z
+      .array(
+        HazardSchema.extend({
+          region: RegionSchema.nullable(),
+          floor_share: z.number().min(0).max(1).nullable().optional(),
+        }),
+      )
+      .max(8),
   })
   .refine((f) => new Set(f.hazards.map((h) => h.id)).size === f.hazards.length, {
     message: "hazard ids must be unique",

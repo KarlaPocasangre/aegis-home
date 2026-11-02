@@ -1,7 +1,14 @@
 import type { Config } from "../config/env.js";
 import type { LanguageValue, RoomTypeValue } from "../schemas/enums.js";
 import type { NormalizedImage } from "./imagePipeline.js";
-import { maskToPolygon, parseSamBoxes, parseSamMasks, pickSamBox } from "./samOutput.js";
+import type { SegmentationMaskRecord } from "@meta-sam/parser";
+import {
+  maskToPolygon,
+  parseSamBoxes,
+  parseSamMasks,
+  pickSamBox,
+  type SamBox,
+} from "./samOutput.js";
 import { SPARK_OUTPUT_JSON_SCHEMA, sparkSystemPrompt, sparkUserMessage } from "./sparkPrompt.js";
 
 export type ProviderErrorKind =
@@ -48,6 +55,8 @@ export interface MetaClient {
     signal: AbortSignal,
     near?: [number, number, number, number],
   ): Promise<RawSegmentation | null>;
+  /** Optional: every instance of a concept (e.g. "floor"), as outlines where the mask allows. */
+  segmentAll?(img: NormalizedImage, label: string, signal: AbortSignal): Promise<RawSegmentation[]>;
 }
 
 type MetaConfig = Pick<
@@ -117,6 +126,40 @@ export function createMetaClient(config: MetaConfig): MetaClient {
   const toDataUrl = (img: NormalizedImage) =>
     `data:image/jpeg;base64,${img.buffer.toString("base64")}`;
 
+  const toSegmentation = (
+    img: NormalizedImage,
+    mask: SegmentationMaskRecord | undefined,
+    box: SamBox,
+    rect: [number, number, number, number],
+  ): RawSegmentation => {
+    const points = mask ? maskToPolygon(mask, box, img) : null;
+    return points ? { kind: "polygon", points } : { kind: "bbox", box: rect };
+  };
+
+  const samText = async (img: NormalizedImage, label: string, signal: AbortSignal) => {
+    const json = await post(
+      `${root}/responses`,
+      apiKey,
+      {
+        model: samModel,
+        input: [
+          {
+            type: "message",
+            role: "user",
+            content: [
+              { type: "input_text", text: label },
+              { type: "input_image", image_url: toDataUrl(img) },
+            ],
+          },
+        ],
+        // one_bit keeps the mask payload small; we only need its outline.
+        metadata: { include_confidence: "true", mask_encoding: "one_bit" },
+      },
+      signal,
+    );
+    return responsesText(json);
+  };
+
   return {
     async detectHazards(img, hint, { signal, strict, lang }) {
       const json = await post(
@@ -148,34 +191,21 @@ export function createMetaClient(config: MetaConfig): MetaClient {
     },
 
     async segment(img, label, signal, near) {
-      const json = await post(
-        `${root}/responses`,
-        apiKey,
-        {
-          model: samModel,
-          input: [
-            {
-              type: "message",
-              role: "user",
-              content: [
-                { type: "input_text", text: label },
-                { type: "input_image", image_url: toDataUrl(img) },
-              ],
-            },
-          ],
-          // one_bit keeps the mask payload small; we only need its outline.
-          metadata: { include_confidence: "true", mask_encoding: "one_bit" },
-        },
-        signal,
-      );
       // Zero matches is a normal, empty result.
-      const text = responsesText(json);
+      const text = await samText(img, label, signal);
       const picked = pickSamBox(parseSamBoxes(text), img, near);
       if (!picked) return null;
       // The chosen instance's mask outline; its box when the mask is missing or unusable.
       const mask = (await parseSamMasks(text).catch(() => null))?.get(picked.box.id);
-      const points = mask ? maskToPolygon(mask, picked.box, img) : null;
-      return points ? { kind: "polygon", points } : { kind: "bbox", box: picked.rect };
+      return toSegmentation(img, mask, picked.box, picked.rect);
+    },
+
+    async segmentAll(img, label, signal) {
+      const text = await samText(img, label, signal);
+      const masks = await parseSamMasks(text).catch(() => null);
+      return parseSamBoxes(text).map((box) =>
+        toSegmentation(img, masks?.get(box.id), box, pickSamBox([box], img)!.rect),
+      );
     },
   };
 }

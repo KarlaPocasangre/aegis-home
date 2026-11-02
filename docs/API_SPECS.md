@@ -192,6 +192,7 @@ Returns the assessment with its rooms, hazards and the derived plan.
           "materialsEs": ["cinta antideslizante"],
           "confidence": 0.8,
           "region": { "type": "polygon", "points": [0.12, 0.55, 0.41, 0.56, 0.40, 0.72, 0.13, 0.70] },
+          "floorShare": 0.28,
           "status": "pending"
         }
       ]
@@ -206,7 +207,7 @@ Returns the assessment with its rooms, hazards and the derived plan.
 }
 ```
 
-`plan.orderedHazardIds` lists pending hazards by severity (high → low), then confidence. Region format: [Data model §4](DATA_MODEL.md#4-hazardregion-format).
+`plan.orderedHazardIds` lists pending hazards by severity (high → low), then confidence. Region format: [Data model §4](DATA_MODEL.md#4-hazardregion-format). `floorShare` (0–1 or `null`) is the share of the visible floor the hazard covers, measured from SAM masks ([AI integration §6.1](AI_INTEGRATION.md#61-floor-share-a-metric-only-masks-can-give)).
 
 ---
 

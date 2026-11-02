@@ -38,6 +38,9 @@ export interface Hazard {
   materialsEs?: string[];
   confidence: number;
   region: Region | null;
+  /** Share (0–1) of the visible floor the hazard covers, measured from SAM masks. Optional:
+   * older rooms and the recorded demo do not have it. */
+  floorShare?: number | null;
   status: HazardStatus;
   resolvedAt: string | null;
 }

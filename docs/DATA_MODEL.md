@@ -62,6 +62,7 @@ erDiagram
         string[] materialsEs
         float confidence
         json region
+        float floorShare
         enum status
         datetime resolvedAt
     }
@@ -138,6 +139,7 @@ model Hazard {
   materialsEs     String[]     @default([])
   confidence      Float
   region          Json?                           // see §4
+  floorShare      Float?                          // share (0–1) of the visible floor it covers
   status          HazardStatus @default(PENDING)
   resolvedAt      DateTime?
 
@@ -189,6 +191,8 @@ Coordinates are **normalized to 0–1** relative to the normalized image (`Room.
 | Plan order | Pending hazards by severity (high → low), then confidence (descending) |
 | Pending cost | Sum of `costEstimateUsd` over pending hazards, rounded to cents |
 | Progress | Resolved hazards ÷ total hazards |
+
+`Hazard.floorShare` *is* stored: it is measured once from SAM's masks at analysis time and cannot be recomputed later, because the photo is not kept ([AI integration §6.1](AI_INTEGRATION.md#61-floor-share-a-metric-only-masks-can-give)).
 
 ---
 

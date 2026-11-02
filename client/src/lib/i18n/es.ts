@@ -15,6 +15,7 @@ export const es = {
     useSample: "Usar imagen de prueba",
     noPhotoAtHand: "¿No tiene una foto a mano?",
     materials: "Necesita:",
+    floorShare: (pct: number) => `Ocupa el ${pct} % del piso visible`,
   },
   theme: {
     title: "Apariencia",

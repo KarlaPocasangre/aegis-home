@@ -35,6 +35,9 @@ Rules:
   Central America (use 0 if the fix is free).
 - "materials_es" lists the things to buy or have at hand for the fix, in {LANGUAGE}: up to 5
   short items (e.g. "non-slip tape", "cable clips"). Use [] when nothing is needed.
+- "on_floor" is true when the hazard lies on the walking surface (rug, cables, clutter, wet
+  floor, objects in the path); false for anything else (furniture edges, lighting, missing
+  grab bar, high shelves).
 - "box" is a tight bounding box around the object as [x_min, y_min, x_max, y_max] on a
   normalized 0-1000 grid of this image, with (0,0) at the top-left. For something missing
   (e.g. "missing grab bar"), box the place where it should be.
@@ -46,7 +49,7 @@ JSON schema:
 { "room_type": one of [bathroom, kitchen, bedroom, living_room, hallway, stairs, entrance, outdoor, other],
   "hazards": [ { "id": "h1", "label_en": str, "label_es": str, "severity": "low|medium|high",
                  "description_es": str, "fix_es": str, "cost_estimate_usd": number,
-                 "materials_es": [str],
+                 "materials_es": [str], "on_floor": boolean,
                  "confidence": number between 0 and 1,
                  "box": [x_min, y_min, x_max, y_max] } ] }`;
 
@@ -87,6 +90,7 @@ export const SPARK_OUTPUT_JSON_SCHEMA = {
           "fix_es",
           "cost_estimate_usd",
           "materials_es",
+          "on_floor",
           "confidence",
           "box",
         ],
@@ -99,6 +103,7 @@ export const SPARK_OUTPUT_JSON_SCHEMA = {
           fix_es: str(300),
           cost_estimate_usd: { type: "number", minimum: 0, maximum: 5000 },
           materials_es: { type: "array", maxItems: 5, items: str(60) },
+          on_floor: { type: "boolean" },
           confidence: { type: "number", minimum: 0, maximum: 1 },
           box: {
             type: "array",

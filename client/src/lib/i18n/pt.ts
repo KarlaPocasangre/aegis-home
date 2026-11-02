@@ -16,6 +16,7 @@ export const pt: Dict = {
     useSample: "Usar imagem de exemplo",
     noPhotoAtHand: "Não tem uma foto à mão?",
     materials: "Precisa de:",
+    floorShare: (pct: number) => `Ocupa ${pct}% do piso visível`,
   },
   theme: {
     title: "Aparência",
