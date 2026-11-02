@@ -86,7 +86,7 @@ Two models in sequence, each doing what it is best at:
 - **Constrained decoding.** Spark is called with `response_format: json_schema`, then re-validated with Zod. On invalid JSON it gets one strict retry, then the fallback.
 - **Grounded instance matching.** A concept prompt like "rug" returns _every_ rug. We pick the one whose box has the best IoU with Spark's box, so the outline matches the hazard Spark described.
 - **Mask → polygon.** Masks are decoded with Meta's official [`@meta-sam/parser`](https://www.npmjs.com/package/@meta-sam/parser). We keep the largest contour, simplify it (Ramer–Douglas–Peucker) to ≤ 100 vertices, and normalize it to 0–1.
-- **Floor share, a metric only masks can give.** Spark flags hazards on the walking surface; one extra SAM call segments the `"floor"` in parallel; each hazard's share is `area(hazard) / area(floor ∪ hazard)` on a raster grid. A boxes-only pipeline couldn't measure this.
+- **Floor share, a metric only masks can give.** Spark flags hazards on the walking surface; one extra SAM call segments the `"floor"` in parallel; the walkway is the floor plus every floor-level hazard, and each hazard's share is its area over that walkway, on a raster grid. A boxes-only pipeline couldn't measure this.
 - **Graceful degradation.** If SAM finds nothing (common for _missing_ things like a grab bar), the region falls back to Spark's box. A failed SAM call never fails the room.
 - **Shared pixel space.** Both models see the _same_ 1024 px re-encoded image, so their coordinates line up.
 

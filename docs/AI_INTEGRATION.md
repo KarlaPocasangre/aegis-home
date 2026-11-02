@@ -195,10 +195,10 @@ For each hazard Spark marks `on_floor`, the card says how much of the **visible 
 
 1. When at least one hazard is `on_floor`, one extra SAM 3.1 call with the concept `"floor"` runs **in parallel** with the hazard calls (`segmentAll`, every instance).
 2. All floor outlines are normalized and rasterized together on a 160 × 160 grid ([`server/src/lib/floorShare.ts`](../server/src/lib/floorShare.ts)).
-3. `floor_share = area(hazard) / area(floor ∪ hazard)`. The union matters: SAM's floor usually *excludes* a rug lying on it, so the rug is added back to the walkable surface. Area ratios are unchanged by the non-uniform scaling to 0–1, so the grid works in normalized space.
+3. The **walkway** is the floor plus the outlines of **every** `on_floor` hazard, because SAM's floor usually *excludes* a rug lying on it. Each share is `area(hazard) / area(walkway ∪ hazard)`. Without adding the other hazards, a pouf on a large rug would be divided by a tiny strip of bare floor and read far too high. Area ratios are unchanged by the non-uniform scaling to 0–1, so the grid works in normalized space.
 4. The share is computed only for **mask outlines** (a box overstates most objects), and is `null` when less than 2 % of the image is visible floor or when the floor call fails. It never fails the room.
 
-The value is stored as `Hazard.floorShare` (0–1) and rounded to whole percent in the UI. Measured live on the sample living room: the loose rug covers 28 % of the visible floor, the footstool 5 % and the wet patch 4 %.
+The value is stored as `Hazard.floorShare` (0–1) and rounded to whole percent in the UI. Measured live on the sample living room: the loose rug covers 26 % of the walkway, the tangled cords 6 % and the wet patch 3 %.
 
 ### `MetaClient` abstraction
 

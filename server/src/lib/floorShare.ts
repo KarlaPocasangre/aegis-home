@@ -40,9 +40,9 @@ export function rasterizeFloor(floor: Region[]): Uint8Array {
 }
 
 /**
- * area(hazard) / area(floor ∪ hazard), rounded to whole percent. The union matters: SAM's "floor"
- * usually excludes a rug lying on it, so the rug is added back to the walkable surface.
- * Null when there is too little floor in view to say anything.
+ * area(hazard) / area(walkway ∪ hazard), rounded to whole percent. `walkway` should already include
+ * the floor-level hazards (SAM's "floor" usually excludes a rug lying on it); the union with the
+ * hazard itself keeps the result ≤ 1 either way. Null when too little floor is in view.
  */
 export function floorShare(hazard: Region, floor: Uint8Array): number | null {
   const cells = new Uint8Array(GRID * GRID);

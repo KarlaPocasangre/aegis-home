@@ -69,6 +69,31 @@ describe("visionService floor share", () => {
     expect(usage.tryConsume.mock.calls.map((c) => c[0])).toEqual([1, 2, 1]);
   });
 
+  it("counts a rug SAM left out of the floor as walkway for the other hazards", async () => {
+    // Image 1000 × 500. Floor: a strip, 10 %. Rug: 40 %, outside it. Pouf: 2 %, on the rug.
+    const rect = (x: number, y: number, w: number, h: number) => ({
+      kind: "polygon" as const,
+      points: [x, y, x + w, y, x + w, y + h, x, y + h],
+    });
+    const { service } = vision({
+      detectHazards: async () => ({
+        room_type: "living_room",
+        hazards: [
+          sparkHazard({ label_en: "rug", on_floor: true }),
+          sparkHazard({ id: "h2", label_en: "pouf", on_floor: true }),
+        ],
+      }),
+      segment: async (_img, label) =>
+        label === "rug" ? rect(0, 250, 1000, 200) : rect(800, 350, 100, 100),
+      segmentAll: async () => [rect(0, 450, 1000, 50)],
+    });
+    const [rug, pouf] = (await service.analyze(image, "living_room", "es")).hazards;
+
+    // Walkway = strip + rug = 50 %. Without the rug, the pouf would read 0.02 / 0.12 ≈ 17 %.
+    expect(rug?.floor_share).toBeCloseTo(0.8, 2);
+    expect(pouf?.floor_share).toBeCloseTo(0.04, 2);
+  });
+
   it("skips the floor call when no hazard is on the floor", async () => {
     const segmentAll = vi.fn(async () => []);
     const { service } = vision({

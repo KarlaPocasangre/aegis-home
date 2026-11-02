@@ -18,12 +18,45 @@ export interface Point {
   y: number;
 }
 
+function vertices(points: number[]): Point[] {
+  const out: Point[] = [];
+  for (let i = 0; i + 1 < points.length; i += 2) out.push({ x: points[i]!, y: points[i + 1]! });
+  return out;
+}
+
+/** Area centroid of a simple polygon; null when it has no area. */
+function centroid(poly: Point[]): Point | null {
+  let a = 0;
+  let cx = 0;
+  let cy = 0;
+  poly.forEach((p, i) => {
+    const q = poly[(i + 1) % poly.length]!;
+    const cross = p.x * q.y - q.x * p.y;
+    a += cross;
+    cx += (p.x + q.x) * cross;
+    cy += (p.y + q.y) * cross;
+  });
+  return a === 0 ? null : { x: cx / (3 * a), y: cy / (3 * a) };
+}
+
+function inside(poly: Point[], { x, y }: Point): boolean {
+  let hit = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const [a, b] = [poly[i]!, poly[j]!];
+    if (a.y > y !== b.y > y && x < ((b.x - a.x) * (y - a.y)) / (b.y - a.y) + a.x) hit = !hit;
+  }
+  return hit;
+}
+
 /**
- * Where the numbered marker goes, as fractions: a box's top-left corner, or a polygon's
- * topmost vertex (its bounding corner can sit far outside an irregular outline).
+ * Where the numbered marker goes, as fractions: a box's top-left corner; for an outline, its
+ * center when that falls on the object (a wide rug's top edge can end next to another hazard),
+ * else its topmost vertex (the center of a C-shaped outline is off the object).
  */
 export function regionAnchor(region: Region): Point {
   if (region.type === "bbox") return { x: region.points[0] ?? 0, y: region.points[1] ?? 0 };
+  const center = centroid(vertices(region.points));
+  if (center && inside(vertices(region.points), center)) return center;
   let best: Point = { x: region.points[0] ?? 0, y: region.points[1] ?? 0 };
   for (let i = 2; i + 1 < region.points.length; i += 2) {
     const p = { x: region.points[i] ?? 0, y: region.points[i + 1] ?? 0 };

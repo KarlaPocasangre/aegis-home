@@ -68,15 +68,20 @@ describe("regions", () => {
     expect(isValidRegion(region)).toBe(false);
   });
 
-  it("anchors markers at a box's corner or a polygon's topmost vertex", () => {
+  it("anchors markers at a box's corner, an outline's center, or its top when hollow", () => {
     expect(regionAnchor({ type: "bbox", points: [0.1, 0.2, 0.3, 0.4] })).toEqual({
       x: 0.1,
       y: 0.2,
     });
-    expect(regionAnchor({ type: "polygon", points: [0.5, 0.4, 0.2, 0.9, 0.7, 0.6] })).toEqual({
-      x: 0.5,
-      y: 0.4,
+    const center = regionAnchor({
+      type: "polygon",
+      points: [0.2, 0.6, 0.8, 0.6, 0.8, 0.9, 0.2, 0.9],
     });
+    expect(center.x).toBeCloseTo(0.5);
+    expect(center.y).toBeCloseTo(0.75);
+    // A "C" shape: its centroid falls in the gap, so the topmost vertex is used.
+    const c = [0.1, 0.1, 0.9, 0.1, 0.9, 0.2, 0.2, 0.2, 0.2, 0.8, 0.9, 0.8, 0.9, 0.9, 0.1, 0.9];
+    expect(regionAnchor({ type: "polygon", points: c })).toEqual({ x: 0.1, y: 0.1 });
     expect(polygonPoints([0, 0.5, 1, 1])).toBe("0,0.5 1,1");
   });
 

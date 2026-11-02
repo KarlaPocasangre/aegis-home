@@ -152,21 +152,30 @@ export function createVisionService(deps: VisionDeps): VisionService {
       }
     });
     const floor = await floorTask;
+    // Only mask outlines are measured: a box overstates the area of most objects.
+    const measured = (hazard: SparkHazard, region: Region | null): region is Region =>
+      hazard.on_floor === true && region?.type === "polygon";
+    // The walking surface is the floor plus every hazard lying on it: SAM's "floor" leaves out a
+    // rug, so without it a pouf on that rug would be divided by a floor that is far too small.
+    const walkway = floor
+      ? rasterizeFloor([
+          ...floor,
+          ...hazards.flatMap((h, i) => (measured(h, regions[i] ?? null) ? [regions[i]!] : [])),
+        ])
+      : null;
     return hazards.map((hazard, i) => {
       const region = regions[i] ?? null;
-      // Only mask outlines are measured: a box overstates the area of most objects.
-      const share =
-        floor && hazard.on_floor && region?.type === "polygon" ? floorShare(region, floor) : null;
+      const share = walkway && measured(hazard, region) ? floorShare(region, walkway) : null;
       return { ...hazard, region, floor_share: share };
     });
   }
 
-  /** Rasterized union of every "floor" instance SAM finds; null on failure or no floor. */
+  /** Every "floor" instance SAM finds, normalized; null on failure or no floor. */
   async function segmentFloor(ai: MetaClient, image: NormalizedImage, budget: AbortSignal) {
     try {
       const segs = await ai.segmentAll!(image, "floor", withTimeout(budget, timing.samTimeoutMs));
       const regions = segs.flatMap((seg) => toNormalizedRegion(seg, image) ?? []);
-      return regions.length > 0 ? rasterizeFloor(regions) : null;
+      return regions.length > 0 ? regions : null;
     } catch {
       return null;
     }
