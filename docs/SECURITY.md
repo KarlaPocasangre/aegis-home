@@ -2,7 +2,9 @@
 
 > aegis-home handles photos of people's homes. This document covers what we protect, the threats we designed against, the controls in place, and what is deliberately out of scope.
 
-**Related:** [Architecture](ARCHITECTURE.md) · [AI integration](AI_INTEGRATION.md) · [API specs](API_SPECS.md) · [Data model](DATA_MODEL.md)
+<!-- Absolute links: GitHub also renders this file as the repository security policy (/security/policy), where relative links break. -->
+
+**Related:** [Architecture](https://github.com/KarlaPocasangre/aegis-home/blob/main/docs/ARCHITECTURE.md) · [AI integration](https://github.com/KarlaPocasangre/aegis-home/blob/main/docs/AI_INTEGRATION.md) · [API specs](https://github.com/KarlaPocasangre/aegis-home/blob/main/docs/API_SPECS.md) · [Data model](https://github.com/KarlaPocasangre/aegis-home/blob/main/docs/DATA_MODEL.md)
 
 **Scope:** a hackathon MVP running in public. The goal is to prevent the incidents that hurt most (leaked keys, runaway AI spend, exposure of a family's data, outages) without enterprise overhead.
 
