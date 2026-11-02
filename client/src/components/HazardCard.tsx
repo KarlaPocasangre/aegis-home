@@ -1,6 +1,7 @@
 import { capitalize, formatCost, SEVERITY_STYLES } from "../lib/labels";
 import type { ContentLanguage, Hazard } from "../lib/types";
 import { useT } from "../lib/i18n";
+import { floorPercent } from "../lib/plan";
 import { SeverityBadge } from "./SeverityBadge";
 
 /** DOM id of a hazard's card, so a tap on its photo marker can scroll to it. */
@@ -21,11 +22,7 @@ export function HazardCard({ hazard, number, active, onSelect, lang }: Props) {
   const tr = useT();
   const resolved = hazard.status === "resolved";
   // Measured from SAM's masks; shown only when the server could measure it.
-  const share = hazard.floorShare;
-  const floorPct =
-    typeof share === "number" && Number.isFinite(share) && share > 0 && share <= 1
-      ? Math.max(1, Math.round(share * 100))
-      : null;
+  const floorPct = floorPercent(hazard);
   return (
     <li id={hazardElementId(hazard.id)}>
       <button
@@ -66,6 +63,11 @@ export function HazardCard({ hazard, number, active, onSelect, lang }: Props) {
             {tr.common.floorShare(floorPct)}
           </p>
         ) : null}
+        {floorPct !== null && (
+          <p className="mt-0.5 text-xs text-stone-500 dark:text-stone-400">
+            {tr.common.floorShareHint}
+          </p>
+        )}
         <p className="mt-2 text-sm dark:text-stone-200">
           <span className="font-semibold">{tr.roomsView.whatToDo} </span>
           <span lang={lang}>{hazard.fixEs}</span>

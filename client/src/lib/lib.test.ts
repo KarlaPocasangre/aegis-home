@@ -9,6 +9,8 @@ import { en } from "./i18n/en";
 import { es } from "./i18n/es";
 import { pt } from "./i18n/pt";
 import { formatCost, roomLabel } from "./labels";
+import { floorPercent, mostObstructing } from "./plan";
+import type { Hazard } from "./types";
 
 // The app picks its first language from the system (navigator.language): CI runs in English.
 // Every test starts from Spanish so results don't depend on the machine or on test order.
@@ -175,5 +177,29 @@ describe("i18n", () => {
     setLang("es");
     expect(formatCost(0)).toBe("Sin costo");
     expect(userMessage(new ApiError(500, "SOMETHING_NEW", "x"))).toBe(es.errors.generic);
+  });
+});
+
+describe("floor share", () => {
+  const hazard = (id: string, floorShare: unknown, status = "pending") =>
+    ({ id, floorShare, status }) as unknown as Hazard;
+
+  it("turns a 0–1 share into a whole percent and ignores bad values", () => {
+    expect(floorPercent(hazard("a", 0.284))).toBe(28);
+    expect(floorPercent(hazard("a", 0.001))).toBe(1);
+    for (const bad of [null, undefined, 0, 1.5, Number.NaN, "0.3"]) {
+      expect(floorPercent(hazard("a", bad))).toBeNull();
+    }
+  });
+
+  it("picks the pending hazard that covers the most floor", () => {
+    const hazards = [
+      hazard("rug", 0.28),
+      hazard("cables", 0.09),
+      hazard("fixed", 0.6, "resolved"),
+      hazard("lamp", null),
+    ];
+    expect(mostObstructing(hazards)).toEqual({ hazard: hazards[0], percent: 28 });
+    expect(mostObstructing([hazard("lamp", null)])).toBeNull();
   });
 });

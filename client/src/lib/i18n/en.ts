@@ -17,6 +17,8 @@ export const en: Dict = {
     noPhotoAtHand: "Don't have a photo handy?",
     materials: "You'll need:",
     floorShare: (pct: number) => `Covers ${pct}% of the visible floor`,
+    floorShareHint:
+      "The part of the walking floor it covers. The higher, the more it gets in the way.",
   },
   theme: {
     title: "Appearance",
@@ -423,6 +425,8 @@ export const en: Dict = {
         : `Start with the ${n} marked “Fix first”.`,
     summaryCost: (value: string) => `Approximate cost of the fixes: ${value}.`,
     summaryResolved: "Everything in this room is already fixed.",
+    summaryFloor: (label: string, pct: number) =>
+      `What gets in the way most: ${label} (${pct}% of the visible floor).`,
     seePlan: "See my plan",
     analyzeAnother: "Check another room",
     whatToDo: "What to do:",

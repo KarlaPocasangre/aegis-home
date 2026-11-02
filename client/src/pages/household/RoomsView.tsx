@@ -3,6 +3,7 @@ import { RoomCard } from "../../components/RoomCard";
 import { ViewTitle } from "../../components/ViewTitle";
 import { useT } from "../../lib/i18n";
 import { formatUsd, roomLabel } from "../../lib/labels";
+import { mostObstructing } from "../../lib/plan";
 import { householdPath, linkHandler, roomPath } from "../../lib/router";
 import type { Room } from "../../lib/types";
 
@@ -34,6 +35,8 @@ function RoomSummary({ token, room }: { token: string; room: Room }) {
   if (room.hazards.length === 0) return null;
   const high = pending.filter((h) => h.severity === "high").length;
   const cost = pending.reduce((sum, h) => sum + h.costEstimateUsd, 0);
+  // Gives the floor percentages a reference point: which one blocks the walkway most.
+  const obstructing = mostObstructing(room.hazards);
   const planPath = householdPath(token);
   const analyzePath = householdPath(token, "analizar");
   return (
@@ -51,6 +54,9 @@ function RoomSummary({ token, room }: { token: string; room: Room }) {
           <>
             {high > 0 && `${r.summaryHigh(high)} `}
             {r.summaryCost(formatUsd(cost))}
+            {obstructing && (
+              <> {r.summaryFloor(obstructing.hazard.labelEs.toLowerCase(), obstructing.percent)}</>
+            )}
           </>
         )}
       </p>

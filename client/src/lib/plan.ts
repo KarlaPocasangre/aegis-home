@@ -1,4 +1,4 @@
-import type { Assessment, HazardStatus, Plan } from "./types";
+import type { Assessment, Hazard, HazardStatus, Plan } from "./types";
 
 const SEVERITY_RANK = { high: 0, medium: 1, low: 2 } as const;
 
@@ -37,4 +37,21 @@ export function withHazardStatus(
     })),
   };
   return { ...next, plan: derivePlan(next) };
+}
+
+/** Whole percent of the visible floor a hazard covers, or null when it wasn't measured. */
+export function floorPercent(hazard: Hazard): number | null {
+  const share = hazard.floorShare;
+  if (typeof share !== "number" || !Number.isFinite(share) || share <= 0 || share > 1) return null;
+  return Math.max(1, Math.round(share * 100));
+}
+
+/** The pending hazard that covers the most visible floor: what gets in the way most. */
+export function mostObstructing(hazards: Hazard[]): { hazard: Hazard; percent: number } | null {
+  let best: { hazard: Hazard; percent: number } | null = null;
+  for (const hazard of hazards) {
+    const percent = hazard.status === "pending" ? floorPercent(hazard) : null;
+    if (percent !== null && (!best || percent > best.percent)) best = { hazard, percent };
+  }
+  return best;
 }

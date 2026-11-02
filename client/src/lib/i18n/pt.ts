@@ -17,6 +17,8 @@ export const pt: Dict = {
     noPhotoAtHand: "Não tem uma foto à mão?",
     materials: "Precisa de:",
     floorShare: (pct: number) => `Ocupa ${pct}% do piso visível`,
+    floorShareHint:
+      "É a parte do piso por onde se anda que ele cobre. Quanto maior, mais atrapalha a passagem.",
   },
   theme: {
     title: "Aparência",
@@ -435,6 +437,8 @@ export const pt: Dict = {
         : `Comece pelas ${n} marcadas como «Resolver primeiro».`,
     summaryCost: (value: string) => `Custo aproximado dos ajustes: ${value}.`,
     summaryResolved: "Tudo neste cômodo já está resolvido.",
+    summaryFloor: (label: string, pct: number) =>
+      `O que mais atrapalha a passagem: ${label} (${pct}% do piso visível).`,
     seePlan: "Ver meu plano",
     analyzeAnother: "Analisar outro cômodo",
     whatToDo: "O que fazer:",

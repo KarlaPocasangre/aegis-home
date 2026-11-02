@@ -16,6 +16,8 @@ export const es = {
     noPhotoAtHand: "¿No tiene una foto a mano?",
     materials: "Necesita:",
     floorShare: (pct: number) => `Ocupa el ${pct} % del piso visible`,
+    floorShareHint:
+      "Es la parte del piso por donde se camina que cubre. Cuanto más alto, más estorba el paso.",
   },
   theme: {
     title: "Apariencia",
@@ -434,6 +436,8 @@ export const es = {
         : `Empiece por las ${n} marcadas como «Arreglar primero».`,
     summaryCost: (value: string) => `Costo aproximado de los arreglos: ${value}.`,
     summaryResolved: "Todo lo de este espacio ya está resuelto.",
+    summaryFloor: (label: string, pct: number) =>
+      `Lo que más estorba el paso: ${label} (${pct} % del piso visible).`,
     seePlan: "Ver mi plan",
     analyzeAnother: "Analizar otro espacio",
     whatToDo: "Qué hacer:",
