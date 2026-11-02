@@ -339,7 +339,7 @@ export const es = {
       "Aegis Home señala riesgos del entorno con inteligencia artificial y puede equivocarse. No da consejos médicos, no detecta caídas y no es un servicio de emergencias. Los costos son aproximados.",
     identityTitle: "Identidad y propósito",
     identityText:
-      "Prevención de caídas en casa para familias de Centroamérica y Latinoamérica: de una foto a un plan claro.",
+      "Menos riesgos de caída en casa para familias de Latinoamérica: de una foto a un plan claro.",
     navTitle: "Navegación rápida",
     home: "Inicio",
     startEvaluation: "Empezar una evaluación",

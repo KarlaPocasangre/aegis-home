@@ -333,7 +333,7 @@ export const en: Dict = {
       "Aegis Home points out hazards in the home with artificial intelligence and can be wrong. It doesn't give medical advice, doesn't detect falls and isn't an emergency service. Costs are approximate.",
     identityTitle: "Identity and purpose",
     identityText:
-      "Fall prevention at home for families in Central and Latin America: from one photo to a clear plan.",
+      "Fewer fall hazards at home for families in Latin America: from one photo to a clear plan.",
     navTitle: "Quick links",
     home: "Home",
     startEvaluation: "Start an assessment",
