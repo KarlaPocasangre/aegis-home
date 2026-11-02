@@ -27,20 +27,20 @@
 
 ## Table of contents
 
-- [The problem](#-the-problem)
-- [The solution](#-the-solution)
-- [Key features](#-key-features)
-- [How we use Meta's models](#-how-we-use-metas-models)
-- [Architecture](#%EF%B8%8F-architecture)
-- [Privacy & security by design](#-privacy--security-by-design)
-- [Why Spanish, Portuguese and English](#-why-spanish-portuguese-and-english)
-- [Tech stack](#-tech-stack)
-- [Quickstart](#-quickstart)
-- [API overview](#-api-overview)
-- [Testing & quality](#-testing--quality)
-- [Honest limitations](#%EF%B8%8F-honest-limitations)
-- [Built during the hackathon](#-built-during-the-hackathon)
-- [Disclaimer, license & credits](#-disclaimer-license--credits)
+- [The problem](#the-problem)
+- [The solution](#the-solution)
+- [Key features](#key-features)
+- [How we use Meta's models](#how-we-use-metas-models)
+- [Architecture](#architecture)
+- [Privacy & security by design](#privacy--security-by-design)
+- [Why Spanish, Portuguese and English](#why-spanish-portuguese-and-english)
+- [Tech stack](#tech-stack)
+- [Quickstart](#quickstart)
+- [API overview](#api-overview)
+- [Testing & quality](#testing--quality)
+- [Honest limitations](#honest-limitations)
+- [Built during the hackathon](#built-during-the-hackathon)
+- [Disclaimer, license & credits](#disclaimer-license--credits)
 
 ---
 
@@ -267,4 +267,4 @@ Deeper docs: [Context](docs/CONTEXT.md) · [Architecture](docs/ARCHITECTURE.md) 
 
 - **License:** [MIT](LICENSE). SAM mask decoding uses [`@meta-sam/parser`](https://www.npmjs.com/package/@meta-sam/parser) under the SAM License.
 - **Contributing:** issues and pull requests are welcome. Run `npm run typecheck && npm run lint && npm test` before opening one.
-- **Credits:** built by a solo indie developer from El Salvador for the Meta Global AI Developer Hackathon 2026, with Meta's **Muse Spark** and **SAM 3.1**.
+- **Credits:** built by **Karla Estefany Hernandez Pocasangre** ([@KarlaPocasangre](https://github.com/KarlaPocasangre)), a solo indie developer from El Salvador, for the Meta Global AI Developer Hackathon 2026, with Meta's **Muse Spark** and **SAM 3.1**.
