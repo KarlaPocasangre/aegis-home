@@ -45,8 +45,9 @@ export interface VisionTiming {
 }
 
 const DEFAULT_TIMING: VisionTiming = {
-  budgetMs: 45_000,
-  sparkTimeoutMs: 25_000,
+  budgetMs: 55_000,
+  // Measured 13–22 s on a 1024 px photo (Nov 1); headroom so a slow answer isn't lost.
+  sparkTimeoutMs: 35_000,
   samTimeoutMs: 10_000,
   maxRetryDelayMs: 8_000,
 };

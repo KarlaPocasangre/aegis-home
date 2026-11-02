@@ -213,7 +213,7 @@ Returns the assessment with its rooms, hazards and the derived plan.
 
 ### `POST /api/assessments/:id/rooms`
 
-Uploads one room photo and runs the analysis **synchronously**: Muse Spark, then SAM 3.1 for each hazard. Muse Spark alone was measured at ~13 s on a 1024 px photo; SAM calls run in parallel, and the whole analysis has a 45 s budget. A cold start on the free Render tier can add up to ~50 s.
+Uploads one room photo and runs the analysis **synchronously**: Muse Spark, then SAM 3.1 for each hazard. Muse Spark alone was measured at 13–22 s on a 1024 px photo; SAM calls run in parallel, and the whole analysis has a 55 s budget. A cold start on the free Render tier can add up to ~50 s.
 
 **Content-Type:** `multipart/form-data`
 

@@ -17,8 +17,9 @@ services:
         sync: false
       - key: FRONTEND_URL
         sync: false
+      # Live AI. A Blueprint sync re-applies these values, so this must match production.
       - key: MOCK_AI
-        value: "true"
+        value: "false"
       - key: AI_DAILY_CALL_CAP
         value: "200"
       - key: HOUSEHOLD_TTL_DAYS

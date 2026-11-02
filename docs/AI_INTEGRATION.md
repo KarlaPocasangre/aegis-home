@@ -61,9 +61,9 @@ normalized image (1024 px, in RAM)
 
 | Call | Timeout | Policy |
 |---|---|---|
-| Muse Spark | 25 s (measured ~13 s on a 1024 px photo) | 1 retry on invalid JSON, with a "return only valid JSON" reminder. On HTTP 429, up to 2 retries honoring `Retry-After` (capped at 8 s), otherwise exponential backoff |
+| Muse Spark | 35 s (measured 13–22 s on a 1024 px photo) | 1 retry on invalid JSON, with a "return only valid JSON" reminder. On HTTP 429, up to 2 retries honoring `Retry-After` (capped at 8 s), otherwise exponential backoff |
 | SAM 3.1 | 10 s per call | Up to 4 concurrent calls. A failed call only drops that hazard to Spark's box; it never fails the room |
-| Whole analysis | 45 s budget | Budget exhausted → fallback ladder |
+| Whole analysis | 55 s budget | Budget exhausted → fallback ladder |
 
 All outbound calls share an `AbortSignal` derived from the overall budget.
 

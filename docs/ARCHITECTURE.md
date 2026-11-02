@@ -187,7 +187,7 @@ Step-by-step AI details: [AI integration](AI_INTEGRATION.md).
 | 0 | Normal | Live Spark → SAM, outlines from masks | No |
 | 1 | Spark returns invalid JSON | One retry with a strict reminder | No |
 | 2 | SAM finds nothing, fails, or the cap is hit after Spark | Hazard kept, with Spark's box as its region | Box instead of outline |
-| 3 | 429 after retries, timeout (45 s budget), daily cap | Recorded **real** result for this exact image (SHA-256 match) | **Yes, banner** |
+| 3 | 429 after retries, timeout (55 s budget), daily cap | Recorded **real** result for this exact image (SHA-256 match) | **Yes, banner** |
 | 4 | No recording for this image | Generic sample for the room type | **Yes, banner** |
 
 Every room carries `source: live | cached | mock`. A non-live result is **always** labeled. It is never presented as live AI.

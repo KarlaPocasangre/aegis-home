@@ -121,7 +121,7 @@ The API path never contains the token. The SPA path `/h/<token>` appears only in
 | Incident | Action |
 |---|---|
 | API key exposed | Revoke and rotate in the Meta console → update the Render env var → review usage |
-| Unexpected spend | Set `MOCK_AI=true` or lower `AI_DAILY_CALL_CAP` → redeploy → review rate-limit logs |
+| Unexpected spend | Set `MOCK_AI` to `"true"` or lower `AI_DAILY_CALL_CAP` **in `render.yaml`** (a dashboard-only change is overwritten by the next Blueprint sync) → push → review rate-limit logs |
 | Household link shared by mistake | **Delete my data** (`DELETE /api/households/me`) and start a new household |
 | Meta API outage | The fallback ladder serves recorded or sample results, always with a visible banner |
 
