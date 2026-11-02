@@ -12,7 +12,7 @@
 2. **Deploy early:** production infrastructure (Render, Vercel, Neon) from day one, so deployment surprises surface early.
 3. **One flow that works perfectly** beats many half-built features.
 4. **Honest AI:** a result that did not come from a live model call is always labeled.
-5. **Everything built during the event:** small, frequent commits, never squashed or rewritten, so the history is the evidence.
+5. **Everything built during the event:** commits are never squashed or rewritten, so the history is the evidence.
 
 ---
 
@@ -22,7 +22,8 @@ All dates are 2026. The [commit history](https://github.com/KarlaPocasangre/aegi
 
 | Date | Milestone | Highlights |
 |---|---|---|
-| **Oct 31** | Foundation | Specifications in `docs/`; npm workspaces; Prisma data model and migration; Zod contracts; Express 5 with security middleware; in-memory image pipeline |
+| **Oct 28 – 30** | Research & design | Applied for Meta Model API credits; while a banking issue delayed activating them, studied Muse Spark and SAM 3.1 and wrote the proposal, architecture and API contracts in `docs/` |
+| **Oct 31** | Foundation | Specifications committed; npm workspaces; Prisma data model and migration; Zod contracts; Express 5 with security middleware; in-memory image pipeline |
 | **Oct 31** | Live AI pipeline | Muse Spark over Chat Completions with grounding boxes; SAM 3.1 concept prompts; fallback ladder; live fixtures for the sample images |
 | **Oct 31** | Ship it | Render blueprint, Vercel config, post-deploy smoke test, CI with gitleaks |
 | **Oct 31** | Product UI | Assessment flow, hazard overlay, action plan, contact button, privacy notice, share link, household views |
@@ -30,6 +31,8 @@ All dates are 2026. The [commit history](https://github.com/KarlaPocasangre/aegi
 | **Nov 1** | UX iteration | Tappable markers, undoable fixes, staged progress, photo preview, room filter, materials list per fix |
 | **Nov 1** | SAM masks | Mask decoding with `@meta-sam/parser` → outline polygons; markers kept inside the photo and apart |
 | **Nov 1** | Floor share | Spark flags floor-level hazards, SAM segments the floor, and each card shows the % of visible floor the hazard covers |
+| **Nov 1** | Testing with real photos | Walkway-based floor share (floor + every floor-level hazard); multi-piece masks; markers centered on outlines; pets as hazards; furniture on legs excluded from the metric; the % explained on each card and "what blocks the walkway most" in the room summary |
+| **Nov 1** | Honest failures & ops | A failed live analysis of the user's own photo shows a retryable error instead of another room's sample; `MOCK_AI` pinned in the Render blueprint; migrations over Neon's direct host; Spark timeout widened; new domain `aegishome.vercel.app` |
 
 ---
 
@@ -41,7 +44,7 @@ All dates are 2026. The [commit history](https://github.com/KarlaPocasangre/aegi
 - [x] Quick-contact button (call / WhatsApp / SMS, optional location) with validated phone numbers
 - [x] **Both** Muse Spark and SAM 3.1 in the live path through the Meta Model API
 - [x] No photos stored; household token flow; data deletable on demand
-- [x] Fallback ladder always shows a banner when a result is not live
+- [x] A non-live result is always labeled; a failed analysis of a new photo shows a retryable error, never another room's sample
 - [x] Deployed, kept warm, smoke test passing
 - [x] README with problem, solution, architecture, setup, limitations and provenance
 - [ ] 3-minute demo video recorded with live calls
@@ -82,7 +85,8 @@ Features were prioritized against the judging criteria. When time ran short, sco
 
 | Area | Practice |
 |---|---|
-| Commits | Conventional Commits in English (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `ci`); small and frequent; history never rewritten |
+| Commits | Conventional Commits in English (`feat`, `fix`, `docs`, `refactor`, `test`, `chore`, `ci`), one per working change; history never rewritten |
+| AI assistance | Claude Code as a coding assistant during implementation; product, design decisions, real-photo testing and review by the author |
 | Branching | `main` for a solo developer; short-lived branches only for risky experiments |
 | Quality gates | TypeScript strict, ESLint, Prettier, Vitest (server + client); all run in GitHub Actions on every push, plus a `gitleaks` scan |
 | Testing | Contract tests for Spark output, Spark ↔ SAM matching, mask decoding, the fallback ladder, image validation, household scoping, rate limits; PGlite gives an in-memory Postgres |
