@@ -1,69 +1,98 @@
-# API_SPECS
+# API Specification
 
-Related: [ARCHITECTURE.md](ARCHITECTURE.md) · [DATA_MODEL.md](DATA_MODEL.md) · [AI_INTEGRATION.md](AI_INTEGRATION.md) · [SECURITY.md](SECURITY.md)
+> REST contract of the aegis-home backend: authentication, limits, errors and every endpoint with example payloads.
 
-REST over HTTPS, JSON (except the image upload, which is `multipart/form-data`).
-Base path: `/api`. Backend: Node.js + Express 5.
+**Related:** [Architecture](ARCHITECTURE.md) · [Data model](DATA_MODEL.md) · [AI integration](AI_INTEGRATION.md) · [Security](SECURITY.md)
+
+---
+
+## Overview
+
+| | |
+|---|---|
+| **Protocol** | REST over HTTPS, JSON. Image uploads use `multipart/form-data` |
+| **Base path** | `/api` (plus `GET /health`) |
+| **Auth** | `X-Household-Token: <uuid>` on every `/api` call except `POST /api/households` |
+| **Server** | Node.js 22 + Express 5 · input validated with Zod |
+
+### Endpoints
+
+| Method | Path | Purpose |
+|---|---|---|
+| `GET` | [`/health`](#get-health) | Liveness probe |
+| `POST` | [`/api/households`](#post-apihouseholds) | Create a household and its first assessment |
+| `GET` | [`/api/households/me`](#get-apihouseholdsme) | Household summary |
+| `DELETE` | [`/api/households/me`](#delete-apihouseholdsme) | Delete the household and all its data |
+| `POST` | [`/api/assessments`](#post-apiassessments) | Create another assessment |
+| `GET` | [`/api/assessments/:id`](#get-apiassessmentsid) | Assessment with rooms, hazards and the derived plan |
+| `POST` | [`/api/assessments/:id/rooms`](#post-apiassessmentsidrooms) | Upload a room photo and run the live analysis |
+| `PATCH` | [`/api/hazards/:id`](#patch-apihazardsid) | Mark a hazard resolved or pending |
+
+---
 
 ## 1. Conventions
 
-### Authentication
-There are no accounts. A household is identified by an unguessable **access token** (UUID v4 from `crypto.randomUUID()`), created by `POST /api/households`.
+### 1.1 Authentication
 
-- The token is sent in the header **`X-Household-Token`** (not in the API URL, so it doesn't appear in server access logs).
-- The frontend link that a family shares looks like `https://<frontend>/h/<token>`; the SPA reads the token from the path and sends it as a header. The frontend sets `Referrer-Policy: no-referrer` and `noindex`.
-- Every query filters by the household that owns the token. A resource belonging to another household returns **404** (not 403), so IDs can't be enumerated.
-- CORS allows only `FRONTEND_URL`, with headers `Content-Type` and `X-Household-Token` and methods `GET, POST, PATCH, DELETE`.
+There are no accounts. A household is identified by an unguessable **access token** (UUID v4 from `crypto.randomUUID()`, 122 random bits) returned by `POST /api/households`.
 
-### Common response headers
-`X-Content-Type-Options: nosniff`, HSTS, no `X-Powered-By` (via Helmet).
+- The token travels in the **`X-Household-Token`** header, never in an API URL, so it does not appear in API access logs.
+- The family's shareable link is `https://<frontend>/h/<token>`. The SPA reads the token from the path and sends it as a header. The frontend sets `Referrer-Policy: no-referrer` and `noindex`.
+- Every query is scoped to the token's household. A resource owned by another household returns **404** (not 403), so IDs cannot be probed.
+- Expired tokens are rejected with 401.
+- CORS allows only `FRONTEND_URL`, methods `GET, POST, PATCH, DELETE`, and headers `Content-Type, X-Household-Token`.
 
-### Enums (API uses lowercase)
-- `severity`: `low | medium | high`
-- `status`: `pending | resolved`
-- `source`: `live | cached | mock`
-- `roomType`: `bathroom | kitchen | bedroom | living_room | hallway | stairs | entrance | outdoor | other`
+### 1.2 Enums (lowercase on the wire)
 
-### Error format
+| Field | Values |
+|---|---|
+| `severity` | `low` · `medium` · `high` |
+| `status` | `pending` · `resolved` |
+| `source` | `live` · `cached` · `mock` |
+| `roomType` | `bathroom` · `kitchen` · `bedroom` · `living_room` · `hallway` · `stairs` · `entrance` · `outdoor` · `other` |
+| `lang` / `language` | `es` · `pt` · `en` |
+
+### 1.3 Errors
 
 ```json
 { "error": { "code": "VALIDATION_ERROR", "message": "Datos de entrada no válidos" } }
 ```
 
-Messages are generic. No stack traces, no echoed input, no model output in errors.
+Messages are generic: no stack traces, no echoed input, no model output.
 
 | HTTP | `code` | When |
 |---|---|---|
 | 400 | `BAD_REQUEST` | Malformed JSON or multipart |
-| 401 | `UNAUTHORIZED` | Missing/invalid/expired/revoked token |
+| 401 | `UNAUTHORIZED` | Missing, invalid or expired token |
 | 404 | `NOT_FOUND` | Resource doesn't exist **or** belongs to another household |
-| 413 | `PAYLOAD_TOO_LARGE` | Image over 5 MB or JSON over the limit |
-| 415 | `UNSUPPORTED_MEDIA_TYPE` | Not JPEG/PNG/WebP, or magic bytes don't match |
+| 413 | `PAYLOAD_TOO_LARGE` | Image over 5 MB or JSON over 100 KB |
+| 415 | `UNSUPPORTED_MEDIA_TYPE` | Not JPEG/PNG/WebP, or the magic bytes don't match |
 | 422 | `VALIDATION_ERROR` | Invalid user input (Zod) |
-| 429 | `RATE_LIMITED` | Rate limit hit (`Retry-After` header set) |
-| 502 | `AI_PROVIDER_ERROR` | Provider failed *and* no fallback could be produced |
+| 429 | `RATE_LIMITED` | A rate limit or room cap was hit (`Retry-After` set on rate limits) |
+| 502 | `AI_PROVIDER_ERROR` | The provider failed **and** no fallback could be produced |
 | 500 | `INTERNAL_ERROR` | Anything unexpected |
 
-Invalid AI output is **not** a 422: it is a provider fault, handled with retry then the fallback ladder; only if everything fails does the client see 502.
+Invalid model output is **not** a 422. It is a provider fault, handled with a retry and then the fallback ladder; the client sees 502 only if every level fails.
 
-### Rate limits
+### 1.4 Limits
 
 | Scope | Limit |
 |---|---|
-| Global (per IP) | 100 requests / 15 min |
+| Global, per IP | 100 requests / 15 min |
 | `POST /api/households` | 10 / hour / IP |
-| `POST /api/assessments/:id/rooms` | 5 / minute / IP, and 20 rooms / day / household |
-| Global AI spend cap | `AI_DAILY_CALL_CAP` calls/day, then degrade to cache/mock |
-| `GET /health` | **Excluded** from limits |
-
-Requires `app.set('trust proxy', 1)` behind Render. Request body limit: JSON 100 KB, upload 5 MB, max **2 concurrent analyses** per instance.
+| `POST /api/assessments/:id/rooms` | 5 / minute / IP · 20 rooms / day / household · 8 rooms / assessment |
+| Concurrent analyses | 2 per instance |
+| Meta API calls | `AI_DAILY_CALL_CAP` per UTC day, then the app degrades to labeled fallbacks |
+| Request bodies | JSON 100 KB · image 5 MB |
+| `GET /health` | Excluded from all limits |
 
 ---
 
 ## 2. Endpoints
 
 ### `GET /health`
-Liveness probe for UptimeRobot. Does not touch the DB or Meta API.
+
+Liveness probe used by UptimeRobot and Render. It touches neither the database nor Meta.
 
 **200**
 ```json
@@ -73,36 +102,41 @@ Liveness probe for UptimeRobot. Does not touch the DB or Meta API.
 ---
 
 ### `POST /api/households`
-Create a household and its first assessment. Also triggers lazy cleanup of expired households.
 
-**Request**
+Creates a household and its first assessment. Also purges expired households (lazy retention).
+
+**Request** (all fields optional)
 ```json
 { "name": "Casa de abuela", "language": "es" }
 ```
-- `name`: optional, ≤ 80 chars (plain text). `language`: optional, default `"es"`.
+
+| Field | Rules |
+|---|---|
+| `name` | Plain text, 1–80 characters |
+| `language` | Language tag such as `es` or `es-SV`; default `es` |
 
 **201**
 ```json
 {
   "token": "3f0f7c3e-6d54-4a9a-8c35-2b9d9c3e1c11",
-  "expiresAt": "2026-11-28T00:00:00.000Z",
+  "expiresAt": "2026-12-01T00:00:00.000Z",
   "assessmentId": "b8a1…"
 }
 ```
-The client stores the token and builds the shareable link. Show: *"Anyone with this link can see this home's action plan."*
+
+The client stores the token and builds the shareable link. The UI tells the user: *anyone with this link can see this home's action plan.*
 
 ---
 
 ### `GET /api/households/me`
-**Headers:** `X-Household-Token`
 
 **200**
 ```json
 {
   "name": "Casa de abuela",
-  "expiresAt": "2026-11-28T00:00:00.000Z",
+  "expiresAt": "2026-12-01T00:00:00.000Z",
   "assessments": [
-    { "id": "b8a1…", "createdAt": "2026-10-30T15:02:11.000Z", "roomCount": 3 }
+    { "id": "b8a1…", "createdAt": "2026-11-01T15:02:11.000Z", "roomCount": 3 }
   ]
 }
 ```
@@ -110,14 +144,16 @@ The client stores the token and builds the shareable link. Show: *"Anyone with t
 ---
 
 ### `DELETE /api/households/me`
-Deletes the household and everything under it (cascade).
 
-**204** (no body)
+Deletes the household and everything under it (cascade). Backs the **delete my data** button.
+
+**204**, no body.
 
 ---
 
 ### `POST /api/assessments`
-Create an additional assessment (e.g., a later re-check).
+
+Creates an additional assessment, for example a later re-check of the same home.
 
 **201**
 ```json
@@ -127,18 +163,20 @@ Create an additional assessment (e.g., a later re-check).
 ---
 
 ### `GET /api/assessments/:id`
-Returns the assessment with its rooms, hazards, and the derived plan.
+
+Returns the assessment with its rooms, hazards and the derived plan.
 
 **200**
 ```json
 {
   "id": "b8a1…",
-  "createdAt": "2026-10-30T15:02:11.000Z",
+  "createdAt": "2026-11-01T15:02:11.000Z",
   "rooms": [
     {
       "id": "r1…",
       "type": "bathroom",
       "source": "live",
+      "language": "es",
       "imageWidth": 1024,
       "imageHeight": 768,
       "hazards": [
@@ -153,7 +191,7 @@ Returns the assessment with its rooms, hazards, and the derived plan.
           "costEstimateUsd": 8,
           "materialsEs": ["cinta antideslizante"],
           "confidence": 0.8,
-          "region": { "type": "bbox", "points": [0.12, 0.55, 0.3, 0.18] },
+          "region": { "type": "polygon", "points": [0.12, 0.55, 0.41, 0.56, 0.40, 0.72, 0.13, 0.70] },
           "status": "pending"
         }
       ]
@@ -163,51 +201,53 @@ Returns the assessment with its rooms, hazards, and the derived plan.
     "totalHazards": 4,
     "resolved": 1,
     "pendingCostUsd": 31,
-    "orderedHazardIds": ["hz1…", "hz4…", "hz2…", "hz3…"]
+    "orderedHazardIds": ["hz1…", "hz4…", "hz2…"]
   }
 }
 ```
-`plan.orderedHazardIds`: pending hazards by severity (high → low), then confidence.
+
+`plan.orderedHazardIds` lists pending hazards by severity (high → low), then confidence. Region format: [Data model §4](DATA_MODEL.md#4-hazardregion-format).
 
 ---
 
 ### `POST /api/assessments/:id/rooms`
-Upload one room photo and run the analysis. **Synchronous**; may take up to ~30 s (the client shows progress). A cold start can add up to ~50 s on a free Render instance.
+
+Uploads one room photo and runs the analysis **synchronously**: Muse Spark, then SAM 3.1 for each hazard. Muse Spark alone was measured at ~13 s on a 1024 px photo; SAM calls run in parallel, and the whole analysis has a 45 s budget. A cold start on the free Render tier can add up to ~50 s.
 
 **Content-Type:** `multipart/form-data`
 
 | Field | Type | Rules |
 |---|---|---|
-| `image` | file | JPEG/PNG/WebP, ≤ 5 MB; validated by magic bytes; pixel limit enforced; re-encoded server-side |
-| `roomType` | string | One of the `roomType` enum |
-| `lang` | string | Optional. `es` (default) \| `pt` \| `en`: language the model writes the hazard text in |
+| `image` | file | JPEG, PNG or WebP, ≤ 5 MB. Magic bytes checked, pixel limit enforced, re-encoded server-side |
+| `roomType` | string | A `roomType` value; used as a hint for the model |
+| `lang` | string | Optional: `es` (default), `pt` or `en`. Language the model writes the hazard text in |
 
-Limits: max 8 rooms per assessment.
+**201** returns a `room` object (same shape as in `GET /api/assessments/:id`). When the result is not live, a `notice` is added:
 
-Every `room` object carries `language` (`es | pt | en`): the language its hazard text is actually in. A fallback can be in Spanish even when another language was asked for; the UI says so.
-
-**201** — a `room` object (same shape as in `GET /api/assessments/:id`), plus an optional notice:
 ```json
 {
   "id": "r1…",
   "type": "bathroom",
   "source": "cached",
-  "notice": "Resultado de ejemplo: el servicio de análisis no está disponible en este momento.",
+  "language": "es",
+  "notice": "El servicio de análisis no está disponible en este momento. Se muestra un análisis real hecho antes para esta misma foto.",
   "imageWidth": 1024,
   "imageHeight": 768,
   "hazards": [ /* … */ ]
 }
 ```
-`notice` is present only when `source` is not `live`. The UI must display it prominently.
 
-**Errors:** 401, 404, 413, 415, 422, 429, 502.
+- `notice` is present only when `source` is not `live`, and the UI must display it prominently.
+- `language` is the language the hazard text is **actually** in. A fallback may be in Spanish even if another language was requested; the UI says so.
+- An empty `hazards` array is a valid result (the room looks safe), not an error.
 
-An empty `hazards` array is a valid result (the room looks safe), not an error.
+**Errors:** 401 · 404 · 413 · 415 · 422 · 429 · 502
 
 ---
 
 ### `PATCH /api/hazards/:id`
-Mark a fix as done or undo it.
+
+Marks a fix as done, or undoes it.
 
 **Request**
 ```json
@@ -216,33 +256,30 @@ Mark a fix as done or undo it.
 
 **200**
 ```json
-{ "id": "hz1…", "status": "resolved", "resolvedAt": "2026-10-31T09:20:00.000Z" }
+{ "id": "hz1…", "status": "resolved", "resolvedAt": "2026-11-01T09:20:00.000Z" }
 ```
-Setting `pending` clears `resolvedAt`. The hazard must belong to the caller's household (else 404).
+
+Setting `pending` clears `resolvedAt`. The hazard must belong to the caller's household, or the response is 404.
 
 ---
 
-### `POST /api/voice/checkin` *(stretch — only if time allows)*
-Transcribes a short Spanish voice message (Muse Voice Transcribe).
+## 3. Client contract
 
-**Content-Type:** `multipart/form-data`, field `audio` (≤ 2 MB, ≤ 30 s).
-**200**
-```json
-{ "transcript": "Me siento bien, hoy casi me resbalo en el baño." }
-```
-The transcript is plain text; it triggers nothing automatically. It follows the same rate limit and spend cap as analysis calls. Audio is processed in memory and never stored.
+| Rule | Why |
+|---|---|
+| Send `X-Household-Token` on every `/api` call except household creation | Scoping and auth |
+| Resize and re-encode photos before upload; show staged progress; tolerate ~60 s on a cold start | Privacy and perceived speed |
+| Show `notice` in a visible banner whenever `source !== "live"` | A fallback is never presented as live AI |
+| Draw a `region` only after checking its values are finite and within 0–1 | Untrusted coordinates never reach SVG unchecked |
+| Render all model text as plain text | No HTML injection from model output |
+| Contact button: validate the phone number, URL-encode the message, read location only on opt-in | No server call is involved |
 
 ---
-
-## 3. Client behavior contract
-
-- Send `X-Household-Token` on every `/api` call except `POST /api/households`.
-- Resize and re-encode the image before upload (canvas). Show a progress indicator for analysis; tolerate up to ~60 s on a cold start.
-- If `source !== "live"`, render `notice` in a visible banner.
-- Render `region` coordinates only after verifying they are finite numbers within 0–1, scaled to the displayed image size.
-- Render all model-generated text as plain text.
-- Emergency-contact button: validate the phone number, build `tel:` / `sms:` / `https://wa.me/<digits>?text=<encoded>` links, request geolocation only on tap. No server call is involved.
 
 ## 4. Smoke test
 
-`npm run smoke-test -- https://<backend>` should: call `/health`, create a household, upload a known image, assert a 201 with a schema-valid room, delete the household. Run it after every deploy and before recording the demo.
+```bash
+npm run smoke-test -- https://<api-url>
+```
+
+The script checks `/health`, creates a household, uploads an image (a given file, or a generated one), asserts a `201` with a schema-valid room, reads the assessment back, and always deletes the household it created. Run it after every deploy.

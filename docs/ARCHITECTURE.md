@@ -1,236 +1,241 @@
-# ARCHITECTURE
+# Architecture
 
-> **aegis-home** — a Spanish-language assistant that turns photos of a home into a prioritized, localized fall-prevention plan for older adults and their families.
-> Built for the Meta Global AI Developer Hackathon 2026 · Indie Developer track · Theme: *Build for Your World*.
+> How aegis-home turns a room photo into an outlined, prioritized fall-prevention plan, and why it is built the way it is.
 
-Related documents: [DATA_MODEL.md](DATA_MODEL.md) · [AI_INTEGRATION.md](AI_INTEGRATION.md) · [API_SPECS.md](API_SPECS.md) · [SECURITY.md](SECURITY.md) · [DEVELOPMENT_PLAN.md](DEVELOPMENT_PLAN.md)
-
-Items marked **⚠️ VERIFY** rely on information that must be confirmed in the official Meta docs (`dev.meta.ai/docs`) or the hackathon portal before being treated as fact.
+**Related:** [Data model](DATA_MODEL.md) · [AI integration](AI_INTEGRATION.md) · [API specs](API_SPECS.md) · [Security](SECURITY.md) · [Context](CONTEXT.md)
 
 ---
 
-## 1. Purpose and scope
+## At a glance
 
-**Problem.** Falls are a leading cause of injury among older adults, and most home-hazard assessments require an in-person visit. Existing tools (home-safety scanners, fall-detection cameras) are English-first, priced and contextualized for the US market.
-
-**What the product does.**
-1. A family member photographs the rooms of an older adult's home.
-2. Muse Spark (vision) identifies fall hazards and drafts fixes; SAM 3.1 segments each hazard so it can be highlighted on the photo.
-3. The app produces a prioritized action plan in Spanish with locally relevant materials and cost estimates, and lets the family track what has been fixed.
-4. A quick-contact button opens a call / WhatsApp / SMS (with location) to a family member.
-
-**What it deliberately is not.**
-- Not a medical device, diagnosis, or health-advice tool. It reports *environmental* hazards only.
-- Not an emergency service. The contact button is a shortcut to the user's own contacts via native phone links. It does not monitor, dispatch, or guarantee a response.
-- Not a fall *detector*. That market is served by cameras and wearables; this project focuses on prevention.
-
-## 2. Hackathon fit
-
-| Item | Choice |
+| | |
 |---|---|
-| Track | Indie Developer |
-| Problem statement | *Build for Your World* |
-| Meta tools used | Muse Spark (vision + reasoning) and SAM 3.1 via Meta Model API; Muse Voice Transcribe (stretch goal) |
-| Differentiators | Spanish-first, LatAm context and costs, visual hazard overlay, follow-up plan, privacy-first (no photos stored) |
+| **Style** | Modular monolith: React SPA + stateless REST API |
+| **AI** | Meta Model API, with Muse Spark 1.3 (detection) feeding SAM 3.1 (segmentation) |
+| **Data** | PostgreSQL via Prisma. Structured results only; **no images are ever stored** |
+| **Auth** | No accounts. Each household has an unguessable UUID token sent in a header |
+| **Hosting** | Vercel (frontend) · Render (API) · Neon (Postgres) · UptimeRobot (keep-alive) |
+| **Infra cost** | Free tiers. The only variable cost is model calls, bounded by a daily cap |
 
-## 3. Architectural style
+---
 
-**Modular monolith (SPA + REST API), stateless backend, AI via hosted API.**
+## 1. Scope
 
-Why: a 7-day build window, one developer, and no need to host models. A single deployable backend with clear internal modules is the fastest path, and statelessness leaves a clean path to scale later.
+**In scope**
 
-## 4. System diagram
+1. A family member photographs a room of an older adult's home.
+2. **Muse Spark** identifies visible environmental fall hazards and writes a fix, a materials list and a rough cost.
+3. **SAM 3.1** segments each hazard so it is outlined on the photo.
+4. The app builds an action plan ordered by severity and tracks what has been fixed.
+5. A quick-contact button opens call / WhatsApp / SMS to the family's own contacts.
+
+**Out of scope, by design**
+
+| Not this | Why |
+|---|---|
+| Medical device, diagnosis or health advice | The app reports *environmental* hazards and fixes only |
+| Emergency or monitoring service | The contact button is a shortcut to native phone apps; nothing is dispatched or guaranteed |
+| Fall detector | Detection is a camera/wearable market; this project focuses on prevention |
+
+---
+
+## 2. System overview
 
 ```mermaid
 flowchart TB
-    subgraph Client["Browser"]
-        UI["React + Vite + Tailwind (TypeScript)"]
-        LS[("localStorage<br/>{ name, phone } contacts")]
-        OV["Canvas/SVG overlay<br/>hazard regions"]
+    subgraph Browser["Browser · Vercel"]
+        UI["React 19 + Vite + Tailwind 4"]
+        LS[("localStorage<br/>contacts · language · theme")]
+        OV["SVG overlay<br/>outlines + markers"]
         UI --- LS
         UI --- OV
     end
 
-    subgraph Vercel["Vercel — static hosting"]
-        UI
-    end
-
-    subgraph Render["Render — Node.js + Express 5"]
-        MW["Middleware: helmet, CORS, rate limit,<br/>spend cap, token auth"]
+    subgraph API["Node.js 22 + Express 5 · Render"]
+        MW["helmet · CORS · rate limits · token auth"]
         RT["Routes + Zod input validation"]
-        IMG["Image pipeline<br/>multer(memory) + file-type + sharp"]
-        VIS["visionService<br/>(orchestrates Spark → SAM)"]
-        MC["MetaClient interface<br/>real | cached | mock"]
-        PL["planService<br/>(sort + cost rollup)"]
+        IMG["Image pipeline (RAM only)<br/>multer · file-type · sharp"]
+        VIS["visionService<br/>Spark → SAM · fallback ladder"]
+        USE["usageService<br/>daily AI call cap"]
+        PL["planService<br/>ordering + cost rollup"]
         MW --> RT --> IMG --> VIS
-        VIS --> MC
-        VIS --> PL
+        VIS --> USE
+        RT --> PL
     end
 
     subgraph Meta["Meta Model API"]
-        SPARK["Muse Spark"]
+        SPARK["Muse Spark 1.3"]
         SAM["SAM 3.1"]
-        VOICE["Muse Voice Transcribe<br/>(stretch)"]
     end
 
-    DB[("PostgreSQL<br/>Household, Assessment,<br/>Room, Hazard, DailyUsage")]
+    DB[("PostgreSQL · Neon<br/>Household · Assessment · Room<br/>Hazard · DailyUsage")]
     MON["UptimeRobot<br/>GET /health"]
-    NATIVE["tel: / sms: / wa.me<br/>(native phone apps)"]
+    NATIVE["tel: · sms: · wa.me"]
 
     UI -- "HTTPS + X-Household-Token" --> MW
-    MC --> SPARK
-    MC --> SAM
-    RT -. stretch .-> VOICE
-    PL --> DB
+    VIS --> SPARK
+    VIS --> SAM
     RT --> DB
-    MON --> RT
+    USE --> DB
+    MON --> MW
     UI --> NATIVE
 ```
 
-## 5. Components
+---
 
-### 5.1 Frontend (`client/`)
-- React + Vite + Tailwind, TypeScript strict.
-- **State:** TanStack Query for server data; local component state for UI. No global store.
-- **Flat component folder** (no atomic-design tiers): `HazardCard`, `SeverityBadge`, `ImageCanvasOverlay`, `ActionItemRow`, `EmergencyContactButton`, `RoomUploader`, plus `pages/AssessmentPage`.
-- **Client-side image prep:** resize via `<canvas>` and re-encode to a Blob, which also strips EXIF/GPS. This protects the honest user's privacy; it is **not** a security control (the server repeats it).
-- **Overlay rendering:** regions arrive normalized (0–1) and are scaled to the displayed image size. Coordinates are validated as finite numbers before being placed in SVG attributes.
-- **Contacts:** `{ name, phone }` only, in `localStorage`. Phone numbers are validated before building `tel:` / `sms:` / `wa.me` links; message text is passed through `encodeURIComponent`. Geolocation is requested only when the user taps the button.
+## 3. Components
 
-### 5.2 Backend (`server/`)
-- Node.js + Express 5 (async errors handled natively), TypeScript strict, run with `tsx`.
-- REST, ~8 endpoints (see [API_SPECS.md](API_SPECS.md)). Route files hold route + handler + input validation; there is no separate controller layer.
-- Prisma is called directly from services; no repository wrapper.
-- The only abstraction worth its cost is the **`MetaClient` interface** with real and mock implementations (see [AI_INTEGRATION.md](AI_INTEGRATION.md)).
+### 3.1 Frontend (`client/`)
 
-### 5.3 Database
-PostgreSQL (managed free tier — Neon or Supabase; **⚠️ VERIFY** free-tier limits and expiry, and avoid a tier that expires mid-judging). Stores structured results only; **no images**. Details in [DATA_MODEL.md](DATA_MODEL.md).
+| Concern | Implementation |
+|---|---|
+| Framework | React 19 + Vite + Tailwind 4, TypeScript strict |
+| Server state | TanStack Query; local component state for UI; no global store |
+| Routing | Small custom router: landing page plus household views at `/h/<token>` (analyze, rooms, plan, settings), lazy-loaded chunks |
+| Image prep | Canvas resize (longest side 1600 px) and JPEG re-encode, which drops EXIF/GPS. This is a privacy courtesy; **the server repeats every check**. Bundled samples are sent byte-for-byte so their recorded results match |
+| Overlay | Regions arrive normalized (0–1) and are drawn in a `1×1` SVG viewBox stretched over the photo. Coordinates are validated before reaching SVG attributes. Markers are clamped inside the photo and nudged apart when they overlap |
+| Contacts | Up to 3 `{ name, phone }` entries in `localStorage` only. Phone numbers are validated, message text is URL-encoded, and location is read only when the user opts in |
+| i18n | Spanish (default), Portuguese, English. The initial language follows the browser |
 
-### 5.4 External services
-- **Meta Model API** — Muse Spark, SAM 3.1, (stretch) Muse Voice Transcribe.
-- **UptimeRobot** (or external cron) — keeps the free Render instance awake via `/health`.
-- No queue, cache server, object storage, or paid SMS provider in the MVP.
+### 3.2 Backend (`server/`)
 
-## 6. Repository layout
+| Concern | Implementation |
+|---|---|
+| Runtime | Node.js 22 + Express 5 (native async error handling), TypeScript run with `tsx` |
+| Layers | Route files (route + handler + Zod input) → services → Prisma. No controller or repository layer: the API is small |
+| AI boundary | A single `MetaClient` interface. The real client calls Meta, tests inject fakes, and `MOCK_AI=true` passes no client, so the fallback ladder takes over |
+| Validation | Every request input and every model output goes through Zod before it touches the DB or the response |
+
+### 3.3 External services
+
+| Service | Use |
+|---|---|
+| Meta Model API | `muse-spark-1.3` over Chat Completions, `sam-3.1` over Responses |
+| Neon | Managed Postgres, SSL `verify-full` |
+| UptimeRobot | `GET /health` every 5 minutes so the free Render instance stays warm |
+
+The MVP has no queue, cache server, object storage or paid messaging provider.
+
+---
+
+## 4. Repository layout
 
 ```
-/
-├── client/
+.
+├── client/                    # React SPA (Vercel)
+│   ├── public/samples/        # two AI-generated sample rooms
 │   └── src/
-│       ├── components/        # flat, ~8 components
-│       ├── pages/             # AssessmentPage, LandingPage
-│       ├── hooks/             # useGeolocation, useAssessment
-│       └── services/          # API client
-├── server/
-│   ├── prisma/                # schema.prisma + migrations
-│   ├── fixtures/              # recorded real AI responses (own/consented images only)
-│   ├── scripts/               # record-fixture, smoke-test
+│       ├── components/        # flat: overlay, cards, uploader, contact button…
+│       ├── pages/             # landing/ and household/ views
+│       ├── hooks/             # useAssessment
+│       └── lib/               # api client, image prep, regions, i18n, storage
+├── server/                    # Express API (Render)
+│   ├── prisma/                # schema + migrations
+│   ├── fixtures/              # recorded live results + generic samples (fallback)
+│   ├── scripts/               # smoke-test, record-fixture
 │   ├── src/
 │   │   ├── config/            # env validated with Zod
-│   │   ├── routes/            # route + handler + input schema
-│   │   ├── services/          # visionService, planService, householdService
-│   │   ├── lib/               # metaClient, mockMetaClient, prisma, imagePipeline
-│   │   ├── schemas/           # Zod: AI contract, API inputs
-│   │   ├── middlewares/       # rateLimit, upload, spendCap, auth, errorHandler
-│   │   └── app.ts
-│   └── tests/
-├── docs/ (or repo root)       # these documents
-└── README.md
+│   │   ├── routes/            # households, assessments, hazards, health
+│   │   ├── services/          # vision, assessment, household, plan, usage
+│   │   ├── lib/               # metaClient, samOutput, sparkPrompt, imagePipeline, regions
+│   │   ├── schemas/           # Zod: AI contract, API inputs, enums
+│   │   └── middlewares/       # auth, rate limits, concurrency, upload, errors, logging
+│   └── tests/                 # Vitest + PGlite
+├── docs/                      # these documents
+└── .github/workflows/ci.yml   # typecheck · lint · tests · gitleaks
 ```
 
-## 7. Key flow: analyzing a room
+---
+
+## 5. Request flow: analyzing a room
 
 ```mermaid
 sequenceDiagram
     participant U as Browser
     participant A as Express API
     participant P as Image pipeline
-    participant S as Muse Spark
+    participant S as Muse Spark 1.3
     participant M as SAM 3.1
     participant D as PostgreSQL
 
-    U->>U: Resize + strip EXIF (canvas)
+    U->>U: Resize + re-encode (canvas)
     U->>A: POST /api/assessments/:id/rooms (multipart + X-Household-Token)
-    A->>A: Rate limit, spend cap, token auth
-    A->>P: Validate magic bytes, pixel limit, re-encode, resize
-    P-->>A: Normalized JPEG (in memory)
-    A->>S: Image + JSON-only prompt
-    S-->>A: hazards[] (id, label_en, severity, ...)
-    A->>A: Zod validation (one retry on failure)
-    A->>M: Image + labels from hazards[]
-    M-->>A: Masks + boxes per label (mask → outline polygon)
-    A->>A: Match by hazard id, normalize coords to 0–1
+    A->>A: Token auth, rate limit, concurrency cap, room caps
+    A->>P: Magic bytes, pixel limit, re-encode, resize to 1024 px
+    P-->>A: Normalized JPEG + SHA-256 (in memory)
+    A->>S: Image + system prompt + JSON schema
+    S-->>A: hazards[] with grounding boxes
+    A->>A: Zod validation (one strict retry if invalid)
+    par one call per hazard (max 4 concurrent)
+        A->>M: Image + hazard label_en (concept prompt)
+        M-->>A: Boxes + masks for every matching instance
+    end
+    A->>A: Pick the instance overlapping Spark's box → mask outline → normalize 0–1
     A->>D: Save Room + Hazards (transaction)
     A-->>U: Room JSON (source: live | cached | mock)
-    U->>U: Draw overlay, render action plan
+    U->>U: Draw outlines, render action plan
 ```
 
-Details of each AI step, validation, and fallbacks: [AI_INTEGRATION.md](AI_INTEGRATION.md).
+Step-by-step AI details: [AI integration](AI_INTEGRATION.md).
 
-## 8. Resilience and degradation ladder
+---
 
-| Level | Trigger | Behavior | User-visible? |
+## 6. Resilience: the degradation ladder
+
+| Level | Trigger | Behavior | Visible to the user |
 |---|---|---|---|
-| 0 | Normal | Live Spark → SAM | No |
-| 1 | Invalid JSON from Spark | One retry with a stricter reminder | No |
-| 2 | SAM fails or returns nothing for a hazard | Hazard shown in the plan **without** overlay region | Subtle (no highlight) |
-| 3 | 429 / timeout / spend cap reached | Serve recorded fixture matching the image hash, if any | **Yes — banner** |
-| 4 | No fixture available | Serve generic sample result for the room type | **Yes — banner** |
+| 0 | Normal | Live Spark → SAM, outlines from masks | No |
+| 1 | Spark returns invalid JSON | One retry with a strict reminder | No |
+| 2 | SAM finds nothing, fails, or the cap is hit after Spark | Hazard kept, with Spark's box as its region | Box instead of outline |
+| 3 | 429 after retries, timeout (45 s budget), daily cap | Recorded **real** result for this exact image (SHA-256 match) | **Yes, banner** |
+| 4 | No recording for this image | Generic sample for the room type | **Yes, banner** |
 
-Every response carries `source: "live" | "cached" | "mock"`. When it is not `live`, the UI shows a visible notice such as *"Example result — the analysis service is unavailable."* The demo video must be recorded with **live** calls.
+Every room carries `source: live | cached | mock`. A non-live result is **always** labeled. It is never presented as live AI.
 
-## 9. Deployment and operations
+---
 
-| Part | Host | Notes |
+## 7. Deployment
+
+| Part | Host | Configuration |
 |---|---|---|
-| Frontend | Vercel | Security headers/CSP in `vercel.json`; no cold start |
-| Backend | Render (free) | Cold start of up to ~50 s after 15 min idle |
-| Database | Managed PostgreSQL | SSL required; least-privilege app user |
-| Keep-alive | UptimeRobot, `GET /health` every 5 min | Active from first deploy through judging (Nov 4–9); `/health` touches no DB and no AI |
+| Frontend | Vercel | Root `client/`; [`client/vercel.json`](../client/vercel.json) sets the CSP, `no-referrer` and `noindex` |
+| API | Render (free web service) | [`render.yaml`](../render.yaml); migrations run in the build; health check `/health` |
+| Database | Neon Postgres | `DATABASE_URL` with `sslmode=verify-full` |
+| Keep-alive | UptimeRobot | `GET /health` every 5 minutes (no DB or AI access) |
 
 Operational notes:
-- Deploy a "hello world" with CORS, env vars and DB by **Fri Oct 30**, so deployment surprises appear early.
-- ⚠️ VERIFY in Render docs: whether keeping a free service awake consumes the monthly free hours, and RAM limits (memory uploads + `sharp` on a small instance → cap file size at 5 MB and limit concurrent analyses to 2).
-- `app.set('trust proxy', 1)` is required so rate limiting sees real client IPs behind Render's proxy.
-- Warm the system manually 1–2 minutes before recording the video and do a full dry run.
 
-### Environment variables
+- `app.set("trust proxy", 1)` lets rate limits see real client IPs behind Render's proxy.
+- Memory is bounded on the small instance: 5 MB uploads, at most 2 concurrent analyses.
+- After each deploy, run `npm run smoke-test -- https://<api-url>`.
 
-| Variable | Where | Secret? |
+Environment variables are listed in the [README](../README.md#environment-variables). Secrets (`DATABASE_URL`, `META_API_KEY`) live only in the backend environment; nothing secret is ever placed in `VITE_*`.
+
+---
+
+## 8. Design decisions
+
+| Decision | Choice | Rationale |
 |---|---|---|
-| `NODE_ENV`, `PORT` | server | no |
-| `DATABASE_URL` | server | **yes** |
-| `FRONTEND_URL` | server (CORS allow-list) | no |
-| `META_API_KEY` | server only | **yes** |
-| `META_API_BASE_URL` | server | no (⚠️ VERIFY value) |
-| `META_MODEL_SPARK`, `META_MODEL_SAM` | server | no (⚠️ VERIFY model IDs) |
-| `MOCK_AI` | server | no |
-| `AI_DAILY_CALL_CAP` | server | no |
-| `HOUSEHOLD_TTL_DAYS` | server | no |
-| `VITE_API_URL` | client | **public by design** — never put secrets in `VITE_*` |
+| Architectural style | Modular monolith | One developer, one week; a single deployable with clear internal modules |
+| API | REST, 8 endpoints | GraphQL would add nothing at this size |
+| Identity | Household token (UUID v4) in a header | Zero sign-up friction; shareable with relatives; scoped queries prevent IDOR |
+| Images | Processed in memory, discarded | Privacy, cost, and no storage to secure |
+| AI pipeline | Spark identifies → SAM segments **by label** → join by hazard id | No ambiguous matching between descriptions and masks |
+| Instance choice | IoU between Spark's box and each SAM instance | A concept prompt returns *every* rug; this picks the one Spark described |
+| Region format | Normalized 0–1 bbox or polygon (≤ 100 vertices) | Resolution-independent, small, easy to validate |
+| Data access | Prisma from services, no repository layer | Fewer layers for a small API |
+| Fallback | Real recordings first, generic samples last, always labeled | Resilience without misrepresenting the product |
+| Cost control | Daily AI call cap stored in Postgres | Survives restarts; Meta's spend notification does not stop billing |
 
-## 10. Design decisions
+---
 
-| Decision | Choice | Reason |
-|---|---|---|
-| Style | Modular monolith | One dev, 7 days |
-| API | REST | ~8 endpoints; GraphQL adds nothing |
-| Auth | No accounts; unguessable household token (UUID v4 via `crypto.randomUUID()`) sent in a header | Fastest; shareable with relatives |
-| Image storage | None — processed in memory, discarded | Privacy, cost, fewer risks |
-| AI pipeline | Sequential: Spark identifies → SAM segments by label | Removes ambiguous matching between text and masks |
-| Data layer | Prisma called from services | Fewer layers for a small API |
-| Components | Flat folder | Atomic-design tiers cost time without benefit at this size |
-| Language | TypeScript strict (client + server). Escape hatch: plain JS + JSDoc if typing slows delivery | Catch contract mismatches early |
-| Fallback | Real fixtures first, generic mock last, always labeled | Resilience without misrepresenting the product |
+## 9. Scaling path
 
-## 11. Scalability path (post-hackathon)
-
-- Stateless API → add instances behind a load balancer.
-- Move analysis to a job queue (BullMQ + Redis) with polling/WebSocket for results.
-- Cache analyses by image hash.
-- If photos are ever stored: object storage with signed URLs and encryption.
-- Run open-weight models (Muse Glimmer / Muse Spark Open) on private infrastructure for fully on-premise privacy.
-
-## 12. Provenance (for judges)
-
-All code in this repository was written between **Oct 27 and Nov 4, 2026**. Third-party libraries are declared in `package.json`. Any boilerplate or code reused from earlier work must be listed here: `<!-- fill in; "none" if none -->`.
+| Need | Next step |
+|---|---|
+| More traffic | Stateless API → horizontal instances behind a load balancer |
+| Long analyses | Job queue (e.g. BullMQ + Redis) with polling or WebSocket results |
+| Repeated photos | Cache analyses by image hash (the hash is already computed) |
+| Stored photos (if ever needed) | Object storage with encryption and signed URLs |
+| Full data residency | Self-hosted open-weight models (Muse Spark Open) on private infrastructure |

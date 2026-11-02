@@ -1,4 +1,4 @@
-# Render Blueprint for the API (docs/ARCHITECTURE.md §9).
+# Render Blueprint for the API (docs/ARCHITECTURE.md §7).
 # Secrets use `sync: false`: Render asks for them on first deploy; they never live in the repo.
 services:
   - type: web

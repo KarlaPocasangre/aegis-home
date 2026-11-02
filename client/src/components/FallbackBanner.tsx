@@ -1,7 +1,7 @@
 import { useT } from "../lib/i18n";
 import type { AnalysisSource } from "../lib/types";
 
-// Shown whenever a result did not come from a live model call (docs/ARCHITECTURE.md §8).
+// Shown whenever a result did not come from a live model call (docs/ARCHITECTURE.md §6).
 // The server's notice is Spanish-only, so the text is chosen locally from the source.
 export function FallbackBanner({ source }: { source: AnalysisSource }) {
   const f = useT().fallback;
