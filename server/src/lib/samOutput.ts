@@ -154,34 +154,44 @@ function simplify(points: Point[], epsilon: number): Point[] {
   ];
 }
 
+/** Pieces smaller than this share of the largest one are dropped (specks, reflections). */
+const MIN_PIECE = 0.1;
+const MAX_PIECES = 4;
+
 /**
- * SAM mask → outline of its largest region as a flat pixel polygon [x1, y1, …] in the target
- * image size. Holes and small islands are dropped: the overlay highlights one object.
- * Returns null for an empty or undecodable mask (the caller keeps the box).
+ * SAM mask → outlines of its main pieces as flat pixel rings [x1, y1, …] in the target image size,
+ * largest first. An object split by something in front of it (a rug under a table) keeps all its
+ * large pieces; holes and specks are dropped. All rings together stay within the schema's 100
+ * vertices. Returns null for an empty or undecodable mask (the caller keeps the box).
  */
-export function maskToPolygon(
+export function maskToPolygons(
   record: SegmentationMaskRecord,
   box: SamBox,
   size: { width: number; height: number },
-): number[] | null {
+): number[][] | null {
   let d: string;
   try {
     d = decodeMaskToSVGPath(record.mask);
   } catch {
     return null;
   }
-  const outline = subpaths(d).reduce<Point[] | null>(
-    (best, points) => (!best || area(points) > area(best) ? points : best),
-    null,
-  );
-  if (!outline) return null;
+  const pieces = subpaths(d)
+    .map((points) => ({ points, area: area(points) }))
+    .sort((a, b) => b.area - a.area);
+  const largest = pieces[0]?.area ?? 0;
+  if (largest === 0) return null;
+  const kept = pieces.filter((p) => p.area >= largest * MIN_PIECE).slice(0, MAX_PIECES);
 
-  // Simplify in raster pixels, coarser until it fits the schema's vertex limit.
-  const ring = (epsilon: number) => simplify([...outline, outline[0]!], epsilon).slice(0, -1);
+  // Simplify in raster pixels, coarser until every ring together fits the vertex limit.
+  const rings = (epsilon: number) =>
+    kept
+      .map(({ points }) => simplify([...points, points[0]!], epsilon).slice(0, -1))
+      .filter((ring) => ring.length >= 3);
+  const total = (rs: Point[][]) => rs.reduce((n, r) => n + r.length, 0);
   let epsilon = 0.5;
-  let simplified = ring(epsilon);
-  while (simplified.length > MAX_VERTICES && epsilon < 64) simplified = ring((epsilon *= 2));
-  if (simplified.length < 3) return null;
+  let simplified = rings(epsilon);
+  while (total(simplified) > MAX_VERTICES && epsilon < 64) simplified = rings((epsilon *= 2));
+  if (simplified.length === 0) return null;
 
   // Raster pixel i spans [i - 0.5, i + 0.5] in path units and covers the record's bounds.
   const { bounds, mask } = record;
@@ -189,8 +199,10 @@ export function maskToPolygon(
   const ry = (bounds.bottom - bounds.top) / mask.height;
   const sx = size.width / box.w;
   const sy = size.height / box.h;
-  return simplified.flatMap(([x, y]) => [
-    (bounds.left + (x + 0.5) * rx) * sx,
-    (bounds.top + (y + 0.5) * ry) * sy,
-  ]);
+  return simplified.map((ring) =>
+    ring.flatMap(([x, y]) => [
+      (bounds.left + (x + 0.5) * rx) * sx,
+      (bounds.top + (y + 0.5) * ry) * sy,
+    ]),
+  );
 }

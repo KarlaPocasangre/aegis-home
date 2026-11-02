@@ -1,6 +1,12 @@
 import { useT } from "../lib/i18n";
 import { SEVERITY_STYLES } from "../lib/labels";
-import { isValidRegion, placeMarkers, polygonPoints, regionAnchor } from "../lib/regions";
+import {
+  isValidRegion,
+  placeMarkers,
+  polygonPoints,
+  regionAnchor,
+  ringsPath,
+} from "../lib/regions";
 import type { Hazard } from "../lib/types";
 
 interface Props {
@@ -42,6 +48,9 @@ export function ImageCanvasOverlay({ src, alt, hazards, activeId, onSelect }: Pr
             vectorEffect: "non-scaling-stroke" as const,
             opacity: dimmed ? 0.35 : 1,
           };
+          if (region.type === "multipolygon") {
+            return <path key={hazard.id} d={ringsPath(region.points)} {...common} />;
+          }
           const [x = 0, y = 0, w = 0, h = 0] = region.points;
           return region.type === "bbox" ? (
             <rect key={hazard.id} x={x} y={y} width={w} height={h} {...common} />

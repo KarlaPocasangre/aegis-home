@@ -167,18 +167,23 @@ Coordinates are **normalized to 0–1** relative to the normalized image (`Room.
 
 // Polygon: flat list [x1, y1, x2, y2, …]
 { "type": "polygon", "points": [0.10, 0.50, 0.40, 0.52, 0.38, 0.70, 0.11, 0.68] }
+
+// Multipolygon: one object in several pieces (a rug split by a table), largest first
+{ "type": "multipolygon", "points": [[0.10, 0.60, 0.40, 0.60, 0.40, 0.90], [0.55, 0.60, 0.80, 0.60, 0.80, 0.90]] }
 ```
 
 | Rule (enforced by Zod before saving) | |
 |---|---|
-| `type` | `bbox` or `polygon` |
+| `type` | `bbox`, `polygon` or `multipolygon` |
 | Values | Finite numbers in `[0, 1]` |
 | `bbox` | Exactly 4 values |
 | `polygon` | Even count, 6–200 values (3–100 vertices) |
+| `multipolygon` | 2–4 rings, each a valid polygon, ≤ 200 values in total |
 
 | Region type | Comes from |
 |---|---|
 | `polygon` | The outline of SAM 3.1's mask for the matched instance |
+| `multipolygon` | The same, when the mask has several large pieces (something in front splits the object) |
 | `bbox` | SAM's box when the mask is unusable, or Spark's grounding box when SAM finds nothing |
 | `null` | No usable region at all; the hazard still appears in the plan, without a highlight |
 

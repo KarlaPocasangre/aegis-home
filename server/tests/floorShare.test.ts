@@ -19,6 +19,15 @@ describe("floorShare", () => {
     expect(floorShare(square(0.2, 0.2, 0.2), floor)).toBeCloseTo(0.07, 2);
   });
 
+  it("counts every piece of a multi-piece outline", () => {
+    const floor = rasterizeFloor([{ type: "bbox", points: [0, 0.5, 1, 0.5] }]);
+    const pieces = {
+      type: "multipolygon" as const,
+      points: [square(0.1, 0.6, 0.2).points, square(0.6, 0.6, 0.2).points],
+    };
+    expect(floorShare(pieces, floor)).toBeCloseTo(0.16, 2);
+  });
+
   it("returns null without enough visible floor or without an area", () => {
     const tiny = rasterizeFloor([{ type: "bbox", points: [0, 0.9, 0.1, 0.1] }]);
     expect(floorShare(square(0.5, 0.5, 0.2), tiny)).toBeNull();

@@ -154,7 +154,7 @@ export function createVisionService(deps: VisionDeps): VisionService {
     const floor = await floorTask;
     // Only mask outlines are measured: a box overstates the area of most objects.
     const measured = (hazard: SparkHazard, region: Region | null): region is Region =>
-      hazard.on_floor === true && region?.type === "polygon";
+      hazard.on_floor === true && (region?.type === "polygon" || region?.type === "multipolygon");
     // The walking surface is the floor plus every hazard lying on it: SAM's "floor" leaves out a
     // rug, so without it a pouf on that rug would be divided by a floor that is far too small.
     const walkway = floor

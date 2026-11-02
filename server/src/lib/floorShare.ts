@@ -7,15 +7,20 @@ const GRID = 160;
 /** Below this much visible floor (fraction of the image) the share is not meaningful. */
 const MIN_FLOOR = 0.02;
 
-function vertices(region: Region): number[] {
-  if (region.type === "polygon") return region.points;
+function rings(region: Region): number[][] {
+  if (region.type === "multipolygon") return region.points;
+  if (region.type === "polygon") return [region.points];
   const [x = 0, y = 0, w = 0, h = 0] = region.points;
-  return [x, y, x + w, y, x + w, y + h, x, y + h];
+  return [[x, y, x + w, y, x + w, y + h, x, y + h]];
 }
 
-/** Marks the cells whose centers fall inside the region (even-odd scanline fill). */
+/** Marks the cells whose centers fall inside any ring of the region. */
 function fill(cells: Uint8Array, region: Region) {
-  const pts = vertices(region);
+  for (const ring of rings(region)) fillRing(cells, ring);
+}
+
+/** Even-odd scanline fill of one ring. */
+function fillRing(cells: Uint8Array, pts: number[]) {
   const n = pts.length / 2;
   for (let row = 0; row < GRID; row++) {
     const y = (row + 0.5) / GRID;

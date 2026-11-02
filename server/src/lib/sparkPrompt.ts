@@ -29,15 +29,18 @@ Rules:
   locate the object in the image.
 - Write "label_es", "description_es" and "fix_es" in {LANGUAGE}, in simple words a family
   member can act on. (The "_es" suffix is only a field name; always use {LANGUAGE}.)
+- Pets count: a pet that can get underfoot, and pet items on the floor (bed, bowls, toys), are
+  trip hazards; report them (e.g. "dog near walkway", "pet bowl"). Their fix is about the space
+  (a fixed spot for the bed and bowls away from the path, a night light), never the animal.
 - "fix_es" must be a concrete change to the environment (move, fix, add, improve lighting).
   Never recommend medication, treatment, or medical equipment decisions.
 - "cost_estimate_usd" is a rough cost in USD of low-cost materials commonly available in
   Central America (use 0 if the fix is free).
 - "materials_es" lists the things to buy or have at hand for the fix, in {LANGUAGE}: up to 5
   short items (e.g. "non-slip tape", "cable clips"). Use [] when nothing is needed.
-- "on_floor" is true when the hazard lies on the walking surface (rug, cables, clutter, wet
-  floor, objects in the path); false for anything else (furniture edges, lighting, missing
-  grab bar, high shelves).
+- "on_floor" is true only for things lying flat or low on the walking surface (rug, mat, cables,
+  papers, shoes, wet patch, pet bed or bowls, a floor cushion or pouf); false for furniture that
+  stands on legs (tables, chairs, stools), tall objects, lighting, a missing grab bar or shelves.
 - "box" is a tight bounding box around the object as [x_min, y_min, x_max, y_max] on a
   normalized 0-1000 grid of this image, with (0,0) at the top-left. For something missing
   (e.g. "missing grab bar"), box the place where it should be.

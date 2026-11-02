@@ -85,7 +85,7 @@ Two models in sequence, each doing what it is best at:
 
 - **Constrained decoding.** Spark is called with `response_format: json_schema`, then re-validated with Zod. On invalid JSON it gets one strict retry, then the fallback.
 - **Grounded instance matching.** A concept prompt like "rug" returns _every_ rug. We pick the one whose box has the best IoU with Spark's box, so the outline matches the hazard Spark described.
-- **Mask → polygon.** Masks are decoded with Meta's official [`@meta-sam/parser`](https://www.npmjs.com/package/@meta-sam/parser). We keep the largest contour, simplify it (Ramer–Douglas–Peucker) to ≤ 100 vertices, and normalize it to 0–1.
+- **Mask → polygon.** Masks are decoded with Meta's official [`@meta-sam/parser`](https://www.npmjs.com/package/@meta-sam/parser). We keep its main pieces (a rug split by a table keeps both halves), simplify them (Ramer–Douglas–Peucker) to ≤ 100 vertices in total, and normalize them to 0–1.
 - **Floor share, a metric only masks can give.** Spark flags hazards on the walking surface; one extra SAM call segments the `"floor"` in parallel; the walkway is the floor plus every floor-level hazard, and each hazard's share is its area over that walkway, on a raster grid. A boxes-only pipeline couldn't measure this.
 - **Graceful degradation.** If SAM finds nothing (common for _missing_ things like a grab bar), the region falls back to Spark's box. A failed SAM call never fails the room.
 - **Shared pixel space.** Both models see the _same_ 1024 px re-encoded image, so their coordinates line up.
@@ -245,7 +245,7 @@ The server suite covers the Spark output contract, Spark ↔ SAM instance matchi
 
 - Detection is AI-generated: it can miss hazards or flag false ones. Costs are **rough estimates**.
 - A hazard that is something _missing_ (e.g. no grab bar) has no mask; it is boxed where the item should be.
-- Outlines keep the largest part of each mask and are simplified to ≤ 100 points.
+- Outlines keep up to 4 main pieces of each mask (holes and specks are dropped) and are simplified to ≤ 100 points.
 - Photos are sent to Meta's Model API for analysis (Standard mode: not used for training).
 - Out of scope on purpose: login/OAuth, WAF, penetration testing, compliance certifications, medical-device regulation.
 

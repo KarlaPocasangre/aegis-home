@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { contactLinks, helpMessage, normalizeName, normalizePhone } from "./contacts";
-import { isValidRegion, placeMarkers, polygonPoints, regionAnchor } from "./regions";
+import { isValidRegion, placeMarkers, polygonPoints, regionAnchor, ringsPath } from "./regions";
 import { householdPath, parseRoute, roomPath } from "./router";
 import { ApiError } from "./api";
 import { userMessage } from "./errors";
@@ -83,6 +83,20 @@ describe("regions", () => {
     const c = [0.1, 0.1, 0.9, 0.1, 0.9, 0.2, 0.2, 0.2, 0.2, 0.8, 0.9, 0.8, 0.9, 0.9, 0.1, 0.9];
     expect(regionAnchor({ type: "polygon", points: c })).toEqual({ x: 0.1, y: 0.1 });
     expect(polygonPoints([0, 0.5, 1, 1])).toBe("0,0.5 1,1");
+  });
+
+  it("accepts multi-piece outlines and anchors them on the largest piece", () => {
+    const big = [0.1, 0.5, 0.5, 0.5, 0.5, 0.9, 0.1, 0.9];
+    const small = [0.7, 0.5, 0.8, 0.5, 0.8, 0.6];
+    expect(isValidRegion({ type: "multipolygon", points: [big, small] })).toBe(true);
+    expect(isValidRegion({ type: "multipolygon", points: [big] })).toBe(false);
+    expect(
+      isValidRegion({ type: "multipolygon", points: [big, [0.1, 2, 0.3, 0.4, 0.5, 0.6]] }),
+    ).toBe(false);
+    const anchor = regionAnchor({ type: "multipolygon", points: [big, small] });
+    expect(anchor.x).toBeCloseTo(0.3);
+    expect(anchor.y).toBeCloseTo(0.7);
+    expect(ringsPath([small])).toBe("M0.7,0.5L0.8,0.5L0.8,0.6Z");
   });
 
   it("keeps markers inside the photo and apart", () => {

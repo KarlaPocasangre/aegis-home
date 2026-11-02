@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { createFixtureStore } from "../src/lib/fixtures.js";
 import { createMetaClient, ProviderError } from "../src/lib/metaClient.js";
 import { sparkBoxToSegmentation } from "../src/lib/regions.js";
-import { maskToPolygon, parseSamBoxes, parseSamMasks, pickSamBox } from "../src/lib/samOutput.js";
+import { maskToPolygons, parseSamBoxes, parseSamMasks, pickSamBox } from "../src/lib/samOutput.js";
 import { createVisionService } from "../src/services/visionService.js";
 import { fakeImage, sparkHazard } from "./helpers.js";
 
@@ -106,7 +106,9 @@ describe("SAM 3.1 output", () => {
     const masks = await parseSamMasks(SAM_MASK_LINE);
     expect([...masks.keys()]).toEqual(["0", "1"]);
     const [box] = parseSamBoxes(SAM_MASK_LINE);
-    const points = maskToPolygon(masks.get("0")!, box!, { width: 320, height: 334 })!;
+    const rings = maskToPolygons(masks.get("0")!, box!, { width: 320, height: 334 })!;
+    expect(rings).toHaveLength(1);
+    const points = rings[0]!;
 
     expect(points.length).toBeGreaterThanOrEqual(6);
     expect(points.length / 2).toBeLessThanOrEqual(100);
@@ -115,8 +117,8 @@ describe("SAM 3.1 output", () => {
       else expect(v).toSatisfy((y: number) => y >= 228 && y <= 255);
     });
     // Same mask on an image half the size SAM saw: coordinates halve.
-    const half = maskToPolygon(masks.get("0")!, box!, { width: 160, height: 167 })!;
-    expect(half[0]).toBeCloseTo(points[0]! / 2);
+    const half = maskToPolygons(masks.get("0")!, box!, { width: 160, height: 167 })!;
+    expect(half[0]![0]).toBeCloseTo(points[0]! / 2);
   });
 
   it("ignores malformed masks", async () => {

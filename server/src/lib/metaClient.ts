@@ -3,7 +3,7 @@ import type { LanguageValue, RoomTypeValue } from "../schemas/enums.js";
 import type { NormalizedImage } from "./imagePipeline.js";
 import type { SegmentationMaskRecord } from "@meta-sam/parser";
 import {
-  maskToPolygon,
+  maskToPolygons,
   parseSamBoxes,
   parseSamMasks,
   pickSamBox,
@@ -32,7 +32,10 @@ export class ProviderError extends Error {
  * bbox = [x, y, width, height]; polygon = flat [x1, y1, x2, y2, …].
  */
 export type RawSegmentation =
-  { kind: "bbox"; box: [number, number, number, number] } | { kind: "polygon"; points: number[] };
+  | { kind: "bbox"; box: [number, number, number, number] }
+  | { kind: "polygon"; points: number[] }
+  /** Several pieces of one object (e.g. a rug split by a table), largest first. */
+  | { kind: "multipolygon"; rings: number[][] };
 
 export interface DetectOptions {
   signal: AbortSignal;
@@ -132,8 +135,11 @@ export function createMetaClient(config: MetaConfig): MetaClient {
     box: SamBox,
     rect: [number, number, number, number],
   ): RawSegmentation => {
-    const points = mask ? maskToPolygon(mask, box, img) : null;
-    return points ? { kind: "polygon", points } : { kind: "bbox", box: rect };
+    const rings = mask ? maskToPolygons(mask, box, img) : null;
+    if (!rings) return { kind: "bbox", box: rect };
+    return rings.length === 1
+      ? { kind: "polygon", points: rings[0]! }
+      : { kind: "multipolygon", rings };
   };
 
   const samText = async (img: NormalizedImage, label: string, signal: AbortSignal) => {

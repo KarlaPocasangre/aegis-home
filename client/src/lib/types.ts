@@ -19,10 +19,9 @@ export type AnalysisSource = "live" | "cached" | "mock";
 /** Language of the model-written hazard text in a room. */
 export type ContentLanguage = "es" | "pt" | "en";
 
-export interface Region {
-  type: "bbox" | "polygon";
-  points: number[];
-}
+/** Normalized 0–1. A multipolygon is one object in several pieces (a rug split by a table). */
+export type Region =
+  { type: "bbox" | "polygon"; points: number[] } | { type: "multipolygon"; points: number[][] };
 
 export interface Hazard {
   id: string;

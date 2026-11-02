@@ -34,18 +34,28 @@ export const SparkOutputSchema = z
     path: ["hazards"],
   });
 
+const RingSchema = z
+  .array(z.number().min(0).max(1))
+  .min(6)
+  .max(200)
+  .refine((p) => p.length % 2 === 0, { message: "polygon needs an even number of values" });
+
 export const RegionSchema = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("bbox"),
     points: z.array(z.number().min(0).max(1)).length(4),
   }),
+  z.object({ type: z.literal("polygon"), points: RingSchema }),
+  // Pieces of one object, largest first; all rings together stay within 100 vertices.
   z.object({
-    type: z.literal("polygon"),
+    type: z.literal("multipolygon"),
     points: z
-      .array(z.number().min(0).max(1))
-      .min(6)
-      .max(200)
-      .refine((p) => p.length % 2 === 0, { message: "polygon needs an even number of values" }),
+      .array(RingSchema)
+      .min(2)
+      .max(4)
+      .refine((rings) => rings.reduce((n, r) => n + r.length, 0) <= 200, {
+        message: "too many vertices",
+      }),
   }),
 ]);
 

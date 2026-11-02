@@ -23,14 +23,23 @@ export function toNormalizedRegion(
   size: { width: number; height: number },
 ): Region | null {
   const { width, height } = size;
-  const raw = seg.kind === "bbox" ? [...seg.box] : seg.points;
-  if (raw.length % 2 !== 0 || !raw.every(Number.isFinite)) return null;
-
-  const scaled = raw.map((v, i) => clamp01(v / (i % 2 === 0 ? width : height)));
-  const region =
-    seg.kind === "bbox"
-      ? { type: "bbox" as const, points: scaled }
-      : { type: "polygon" as const, points: decimate(scaled) };
+  const scale = (raw: number[]) =>
+    raw.length % 2 === 0 && raw.every(Number.isFinite)
+      ? raw.map((v, i) => clamp01(v / (i % 2 === 0 ? width : height)))
+      : null;
+  let region: unknown;
+  if (seg.kind === "multipolygon") {
+    const rings = seg.rings.map(scale);
+    if (rings.some((r) => r === null)) return null;
+    region = { type: "multipolygon", points: rings };
+  } else {
+    const scaled = scale(seg.kind === "bbox" ? [...seg.box] : seg.points);
+    if (!scaled) return null;
+    region =
+      seg.kind === "bbox"
+        ? { type: "bbox", points: scaled }
+        : { type: "polygon", points: decimate(scaled) };
+  }
 
   const parsed = RegionSchema.safeParse(region);
   return parsed.success ? parsed.data : null;

@@ -4,12 +4,16 @@ const inUnit = (v: unknown): v is number =>
   typeof v === "number" && Number.isFinite(v) && v >= 0 && v <= 1;
 
 /** Coordinates are checked before they reach SVG attributes (docs/API_SPECS.md §3). */
+const isRing = (points: unknown): points is number[] =>
+  Array.isArray(points) && points.length >= 6 && points.length % 2 === 0 && points.every(inUnit);
+
 export function isValidRegion(region: Region | null | undefined): region is Region {
-  if (!region || !Array.isArray(region.points) || !region.points.every(inUnit)) return false;
-  if (region.type === "bbox") return region.points.length === 4;
-  if (region.type === "polygon") {
-    return region.points.length >= 6 && region.points.length % 2 === 0;
+  if (!region || !Array.isArray(region.points)) return false;
+  if (region.type === "multipolygon") {
+    return region.points.length >= 2 && region.points.length <= 4 && region.points.every(isRing);
   }
+  if (region.type === "bbox") return region.points.length === 4 && region.points.every(inUnit);
+  if (region.type === "polygon") return isRing(region.points);
   return false;
 }
 
@@ -55,13 +59,12 @@ function inside(poly: Point[], { x, y }: Point): boolean {
  */
 export function regionAnchor(region: Region): Point {
   if (region.type === "bbox") return { x: region.points[0] ?? 0, y: region.points[1] ?? 0 };
-  const center = centroid(vertices(region.points));
-  if (center && inside(vertices(region.points), center)) return center;
-  let best: Point = { x: region.points[0] ?? 0, y: region.points[1] ?? 0 };
-  for (let i = 2; i + 1 < region.points.length; i += 2) {
-    const p = { x: region.points[i] ?? 0, y: region.points[i + 1] ?? 0 };
-    if (p.y < best.y || (p.y === best.y && p.x < best.x)) best = p;
-  }
+  // Pieces arrive largest first; the marker goes on the main one.
+  const poly = vertices(region.type === "multipolygon" ? (region.points[0] ?? []) : region.points);
+  const center = centroid(poly);
+  if (center && inside(poly, center)) return center;
+  let best: Point = poly[0] ?? { x: 0, y: 0 };
+  for (const p of poly) if (p.y < best.y || (p.y === best.y && p.x < best.x)) best = p;
   return best;
 }
 
@@ -91,6 +94,11 @@ export function placeMarkers(anchors: Point[]): Point[] {
     placed.push(p);
   }
   return placed;
+}
+
+/** SVG path data for several rings: each piece is drawn and filled on its own. */
+export function ringsPath(rings: number[][]): string {
+  return rings.map((ring) => `M${polygonPoints(ring).replaceAll(" ", "L")}Z`).join(" ");
 }
 
 export function polygonPoints(points: number[]): string {
