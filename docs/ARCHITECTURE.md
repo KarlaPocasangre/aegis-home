@@ -201,7 +201,7 @@ Every room carries `source: live | cached | mock`. A non-live result is **always
 | Part | Host | Configuration |
 |---|---|---|
 | Frontend | Vercel | Root `client/`; [`client/vercel.json`](../client/vercel.json) sets the CSP, `no-referrer` and `noindex` |
-| API | Render (free web service) | [`render.yaml`](../render.yaml); migrations run in the build; health check `/health` |
+| API | Render (free web service) | [`render.yaml`](../render.yaml); migrations run in the build over Neon's direct host (a pooled connection can leak the migration lock); health check `/health` |
 | Database | Neon Postgres | `DATABASE_URL` with `sslmode=verify-full` |
 | Keep-alive | UptimeRobot | `GET /health` every 5 minutes (no DB or AI access) |
 
