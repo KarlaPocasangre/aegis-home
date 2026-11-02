@@ -4,7 +4,7 @@
 
 **Snap a photo of an older adult's home. Get a visual, prioritized, low-cost fall-prevention plan, in Spanish.**
 
-[![Live demo](https://img.shields.io/badge/demo-live-34d399?style=flat-square)](https://client-eight-psi-67.vercel.app)
+[![Live demo](https://img.shields.io/badge/demo-live-34d399?style=flat-square)](https://aegishome.vercel.app)
 [![API](https://img.shields.io/badge/API-health-34d399?style=flat-square)](https://aegis-home-api.onrender.com/health)
 ![Status](https://img.shields.io/badge/status-hackathon%20MVP-f59e0b?style=flat-square)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
@@ -19,7 +19,7 @@
 
 **Meta Global AI Developer Hackathon 2026** · Indie Developer track · _Build for Your World_
 
-[Live demo](https://client-eight-psi-67.vercel.app) · [Demo video (3 min)](TODO) · [Architecture](docs/ARCHITECTURE.md) · [AI integration](docs/AI_INTEGRATION.md)
+[Live demo](https://aegishome.vercel.app) · [Demo video (3 min)](TODO) · [Architecture](docs/ARCHITECTURE.md) · [AI integration](docs/AI_INTEGRATION.md)
 
 </div>
 
