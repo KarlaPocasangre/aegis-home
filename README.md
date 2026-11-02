@@ -253,7 +253,10 @@ The server suite covers the Spark output contract, Spark ↔ SAM instance matchi
 
 ## Built during the hackathon
 
-- **All code in this repository was written during the building period (Oct 27 – Nov 4, 2026).** No code was reused from earlier work. See the commit history.
+- **Oct 28 – 30: research and design.** I applied for the Meta Model API credits on Oct 28 and, while a banking issue delayed activating them, studied Muse Spark and SAM 3.1 and wrote the proposal, architecture and API contracts now in [`docs/`](docs/).
+- **Oct 31 – Nov 1: implementation.** Once the credits were active, I built, deployed and tested the app, committing in blocks as each part worked. Everything since is visible in the [commit history](https://github.com/KarlaPocasangre/aegis-home/commits/main).
+- **AI-assisted coding:** I used Claude Code as a coding assistant during implementation. The product idea, design decisions, testing with real photos and review of every change are my own.
+- **All code in this repository was written during the building period (Oct 27 – Nov 4, 2026).** No code was reused from earlier work.
 - The two sample images in `client/public/samples/` are **AI-generated** for this project. They show no real home and no people, and carry no metadata.
 - The recorded results in `server/fixtures/<sha256>[.pt|.en].json` come from **live** Muse Spark + SAM 3.1 calls on those images.
 
