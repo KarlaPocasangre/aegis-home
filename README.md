@@ -1,6 +1,8 @@
 <div align="center">
 
-# aegis-home
+<img src="client/public/favicon.svg" width="72" alt="Aegis Home logo">
+
+# Aegis Home
 
 **Snap a photo of an older adult's home. Get a visual, prioritized, low-cost plan to fix its fall hazards, in Spanish, Portuguese or English.**
 
@@ -19,7 +21,13 @@
 
 **Meta Global AI Developer Hackathon 2026** · Indie Developer track · _Build for Your World_
 
-[Live demo](https://aegishome.vercel.app) · [Demo video (3 min)](TODO) · [Architecture](docs/ARCHITECTURE.md) · [AI integration](docs/AI_INTEGRATION.md)
+[Live demo](https://aegishome.vercel.app) · [Demo video (3 min)](https://youtu.be/KUdrJavkCFU) · [Architecture](docs/ARCHITECTURE.md) · [AI integration](docs/AI_INTEGRATION.md)
+
+<br>
+
+[![Aegis Home: one photo, a safer home](docs/images/hero.jpg)](https://youtu.be/KUdrJavkCFU)
+
+<sub>▶ Click the image to watch the 3-minute demo.</sub>
 
 </div>
 
@@ -29,6 +37,8 @@
 
 - [The problem](#the-problem)
 - [The solution](#the-solution)
+- [Try it in 30 seconds](#try-it-in-30-seconds)
+- [Tested in real homes](#tested-in-real-homes)
 - [Key features](#key-features)
 - [How we use Meta's models](#how-we-use-metas-models)
 - [Architecture](#architecture)
@@ -39,6 +49,7 @@
 - [API overview](#api-overview)
 - [Testing & quality](#testing--quality)
 - [Honest limitations](#honest-limitations)
+- [Beyond the hackathon](#beyond-the-hackathon)
 - [Built during the hackathon](#built-during-the-hackathon)
 - [Disclaimer, license & credits](#disclaimer-license--credits)
 
@@ -55,6 +66,49 @@
 A family member photographs a room. **Muse Spark** finds the visible environmental hazards and writes a plain-language fix with local, low-cost materials. **SAM 3.1** outlines each hazard on the photo with its real shape. The result is a prioritized action plan the family can share and track. **Photos are never stored.**
 
 > From photo to plan in under a minute. No account, no app install, no photo kept on any server.
+
+## Try it in 30 seconds
+
+1. Open **[aegishome.vercel.app](https://aegishome.vercel.app)** (on a phone or a computer).
+2. Under **"Check a photo"**, tick **"I understand and want to continue"** and tap **"Use a sample image"**, or take a photo of a room with the floor in view.
+3. In about 20 seconds you get every hazard **outlined on the photo**, its urgency, how much of the walkway it blocks, how to fix it, materials and a rough cost.
+4. Open **Plan** to see everything ordered by urgency, mark fixes as done and share the private link with family.
+
+The app follows your browser language (Spanish, Portuguese or English); switch it from the globe icon.
+
+---
+
+## Tested in real homes
+
+We used Aegis Home in three real homes in El Salvador (no people in the photos), then fixed what we could and photographed the rooms again.
+
+| Home | Room | Hazards found | Fixed afterwards |
+| --- | --- | --- | --- |
+| 1 | Bedroom | 5: boots in the path, loose rug, fan in the doorway, hanging cables, office chair on wheels | 3: boots put away, fan moved out of the doorway, wheeled chair replaced by a fixed one |
+| 2 | Living room | 3: pedal cable on the floor, cables hanging from the wall, chairs in the walkway | 2: chairs moved out of the walkway, pedal cable off the floor |
+| 3 | Living room (floor close-up) | 5: cushion on the floor, sandals, phone and glasses, rocking chair, mirror on the floor | 3: cushion, sandals, phone and glasses picked up |
+
+<p align="center"><img src="docs/images/home-1-before-after.jpg" width="860" alt="Home 1 before and after: boots, fan and wheeled chair moved out of the walkway"></p>
+
+<table>
+<tr>
+<td width="33%"><img src="docs/images/home-1.jpg" alt="Home 1 analyzed: SAM outlines around the boots, rug, chair and fan"></td>
+<td width="33%"><img src="docs/images/home-2.jpg" alt="Home 2 analyzed: cables and chairs in the walkway"></td>
+<td width="33%"><img src="docs/images/home-3.jpg" alt="Home 3 analyzed: cushion, sandals, phone and rocking chair outlined"></td>
+</tr>
+<tr>
+<td align="center"><sub>Home 1: SAM outlines the boots, the rug around the chair legs and the fan</sub></td>
+<td align="center"><sub>Home 2: a cable under the table and chairs in the walkway</sub></td>
+<td align="center"><sub>Home 3: exact shapes of a phone, sandals and a rocking chair</sub></td>
+</tr>
+</table>
+
+<p align="center">
+<img src="docs/images/mobile-pet.jpg" width="260" alt="Phone view: a cat asleep in the walkway flagged as a hazard, 4% of the walkway">
+&nbsp;&nbsp;
+<img src="docs/images/mobile-plan.jpg" width="260" alt="Phone view: analyzed bedroom with outlines and the quick-contact button">
+</p>
+<p align="center"><sub>On a phone: pets in the walkway count too, and the red button contacts a relative.</sub></p>
 
 ---
 
@@ -107,14 +161,6 @@ flowchart LR
     F --> U
 ```
 
-```
-┌─────────────┐   ┌──────────────────────┐   ┌──────────────────────┐   ┌──────────────┐
-│  Frontend   │──▶│  Node.js + Express 5  │──▶│  Meta Model API      │   │  PostgreSQL  │
-│  Vercel     │   │  Render · in-memory   │   │  Spark 1.3 → SAM 3.1 │   │  Neon        │
-│  strict CSP │◀──│  pipeline · Zod       │◀──│  (validated output)  │   │  text only   │
-└─────────────┘   └──────────┬───────────┘   └──────────────────────┘   └──────▲───────┘
-                             └────────────────── Prisma 7 ───────────────────────┘
-```
 
 ### Pragmatic architecture decisions
 
@@ -204,7 +250,7 @@ This isn't just translated UI strings: **Muse Spark writes the hazard descriptio
 | `META_API_BASE_URL`                   | `https://api.meta.ai/v1`                                                     |
 | `META_MODEL_SPARK` / `META_MODEL_SAM` | `muse-spark-1.3` / `sam-3.1`                                                 |
 | `MOCK_AI`                             | `true` skips Meta and serves labeled fallback results                        |
-| `AI_DAILY_CALL_CAP`                   | Outbound Meta calls per UTC day (1 per Spark attempt + 1 per hazard for SAM) |
+| `AI_DAILY_CALL_CAP`                   | Outbound Meta calls per UTC day (1 per Spark attempt, 1 per hazard for SAM, 1 for the floor) |
 | `HOUSEHOLD_TTL_DAYS`                  | Days before a household and its data expire                                  |
 | `VITE_API_URL` (client)               | API origin used by the frontend                                              |
 
@@ -237,7 +283,7 @@ npm run smoke-test -- https://<api-url>                      # after each deploy
 npm run record-fixture -w server -- <image> <room_type> [es|pt|en]   # record a real result as fallback
 ```
 
-The server suite covers the Spark output contract, Spark ↔ SAM instance matching, SAM mask decoding into polygons, floor-share measurement, the fallback ladder (429, timeout, invalid JSON, daily cap), image validation, household scoping and rate limits. CI runs all checks plus a gitleaks secret scan on every push.
+**124 automated tests** (88 server, 36 client). The server suite covers the Spark output contract, Spark ↔ SAM instance matching, SAM mask decoding into polygons, floor-share measurement, the fallback ladder (429, timeout, invalid JSON, daily cap), image validation, household scoping and rate limits. CI runs all checks plus a gitleaks secret scan on every push.
 
 ---
 
@@ -247,7 +293,17 @@ The server suite covers the Spark output contract, Spark ↔ SAM instance matchi
 - A hazard that is something _missing_ (e.g. no grab bar) has no mask; it is boxed where the item should be.
 - Outlines keep up to 4 main pieces of each mask (holes and specks are dropped) and are simplified to ≤ 100 points.
 - Photos are sent to Meta's Model API for analysis (Standard mode: not used for training).
+- An analysis takes **15–35 s**, and results can vary between runs of the same photo (the model may find a slightly different set of hazards).
+- The walkway percentage depends on the camera angle and how much floor is in view; compare photos taken from the same spot. When the hazard *is* the floor itself (e.g. "slippery floor"), the percentage is not meaningful.
 - Out of scope on purpose: login/OAuth, WAF, penetration testing, compliance certifications, medical-device regulation.
+
+---
+
+## Beyond the hackathon
+
+- **Cost:** infrastructure runs on free tiers (Vercel, Render, Neon). The only variable cost is the Meta Model API: about **7–10 calls per photo** (1 Muse Spark call, 1 SAM call per hazard, 1 for the floor), bounded by a daily cap stored in the database.
+- **Distribution:** the plan names cheap, local materials, so **hardware stores** can offer it as a free service to customers; **municipal programs for older adults** and **community clinics** can use it during home visits, in Spanish and Portuguese.
+- **Next steps:** a reference price table per country, local currency, a before/after comparison of the same room, a voice check-in with Muse Voice Transcribe, and self-hosted open-weight models for partners that need full data residency. See the [roadmap](docs/DEVELOPMENT_PLAN.md#5-roadmap).
 
 ---
 
